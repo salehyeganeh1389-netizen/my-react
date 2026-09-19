@@ -285,7 +285,6 @@ export default function HeroSlider() {
         bg-[#111]
         sm:h-[600px]
         lg:h-[700px]
-        mb-[1100px]
       "
     >
       {/* ================= SWIPER ================= */}

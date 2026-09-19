@@ -98,7 +98,7 @@ export default function Navbar() {
     }
 
     /* =========================
-       حذف فوری Navbar شناور
+       حذف Navbar شناور
     ========================= */
 
     if (hasEnteredScroll.current) {
@@ -151,14 +151,25 @@ export default function Navbar() {
           top-0
           z-[200]
           hidden
-          w-[66.666vw]
-          max-w-[1100px]
+
+          w-[calc(100%-24px)]
+          max-w-none
+
           rounded-full
           border
           border-white/60
           bg-white/55
           shadow-[0_15px_45px_rgba(0,0,0,0.10)]
-          backdrop-blur-[22px]
+          backdrop-blur-[15px]
+
+          sm:w-[calc(100%-40px)]
+          sm:max-w-[700px]
+
+          md:w-[80vw]
+          md:max-w-[850px]
+
+          lg:w-[66.666vw]
+          lg:max-w-[1100px]
         "
         style={{
           perspective: "1000px",

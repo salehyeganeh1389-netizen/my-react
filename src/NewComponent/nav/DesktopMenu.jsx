@@ -11,31 +11,37 @@ export default function DesktopMenu() {
           px-6
         "
       >
-        <nav className="flex h-full items-center gap-8 xl:gap-9">
-
+        <nav className="flex h-full items-center gap-2 xl:gap-3">
           <NavItem text="خانه" />
 
           {/* محصولات */}
-          <div className="group relative h-full">
+          <div className="group relative flex h-full items-center">
             <button
               type="button"
               className="
                 flex
-                h-full
+                h-[38px]
                 items-center
+                justify-center
                 gap-2
+                rounded-[8px]
+                px-4
                 text-[13px]
                 font-medium
                 text-[#333]
-                transition
-                group-hover:text-[#166534]
+                whitespace-nowrap
+                transition-all
+                duration-200
+                hover:bg-[#edf5f0]
+                hover:text-[#166534]
               "
             >
-              محصولات
+              <span>محصولات</span>
 
               <i
                 className="
-                  bi bi-chevron-down
+                  bi
+                  bi-chevron-down
                   text-[9px]
                   transition-transform
                   duration-200
@@ -44,18 +50,17 @@ export default function DesktopMenu() {
               />
             </button>
 
-
             {/* منوی محصولات */}
             <div
               className="
                 invisible
                 absolute
-                right-[-15px]
+                right-0
                 top-full
                 z-50
-                w-[220px]
-                translate-y-3
-                rounded-[10px]
+                w-[230px]
+                translate-y-2
+                rounded-[11px]
                 border
                 border-[#eeeeee]
                 bg-white
@@ -69,7 +74,6 @@ export default function DesktopMenu() {
                 group-hover:opacity-100
               "
             >
-
               <ProductCategory
                 title="پارچه"
                 items={[
@@ -99,18 +103,13 @@ export default function DesktopMenu() {
                   "پرفروش‌ها",
                 ]}
               />
-
             </div>
           </div>
 
           <NavItem text="مقالات" />
-
           <NavItem text="درباره ما" />
-
           <NavItem text="تماس با ما" />
-
         </nav>
-
 
         {/* تلفن */}
         <a
@@ -118,26 +117,30 @@ export default function DesktopMenu() {
           className="
             mr-auto
             flex
+            h-[38px]
             items-center
+            justify-center
             gap-3
+            rounded-[8px]
+            px-4
             text-[13px]
+            font-medium
             text-[#333]
-            transition
+            whitespace-nowrap
+            transition-all
+            duration-200
+            hover:bg-[#edf5f0]
             hover:text-[#166534]
           "
         >
-          <span className="font-medium">
-            ۰۲۵-۳۲۹۳۹۸۶۳
-          </span>
+          <span>۰۲۵-۳۲۹۳۹۸۶۳</span>
 
           <i className="bi bi-telephone text-[16px] text-green-950" />
         </a>
-
       </div>
     </div>
   );
 }
-
 
 /* =========================
    Nav Item
@@ -149,21 +152,25 @@ function NavItem({ text }) {
       href="#"
       className="
         flex
-        h-full
+        h-[38px]
         items-center
+        justify-center
+        rounded-[8px]
+        px-4
         text-[13px]
         font-medium
         text-[#333]
-        transition
-        duration-300
-        hover:bg-[#333]
+        whitespace-nowrap
+        transition-all
+        duration-200
+        hover:bg-[#edf5f0]
+        hover:text-[#166534]
       "
     >
       {text}
     </a>
   );
 }
-
 
 /* =========================
    Product Category
@@ -172,30 +179,40 @@ function NavItem({ text }) {
 function ProductCategory({ title, items }) {
   return (
     <div className="group/category relative">
-
       <button
         type="button"
         className="
           flex
-          h-[44px]
+          h-[40px]
           w-full
           items-center
           justify-between
           rounded-[7px]
-          px-4
+          px-3
           text-right
-          text-[13px]
+          text-[12px]
+          font-medium
           text-[#444]
-          transition
-          hover:bg-[#faf7f2]
+          transition-all
+          duration-200
+          hover:bg-[#edf5f0]
           hover:text-[#166534]
         "
       >
         <span>{title}</span>
 
-        <i className="bi bi-chevron-left text-[9px]" />
+        <i
+          className="
+            bi
+            bi-chevron-left
+            text-[9px]
+            text-[#999]
+            transition-colors
+            duration-200
+            group-hover/category:text-[#166534]
+          "
+        />
       </button>
-
 
       {/* زیرمنو */}
       <div
@@ -205,6 +222,7 @@ function ProductCategory({ title, items }) {
           right-full
           top-0
           mr-2
+          z-50
           w-[210px]
           translate-x-2
           rounded-[10px]
@@ -226,14 +244,18 @@ function ProductCategory({ title, items }) {
             key={item}
             href="#"
             className="
-              block
+              flex
+              h-[38px]
+              w-full
+              items-center
               rounded-[7px]
-              px-4
-              py-3
+              px-3
               text-[12px]
               text-[#555]
-              transition
-              hover:bg-[#faf7f2]
+              whitespace-nowrap
+              transition-all
+              duration-200
+              hover:bg-[#edf5f0]
               hover:text-[#15803d]
             "
           >
@@ -241,7 +263,6 @@ function ProductCategory({ title, items }) {
           </a>
         ))}
       </div>
-
     </div>
   );
 }

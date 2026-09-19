@@ -8,6 +8,7 @@ export default function NavbarTop({
   return (
     <div
       className={`
+        w-full
         transition-all
         duration-500
         ${
@@ -26,17 +27,20 @@ export default function NavbarTop({
           duration-500
           ${
             scrolled
-              ? "h-[60px] px-5"
+              ? "h-[60px] px-4 sm:px-5"
               : "min-h-[72px] max-w-[1650px] px-4 sm:px-6 lg:h-[78px]"
           }
         `}
       >
-        {/* همبرگری موبایل */}
+        {/* =========================
+            منوی موبایل
+        ========================= */}
         <button
           type="button"
           onClick={() => setMobileMenu(!mobileMenu)}
+          aria-label={mobileMenu ? "بستن منو" : "باز کردن منو"}
           className="
-            ml-2
+            ml-1
             flex
             h-9
             w-9
@@ -45,21 +49,29 @@ export default function NavbarTop({
             justify-center
             rounded-full
             text-[#333]
-            transition
+            transition-all
+            duration-200
             hover:bg-[#f7f4ef]
+            hover:text-[#166534]
+            sm:ml-2
             lg:hidden
           "
         >
           <i
-            className={`bi ${
-              mobileMenu ? "bi-x-lg" : "bi-list"
-            } text-[20px]`}
+            className={`
+              bi
+              ${mobileMenu ? "bi-x-lg" : "bi-list"}
+              text-[20px]
+            `}
           />
         </button>
 
-        {/* لوگو */}
+        {/* =========================
+            لوگو
+        ========================= */}
         <a
           href="#"
+          aria-label="قماش شیخ الاسلامی"
           className={`
             flex
             shrink-0
@@ -68,34 +80,37 @@ export default function NavbarTop({
             duration-500
             ${
               scrolled
-                ? "w-[105px]"
-                : "w-[120px] sm:w-[145px] lg:w-[175px]"
+                ? "w-[100px] sm:w-[105px]"
+                : "w-[115px] sm:w-[145px] lg:w-[175px]"
             }
           `}
         >
           <img
             src={logo}
-            alt="لوگو"
+            alt="قماش شیخ الاسلامی"
             className={`
+              block
               max-w-full
               object-contain
               transition-all
               duration-500
               ${
                 scrolled
-                  ? "max-h-[38px]"
-                  : "max-h-[52px] sm:max-h-[58px] lg:max-h-[62px]"
+                  ? "max-h-[36px]"
+                  : "max-h-[50px] sm:max-h-[56px] lg:max-h-[62px]"
               }
             `}
           />
         </a>
 
-        {/* سرچ دسکتاپ */}
+        {/* =========================
+            سرچ دسکتاپ
+        ========================= */}
         <div
           className={`
             hidden
-            w-full
             lg:block
+            w-full
             transition-all
             duration-500
             ${
@@ -108,13 +123,18 @@ export default function NavbarTop({
           <SearchBox scrolled={scrolled} />
         </div>
 
+        {/* فضای خالی */}
         <div className="hidden flex-1 lg:block" />
 
-        {/* اقدامات */}
+        {/* =========================
+            اقدامات
+        ========================= */}
         <NavbarActions scrolled={scrolled} />
       </div>
 
-      {/* سرچ موبایل */}
+      {/* =========================
+          سرچ موبایل
+      ========================= */}
       {!scrolled && (
         <div className="px-4 pb-4 sm:px-6 lg:hidden">
           <SearchBox />
@@ -124,17 +144,17 @@ export default function NavbarTop({
   );
 }
 
-
 /* =========================
    Search Box
 ========================= */
 
 function SearchBox({ scrolled = false }) {
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <input
         type="text"
         placeholder="جستجو در محصولات..."
+        aria-label="جستجو در محصولات"
         className={`
           w-full
           border
@@ -147,7 +167,7 @@ function SearchBox({ scrolled = false }) {
           text-[#333]
           outline-none
           transition-all
-          duration-500
+          duration-300
           placeholder:text-[#999]
           hover:border-[#d8d8d8]
           focus:border-[#bd9257]
@@ -155,7 +175,7 @@ function SearchBox({ scrolled = false }) {
           focus:shadow-[0_4px_18px_rgba(189,146,87,0.08)]
           ${
             scrolled
-              ? "h-[42px] rounded-full bg-white/45"
+              ? "h-[42px] rounded-full bg-white/50"
               : "h-[44px] rounded-[8px]"
           }
         `}
@@ -163,7 +183,9 @@ function SearchBox({ scrolled = false }) {
 
       <i
         className="
-          bi bi-search
+          bi
+          bi-search
+          pointer-events-none
           absolute
           left-4
           top-1/2
@@ -176,7 +198,6 @@ function SearchBox({ scrolled = false }) {
   );
 }
 
-
 /* =========================
    Navbar Actions
 ========================= */
@@ -187,38 +208,46 @@ function NavbarActions({ scrolled = false }) {
       className={`
         mr-auto
         flex
+        shrink-0
         items-center
         transition-all
         duration-500
         ${
           scrolled
-            ? "gap-1"
-            : "gap-1 sm:gap-2 lg:gap-5"
+            ? "gap-0.5"
+            : "gap-1 sm:gap-2 lg:gap-3 xl:gap-4"
         }
       `}
     >
-      {/* اعلان */}
+      {/* =========================
+          اعلان
+      ========================= */}
       <button
         type="button"
+        aria-label="اعلان‌ها"
         className="
           group
           relative
           flex
           h-10
           w-10
+          shrink-0
           items-center
           justify-center
           rounded-full
-          transition
+          text-[#333]
+          transition-all
+          duration-200
           hover:bg-[#f7f4ef]
         "
       >
         <i
           className="
-            bi bi-bell
+            bi
+            bi-bell
             text-[19px]
-            text-[#333]
-            transition
+            transition-colors
+            duration-200
             group-hover:text-[#166534]
           "
         />
@@ -236,71 +265,103 @@ function NavbarActions({ scrolled = false }) {
         />
       </button>
 
-      {/* ورود */}
+      {/* =========================
+          ورود / ثبت نام
+      ========================= */}
       <button
         type="button"
+        aria-label="ورود یا ثبت نام"
         className={`
           group
           flex
+          shrink-0
           items-center
           justify-center
           border
           border-[#e5e5e5]
           transition-all
-          duration-500
+          duration-300
           hover:border-[#166534]
           hover:bg-[#fdfbf8]
           ${
             scrolled
               ? "h-9 w-9 rounded-full"
-              : "h-10 w-10 rounded-full sm:h-[43px] sm:w-auto sm:gap-3 sm:rounded-[7px] sm:px-4"
+              : "h-10 w-10 rounded-full sm:h-[42px] sm:w-auto sm:gap-2.5 sm:rounded-[8px] sm:px-4"
           }
         `}
       >
         <i
           className="
-            bi bi-person
+            bi
+            bi-person
             text-[18px]
             text-[#555]
-            transition
+            transition-colors
+            duration-200
             group-hover:text-[#166534]
           "
         />
 
         {!scrolled && (
-          <span className="hidden text-[13px] font-medium text-[#333] sm:block">
+          <span
+            className="
+              hidden
+              whitespace-nowrap
+              text-[13px]
+              font-medium
+              text-[#333]
+              sm:block
+            "
+          >
             ورود | ثبت‌نام
           </span>
         )}
       </button>
 
-      {/* جداکننده */}
+      {/* =========================
+          جداکننده
+      ========================= */}
       {!scrolled && (
-        <div className="hidden h-7 w-px bg-[#e5e5e5] sm:block" />
+        <div
+          className="
+            hidden
+            h-6
+            w-px
+            bg-[#e5e5e5]
+            sm:block
+          "
+        />
       )}
 
-      {/* سبد خرید */}
+      {/* =========================
+          سبد خرید
+      ========================= */}
       <button
         type="button"
+        aria-label="سبد خرید"
         className="
           group
           relative
           flex
           h-10
           w-10
+          shrink-0
           items-center
           justify-center
           rounded-full
-          transition
+          transition-all
+          duration-200
           hover:bg-[#f7f4ef]
         "
       >
         <i
           className="
-            bi bi-bag
+            bi
+            bi-bag
             text-[20px]
             text-[#333]
-            transition
+            transition-colors
+            duration-200
             group-hover:text-[#166534]
           "
         />
@@ -320,6 +381,7 @@ function NavbarActions({ scrolled = false }) {
             px-1
             text-[8px]
             font-bold
+            leading-none
             text-white
           "
         >
