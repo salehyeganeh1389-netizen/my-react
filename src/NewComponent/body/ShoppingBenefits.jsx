@@ -39,50 +39,81 @@ export default function ShoppingBenefits() {
     const ctx = gsap.context(() => {
       const cards = gsap.utils.toArray(".benefit-card");
       const icons = gsap.utils.toArray(".benefit-icon");
+      const texts = gsap.utils.toArray(".benefit-text");
+
+      // -----------------------------
+      // کارت‌ها
+      // -----------------------------
 
       gsap.fromTo(
         cards,
         {
           opacity: 0,
-          y: 100,
-          scale: 0.88,
-          rotateX: 18,
-          filter: "blur(10px)",
+          y: 45,
         },
         {
           opacity: 1,
           y: 0,
-          scale: 1,
-          rotateX: 0,
-          filter: "blur(0px)",
-          duration: 1,
-          stagger: 0.15,
-          ease: "back.out(1.5)",
+          duration: 0.9,
+          stagger: 0.12,
+          ease: "power3.out",
+
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 82%",
+            start: "top 85%",
             toggleActions: "play none none none",
           },
         }
       );
 
+      // -----------------------------
+      // آیکون‌ها
+      // -----------------------------
+
       gsap.fromTo(
         icons,
         {
           opacity: 0,
-          scale: 0,
-          rotation: -35,
+          scale: 0.7,
+          y: 15,
         },
         {
           opacity: 1,
           scale: 1,
-          rotation: 0,
-          duration: 0.75,
-          stagger: 0.15,
-          ease: "back.out(2)",
+          y: 0,
+          duration: 0.7,
+          stagger: 0.12,
+          ease: "power3.out",
+
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 78%",
+            start: "top 83%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+
+      // -----------------------------
+      // متن
+      // -----------------------------
+
+      gsap.fromTo(
+        texts,
+        {
+          opacity: 0,
+          y: 12,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.65,
+          stagger: 0.12,
+          delay: 0.15,
+          ease: "power2.out",
+
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 82%",
             toggleActions: "play none none none",
           },
         }
@@ -119,7 +150,7 @@ export default function ShoppingBenefits() {
           sm:rounded-[24px]
         "
       >
-        {/* background decoration */}
+        {/* Background decoration */}
 
         <div
           className="
@@ -160,8 +191,9 @@ export default function ShoppingBenefits() {
             grid-cols-1
             divide-y
             divide-[#e2e8e3]
+
             sm:grid-cols-2
-            sm:divide-y
+
             lg:grid-cols-5
             lg:divide-x
             lg:divide-y-0
@@ -180,8 +212,8 @@ export default function ShoppingBenefits() {
                 gap-4
                 px-5
                 py-5
-                transition-all
-                duration-300
+                transition-colors
+                duration-500
                 hover:bg-white/70
 
                 sm:min-h-[105px]
@@ -195,11 +227,9 @@ export default function ShoppingBenefits() {
                 lg:gap-3
                 lg:px-4
                 lg:py-6
-
-                [perspective:1000px]
               "
             >
-              {/* icon */}
+              {/* Icon */}
 
               <div
                 className="
@@ -218,11 +248,11 @@ export default function ShoppingBenefits() {
                   text-[#173a2c]
                   shadow-[0_5px_20px_rgba(23,58,44,0.06)]
                   transition-all
-                  duration-300
+                  duration-500
 
                   group-hover:-translate-y-1
                   group-hover:border-[#173a2c]/20
-                  group-hover:shadow-[0_10px_25px_rgba(23,58,44,0.10)]
+                  group-hover:shadow-[0_12px_30px_rgba(23,58,44,0.11)]
 
                   sm:h-[48px]
                   sm:w-[48px]
@@ -237,7 +267,7 @@ export default function ShoppingBenefits() {
                     ${item.icon}
                     text-[19px]
                     transition-transform
-                    duration-300
+                    duration-500
                     group-hover:scale-110
                     sm:text-[20px]
                   `}
@@ -254,13 +284,13 @@ export default function ShoppingBenefits() {
                     bg-[#bd9257]
                     opacity-0
                     transition-opacity
-                    duration-300
+                    duration-500
                     group-hover:opacity-100
                   "
                 />
               </div>
 
-              {/* text */}
+              {/* Text */}
 
               <div
                 className="

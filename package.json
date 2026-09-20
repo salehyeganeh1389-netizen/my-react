@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "bootstrap-icons": "^1.11.1",
+    "bootstrap-icons": "^1.13.1",
     "gsap": "^3.15.0",
+    "nprogress": "^0.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.4",
     "swiper": "^14.2.0",
     "zustand": "^5.0.15"
   },

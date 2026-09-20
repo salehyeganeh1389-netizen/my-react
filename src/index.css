@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 @keyframes heroProgress {
   from {
     width: 0%;

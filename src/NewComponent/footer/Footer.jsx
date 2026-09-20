@@ -59,15 +59,15 @@ export default function Footer() {
                 <i className="bi bi-geo-alt mt-1 shrink-0 text-[14px] text-[#166534]" />
 
                 <span>
-                  قم، خیابان ۱۹ دی، مجتمع تجاری حجت،
-                  طبقه ۳، پلاک ۱۴۴
+                  مشهد، خیابان سناباد، سناباد 19،
+                 پلاک 225
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
                 <i className="bi bi-clock shrink-0 text-[14px] text-[#166534]" />
 
-                <span>۱۰ الی ۱۴ - ۱۶ الی ۲۲</span>
+                <span>9 الی ۱۴ - 17 الی ۲۲</span>
               </div>
 
               <a

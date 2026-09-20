@@ -1,5 +1,3 @@
-
-
 import { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCreative } from "swiper/modules";
@@ -56,6 +54,10 @@ export default function HeroSlider() {
   const [current, setCurrent] = useState(0);
   const [isHover, setIsHover] = useState(false);
 
+  // =========================
+  // DOTS
+  // =========================
+
   const animateDots = (activeIndex) => {
     dotsRef.current.forEach((dot, index) => {
       if (!dot) return;
@@ -81,6 +83,10 @@ export default function HeroSlider() {
       }
     });
   };
+
+  // =========================
+  // SLIDE ANIMATION
+  // =========================
 
   const animateSlide = (swiper) => {
     const activeSlide = swiper.slides[swiper.activeIndex];
@@ -228,6 +234,10 @@ export default function HeroSlider() {
     );
   };
 
+  // =========================
+  // SWIPER INIT
+  // =========================
+
   const handleSwiper = (swiper) => {
     swiperRef.current = swiper;
 
@@ -241,6 +251,10 @@ export default function HeroSlider() {
     }, 50);
   };
 
+  // =========================
+  // SLIDE CHANGE
+  // =========================
+
   const handleSlideChange = (swiper) => {
     const index = swiper.realIndex;
 
@@ -250,9 +264,17 @@ export default function HeroSlider() {
     animateDots(index);
   };
 
+  // =========================
+  // GO TO SLIDE
+  // =========================
+
   const goToSlide = (index) => {
     swiperRef.current?.slideToLoop(index);
   };
+
+  // =========================
+  // NEXT / PREVIOUS
+  // =========================
 
   const nextSlide = () => {
     swiperRef.current?.slideNext();
@@ -261,6 +283,10 @@ export default function HeroSlider() {
   const prevSlide = () => {
     swiperRef.current?.slidePrev();
   };
+
+  // =========================
+  // HOVER
+  // =========================
 
   const handleMouseEnter = () => {
     setIsHover(true);
@@ -272,6 +298,13 @@ export default function HeroSlider() {
     swiperRef.current?.autoplay?.resume();
   };
 
+  // =========================
+  // NEXT PREVIEW
+  // =========================
+
+  const nextIndex = (current + 1) % slides.length;
+  const nextSlideData = slides[nextIndex];
+
   return (
     <section
       dir="rtl"
@@ -279,12 +312,20 @@ export default function HeroSlider() {
       onMouseLeave={handleMouseLeave}
       className="
         relative
-        h-[520px]
+        h-[580px]
         w-full
         overflow-hidden
         bg-[#111]
-        sm:h-[600px]
-        lg:h-[700px]
+
+        sm:h-[620px]
+
+        md:h-[680px]
+
+        lg:h-[720px]
+
+        xl:h-[760px]
+
+        2xl:h-[800px]
       "
     >
       {/* ================= SWIPER ================= */}
@@ -297,18 +338,19 @@ export default function HeroSlider() {
             translate: ["-100%", 0, -1],
             opacity: 0.3,
           },
+
           next: {
             translate: ["100%", 0, 0],
             opacity: 0.3,
           },
         }}
         loop={true}
-        speed={1100}
+        speed={2000}
         slidesPerView={1}
         grabCursor={true}
         allowTouchMove={true}
         autoplay={{
-          delay: 6500,
+          delay: 4000,
           disableOnInteraction: false,
           pauseOnMouseEnter: false,
         }}
@@ -320,7 +362,7 @@ export default function HeroSlider() {
           <SwiperSlide key={slide.id}>
             <div className="relative h-full w-full overflow-hidden">
 
-              {/* ================= IMAGE ================= */}
+              {/* IMAGE */}
 
               <img
                 src={slide.image}
@@ -336,7 +378,7 @@ export default function HeroSlider() {
                 "
               />
 
-              {/* ================= OVERLAY ================= */}
+              {/* OVERLAY */}
 
               <div
                 className="
@@ -344,9 +386,9 @@ export default function HeroSlider() {
                   absolute
                   inset-0
                   bg-gradient-to-l
-                  from-black/85
-                  via-black/45
-                  to-black/10
+                  from-black/90
+                  via-black/50
+                  to-black/15
                 "
               />
 
@@ -354,7 +396,8 @@ export default function HeroSlider() {
                 className="
                   absolute
                   inset-0
-                  bg-black/20
+                  bg-black/15
+                  sm:bg-black/10
                 "
               />
 
@@ -364,30 +407,34 @@ export default function HeroSlider() {
                 className="
                   hero-decoration
                   absolute
-                  bottom-[18%]
-                  left-[8%]
+                  bottom-[15%]
+                  left-[5%]
                   hidden
-                  h-40
-                  w-40
+                  h-32
+                  w-32
                   rounded-full
                   border
                   border-white/10
                   lg:block
+                  lg:h-40
+                  lg:w-40
+                  xl:left-[8%]
                 "
               />
 
               <div
                 className="
                   absolute
-                  bottom-[22%]
-                  left-[12%]
+                  bottom-[20%]
+                  left-[10%]
                   hidden
-                  h-20
-                  w-20
+                  h-16
+                  w-16
                   rounded-full
                   border
                   border-white/10
                   lg:block
+                  xl:left-[12%]
                 "
               />
 
@@ -400,47 +447,73 @@ export default function HeroSlider() {
                   inset-0
                   mx-auto
                   flex
-                  max-w-7xl
+                  max-w-[1500px]
                   items-center
-                  px-6
-                  sm:px-10
-                  lg:px-16
+                  px-5
+
+                  sm:px-8
+
+                  md:px-10
+
+                  lg:px-14
+
+                  xl:px-20
+
+                  2xl:px-24
                 "
               >
                 <div
                   className="
-                    max-w-[700px]
+                    w-full
+                    max-w-[680px]
                     text-white
                     [perspective:1000px]
+
+                    sm:max-w-[700px]
+
+                    lg:max-w-[760px]
+
+                    xl:max-w-[820px]
                   "
                 >
-
                   {/* SMALL TITLE */}
 
                   <div
                     className="
                       hero-small-title
-                      mb-5
+                      mb-4
                       flex
                       items-center
-                      gap-3
+                      gap-2.5
+
+                      sm:mb-5
+                      sm:gap-3
+
+                      lg:mb-6
                     "
                   >
                     <span
                       className="
-                        h-[1px]
-                        w-12
-                        bg-white
+                        h-px
+                        w-7
+                        bg-white/90
+
+                        sm:w-10
+
+                        lg:w-12
                       "
                     />
 
                     <span
                       className="
-                        text-xs
+                        text-[10px]
                         font-medium
-                        tracking-[0.2em]
+                        tracking-[0.15em]
                         text-white/80
-                        sm:text-sm
+
+                        sm:text-xs
+
+                        md:text-sm
                       "
                     >
                       {slide.smallTitle}
@@ -452,13 +525,25 @@ export default function HeroSlider() {
                   <h1
                     className="
                       hero-title
+                      max-w-[600px]
                       whitespace-pre-line
-                      text-4xl
+                      text-[34px]
                       font-bold
-                      leading-[1.08]
+                      leading-[1.12]
                       tracking-tight
-                      sm:text-6xl
-                      lg:text-[82px]
+
+                      min-[400px]:text-[38px]
+
+                      sm:text-5xl
+                      sm:leading-[1.08]
+
+                      md:text-6xl
+
+                      lg:text-[70px]
+
+                      xl:text-[82px]
+
+                      2xl:text-[90px]
                     "
                   >
                     {slide.title}
@@ -469,12 +554,21 @@ export default function HeroSlider() {
                   <p
                     className="
                       hero-description
-                      mt-6
-                      max-w-[540px]
-                      text-sm
-                      leading-8
+                      mt-5
+                      max-w-[430px]
+                      text-[12px]
+                      leading-7
                       text-white/70
-                      sm:text-base
+
+                      sm:mt-6
+                      sm:max-w-[500px]
+                      sm:text-sm
+                      sm:leading-7
+
+                      md:text-base
+                      md:leading-8
+
+                      lg:max-w-[550px]
                     "
                   >
                     {slide.description}
@@ -485,10 +579,16 @@ export default function HeroSlider() {
                   <div
                     className="
                       hero-buttons
-                      mt-8
+                      mt-6
                       flex
+                      flex-wrap
                       items-center
-                      gap-3
+                      gap-2.5
+
+                      sm:mt-8
+                      sm:gap-3
+
+                      md:mt-9
                     "
                   >
                     <button
@@ -496,27 +596,40 @@ export default function HeroSlider() {
                       className="
                         group
                         flex
+                        min-h-[42px]
                         items-center
-                        gap-3
+                        gap-2
                         rounded-full
                         bg-white
-                        px-7
-                        py-3.5
-                        text-sm
+                        px-5
+                        py-2.5
+                        text-[11px]
                         font-bold
                         text-black
                         transition-all
                         duration-500
-                        hover:px-9
+                        hover:px-7
+
+                        sm:min-h-[46px]
+                        sm:px-6
+                        sm:py-3
+                        sm:text-xs
+
+                        md:min-h-[50px]
+                        md:px-7
+                        md:text-sm
                       "
                     >
-                      مشاهده محصولات
+                      <span>مشاهده محصولات</span>
 
                       <span
                         className="
+                          text-sm
                           transition-transform
                           duration-300
                           group-hover:-translate-x-1
+
+                          sm:text-base
                         "
                       >
                         ←
@@ -526,19 +639,29 @@ export default function HeroSlider() {
                     <button
                       type="button"
                       className="
+                        min-h-[42px]
                         rounded-full
                         border
                         border-white/30
                         bg-white/5
-                        px-7
-                        py-3.5
-                        text-sm
+                        px-5
+                        py-2.5
+                        text-[11px]
                         text-white
                         backdrop-blur-md
                         transition-all
                         duration-300
                         hover:border-white/70
                         hover:bg-white/10
+
+                        sm:min-h-[46px]
+                        sm:px-6
+                        sm:py-3
+                        sm:text-xs
+
+                        md:min-h-[50px]
+                        md:px-7
+                        md:text-sm
                       "
                     >
                       درباره ما
@@ -551,102 +674,101 @@ export default function HeroSlider() {
         ))}
       </Swiper>
 
-      {/* ================= PAGINATION DOTS ================= */}
+      {/* ================= PAGINATION ================= */}
 
       <div
         className="
           absolute
-          bottom-8
+          bottom-5
           left-1/2
           z-30
           flex
           -translate-x-1/2
           items-center
-          gap-2.5
+          gap-2
           rounded-full
           border
           border-white/10
           bg-black/20
-          px-4
-          py-2.5
+          px-3
+          py-2
           backdrop-blur-xl
+
+          sm:bottom-7
+          sm:gap-2.5
+          sm:px-4
+          sm:py-2.5
         "
       >
-        {slides.map((slide, index) => (
-          <button
-            key={slide.id}
-            type="button"
-            aria-label={`رفتن به اسلاید ${index + 1}`}
-            onClick={() => goToSlide(index)}
-            ref={(el) => {
-              dotsRef.current[index] = el;
-            }}
-            className="
-              h-2
-              w-2
-              rounded-full
-              bg-white
-              opacity-45
-              transition-none
-            "
-          />
-        ))}
+        {[...slides].reverse().map((slide) => {
+          const index = slides.findIndex(
+            (item) => item.id === slide.id
+          );
+
+          return (
+            <button
+              key={slide.id}
+              type="button"
+              aria-label={`رفتن به اسلاید ${index + 1}`}
+              onClick={() => goToSlide(index)}
+              ref={(el) => {
+                dotsRef.current[index] = el;
+              }}
+              className="
+                h-1.5
+                w-1.5
+                rounded-full
+                bg-white
+                opacity-45
+                transition-none
+
+                sm:h-2
+                sm:w-2
+              "
+            />
+          );
+        })}
       </div>
 
-      {/* ================= FLOATING CONTROL ================= */}
+      {/* ================================================= */}
+      {/* LEFT SIDE CONTROLS                               */}
+      {/* ================================================= */}
 
       <div
         className="
           absolute
-          bottom-7
-          left-6
+          bottom-5
+          left-5
           z-30
           flex
           items-center
-          gap-3
-          sm:left-10
+          gap-2
+
+          sm:bottom-7
+          sm:left-8
+          sm:gap-3
+
+          lg:left-10
         "
       >
-        <button
-          type="button"
-          onClick={prevSlide}
-          className="
-            flex
-            h-12
-            w-12
-            items-center
-            justify-center
-            rounded-full
-            border
-            border-white/20
-            bg-black/20
-            text-lg
-            text-white
-            backdrop-blur-xl
-            transition-all
-            duration-300
-            hover:border-white
-            hover:bg-white
-            hover:text-black
-          "
-        >
-          ←
-        </button>
+        {/* NEXT - سمت راست */}
 
         <button
           type="button"
           onClick={nextSlide}
+          aria-label="اسلاید بعدی"
           className="
+            group
             flex
-            h-12
-            w-12
+            h-9
+            w-9
             items-center
             justify-center
             rounded-full
             border
             border-white/20
             bg-black/20
-            text-lg
+            text-sm
             text-white
             backdrop-blur-xl
             transition-all
@@ -654,25 +776,75 @@ export default function HeroSlider() {
             hover:border-white
             hover:bg-white
             hover:text-black
+
+            sm:h-11
+            sm:w-11
+
+            md:h-12
+            md:w-12
+            md:text-lg
           "
         >
-          →
+          <span className="transition-transform duration-300 group-hover:translate-x-0.5">
+            →
+          </span>
+        </button>
+
+        {/* PREVIOUS - سمت چپ */}
+
+        <button
+          type="button"
+          onClick={prevSlide}
+          aria-label="اسلاید قبلی"
+          className="
+            group
+            flex
+            h-9
+            w-9
+            items-center
+            justify-center
+            rounded-full
+            border
+            border-white/20
+            bg-black/20
+            text-sm
+            text-white
+            backdrop-blur-xl
+            transition-all
+            duration-300
+            hover:border-white
+            hover:bg-white
+            hover:text-black
+
+            sm:h-11
+            sm:w-11
+
+            md:h-12
+            md:w-12
+            md:text-lg
+          "
+        >
+          <span className="transition-transform duration-300 group-hover:-translate-x-0.5">
+            ←
+          </span>
         </button>
       </div>
 
-      {/* ================= NEXT PREVIEW ================= */}
+      {/* ================================================= */}
+      {/* NEXT PREVIEW - RIGHT SIDE                        */}
+      {/* ================================================= */}
 
       <div
         onClick={nextSlide}
         className="
           group
           absolute
-          bottom-7
-          right-6
+          bottom-5
+          right-5
           z-30
           hidden
-          h-[100px]
-          w-[175px]
+          h-[82px]
+          w-[140px]
           cursor-pointer
           overflow-hidden
           rounded-2xl
@@ -680,15 +852,30 @@ export default function HeroSlider() {
           border-white/20
           bg-black/20
           shadow-2xl
-          backdrop-blur-sm
+          backdrop-blur-md
+
+          sm:bottom-7
+          sm:right-8
           sm:block
+          sm:h-[92px]
+          sm:w-[160px]
+
+          md:h-[96px]
+          md:w-[170px]
+
           lg:right-10
+          lg:h-[105px]
+          lg:w-[185px]
         "
       >
+        {/* IMAGE */}
+
         <img
-          src={slides[(current + 1) % slides.length].image}
-          alt=""
+          src={nextSlideData.image}
+          alt={nextSlideData.title.replace("\n", " ")}
           className="
+            absolute
+            inset-0
             h-full
             w-full
             object-cover
@@ -698,29 +885,111 @@ export default function HeroSlider() {
           "
         />
 
+        {/* DARK OVERLAY */}
+
         <div
           className="
             absolute
             inset-0
+            bg-gradient-to-l
+            from-black/80
+            via-black/55
+            to-black/25
+          "
+        />
+
+        {/* CONTENT */}
+
+        <div
+          className="
+            relative
+            z-10
             flex
-            items-center
+            h-full
+            flex-col
             justify-center
-            bg-black/40
+            px-3
+            text-right
+            text-white
+
+            sm:px-4
           "
         >
-          <div className="text-center text-white">
-            <span className="block text-[10px] text-white/60">
-              اسلاید بعدی
-            </span>
+          <span
+            className="
+              text-[7px]
+              font-medium
+              tracking-wide
+              text-white/55
 
-            <span className="mt-1 block text-xs font-bold">
-              {slides[(current + 1) % slides.length].smallTitle}
-            </span>
-          </div>
+              sm:text-[8px]
+
+              lg:text-[9px]
+            "
+          >
+            اسلاید بعدی
+          </span>
+
+          <span
+            className="
+              mt-0.5
+              text-[8px]
+              text-white/60
+
+              sm:text-[9px]
+            "
+          >
+            {nextSlideData.smallTitle}
+          </span>
+
+          <h3
+            className="
+              mt-0.5
+              whitespace-pre-line
+              text-[11px]
+              font-bold
+              leading-4
+
+              sm:text-xs
+
+              lg:text-sm
+              lg:leading-5
+            "
+          >
+            {nextSlideData.title}
+          </h3>
+        </div>
+
+        {/* ARROW */}
+
+        <div
+          className="
+            absolute
+            bottom-2
+            left-2
+            z-20
+            flex
+            h-6
+            w-6
+            items-center
+            justify-center
+            rounded-full
+            bg-white/15
+            text-[10px]
+            text-white
+            backdrop-blur-md
+            transition-all
+            duration-300
+            group-hover:scale-110
+            group-hover:bg-white
+            group-hover:text-black
+          "
+        >
+          →
         </div>
       </div>
 
-      {/* ================= PAUSE ================= */}
+      {/* ================= HOVER STATE ================= */}
 
       <div
         className={`
@@ -739,10 +1008,7 @@ export default function HeroSlider() {
               : "scale-75 opacity-0"
           }
         `}
-      >
-
-      </div>
+      />
     </section>
-    
   );
 }

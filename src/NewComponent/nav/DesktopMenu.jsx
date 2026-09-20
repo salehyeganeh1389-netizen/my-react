@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function DesktopMenu() {
   return (
     <div className="hidden border-b border-[#eeeeee] lg:block">
@@ -12,7 +14,7 @@ export default function DesktopMenu() {
         "
       >
         <nav className="flex h-full items-center gap-2 xl:gap-3">
-          <NavItem text="خانه" />
+          <NavItem text="خانه" to="/" />
 
           {/* محصولات */}
           <div className="group relative flex h-full items-center">
@@ -106,9 +108,9 @@ export default function DesktopMenu() {
             </div>
           </div>
 
-          <NavItem text="مقالات" />
-          <NavItem text="درباره ما" />
-          <NavItem text="تماس با ما" />
+          <NavItem text="مقالات" to="/Articles" />
+          <NavItem text="درباره ما" to="/about" />
+          <NavItem text="تماس با ما" to="/contact" />
         </nav>
 
         {/* تلفن */}
@@ -146,10 +148,10 @@ export default function DesktopMenu() {
    Nav Item
 ========================= */
 
-function NavItem({ text }) {
+function NavItem({ text, to }) {
   return (
-    <a
-      href="#"
+    <Link
+      to={to}
       className="
         flex
         h-[38px]
@@ -168,7 +170,7 @@ function NavItem({ text }) {
       "
     >
       {text}
-    </a>
+    </Link>
   );
 }
 
@@ -240,9 +242,9 @@ function ProductCategory({ title, items }) {
         "
       >
         {items.map((item) => (
-          <a
+          <Link
             key={item}
-            href="#"
+            to={`/products/${item}`}
             className="
               flex
               h-[38px]
@@ -260,7 +262,7 @@ function ProductCategory({ title, items }) {
             "
           >
             {item}
-          </a>
+          </Link>
         ))}
       </div>
     </div>

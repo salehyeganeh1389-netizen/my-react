@@ -133,9 +133,10 @@ export default function Navbar() {
 
         <DesktopMenu />
 
-        <MobileMenu
-          mobileMenu={mobileMenu}
-        />
+<MobileMenu
+  mobileMenu={mobileMenu}
+  setMobileMenu={setMobileMenu}
+/>        
       </header>
 
       {/* =========================

@@ -106,47 +106,81 @@ export default function ProductCategories() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".categories-main-title", {
-        opacity: 0,
-        y: 70,
-        filter: "blur(10px)",
-        duration: 1,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: ".categories-main-title",
-          start: "top 85%",
-          toggleActions: "play none none none",
-        },
-      });
+      /* =================================
+         عنوان اصلی
+      ================================= */
 
-      gsap.from(".category-section", {
-        opacity: 0,
-        y: 70,
-        duration: 0.9,
-        stagger: 0.2,
-        ease: "power4.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 70%",
-          toggleActions: "play none none none",
-        },
-      });
-
-      gsap.utils.toArray(".category-card").forEach((card) => {
-        gsap.from(card, {
+      gsap.fromTo(
+        ".categories-main-title",
+        {
           opacity: 0,
-          y: 100,
-          scale: 0.86,
-          rotateX: 18,
-          filter: "blur(8px)",
+          y: 25,
+        },
+        {
+          opacity: 1,
+          y: 0,
           duration: 0.9,
-          ease: "back.out(1.4)",
+          ease: "power3.out",
+
           scrollTrigger: {
-            trigger: card,
+            trigger: ".categories-main-title",
             start: "top 88%",
             toggleActions: "play none none none",
           },
-        });
+        }
+      );
+
+      /* =================================
+         سکشن‌های دسته‌بندی
+      ================================= */
+
+      gsap.utils.toArray(".category-section").forEach((section) => {
+        gsap.fromTo(
+          section,
+          {
+            opacity: 0,
+            y: 30,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power3.out",
+
+            scrollTrigger: {
+              trigger: section,
+              start: "top 88%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+
+      /* =================================
+         کارت‌ها
+      ================================= */
+
+      gsap.utils.toArray(".category-card").forEach((card, index) => {
+        gsap.fromTo(
+          card,
+          {
+            opacity: 0,
+            y: 35,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.75,
+            delay: (index % 6) * 0.07,
+            ease: "power3.out",
+
+            scrollTrigger: {
+              trigger: card,
+              start: "top 91%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
       });
     }, sectionRef);
 
@@ -471,7 +505,7 @@ function CategoryCard({ item, index }) {
               text-white
               opacity-0
               transition-all
-              duration-300
+              duration-500
               group-hover:translate-y-0
               group-hover:opacity-100
               sm:flex
