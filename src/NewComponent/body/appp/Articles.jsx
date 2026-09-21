@@ -73,15 +73,7 @@ const articles = [
       "/file_00000000d58c820da9bfbc1b74d4fefb.png",
   },
 ];
-const categories = [
-  "همه",
-  "راهنمای انتخاب",
-  "شناخت پارچه",
-  "پارچه‌شناسی",
-  "استایل",
-  "نگهداری",
-  "راهنمای خرید",
-];
+
 
 const popularTopics = [
   {
@@ -274,61 +266,170 @@ export default function Articles() {
       {/* =====================================================
           HERO
       ===================================================== */}
+<section className="relative overflow-hidden">
 
-      <section className="relative overflow-hidden bg-[#17633f]">
-        <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/5 blur-3xl" />
+  {/* =========================
+      Background Image
+  ========================= */}
 
-        <div className="absolute -bottom-32 -right-20 h-80 w-80 rounded-full bg-black/10 blur-3xl" />
+  <img
+    src="/file_00000000d58c820da9bfbc1b74d4fefb.png"
+    alt=""
+    className="
+      absolute
+      inset-0
+      h-full
+      w-full
+      object-cover
+      object-center
+    "
+  />
 
-        <div className="relative mx-auto max-w-[1400px] px-5 py-20 sm:px-8 sm:py-24 lg:px-16 lg:py-28">
-          <div className="max-w-[720px]">
-            <div className="articles-hero-badge inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-[9px] text-white/80 backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-white" />
+  {/* =========================
+      Dark Overlay
+  ========================= */}
 
-              مجله قماش شیخ الاسلامی
-            </div>
+  <div className="absolute inset-0 bg-black/45" />
 
-            <h1 className="articles-hero-title mt-7 text-[32px] font-bold leading-[1.6] tracking-[-1px] text-white sm:text-[44px] lg:text-[54px]">
-              راهنمای انتخاب،
-              <br />
-              شناخت و خرید بهتر پارچه
-            </h1>
+  {/* =========================
+      Content
+  ========================= */}
 
-            <p className="articles-hero-text mt-5 max-w-[600px] text-[12px] leading-8 text-white/70 sm:text-[13px]">
-              مطالب کاربردی درباره انواع پارچه، روش تشخیص کیفیت،
-              انتخاب مناسب برای لباس و نکاتی که قبل از خرید باید بدانید.
-            </p>
+  <div
+    className="
+      relative
+      mx-auto
+      max-w-[1400px]
+      px-5
+      py-20
+      sm:px-8
+      sm:py-24
+      lg:px-16
+      lg:py-28
+    "
+  >
+    <div className="max-w-[720px]">
 
-            {/* Search */}
+      <div
+        className="
+          articles-hero-badge
+          inline-flex
+          items-center
+          gap-2
+          rounded-full
+          border
+          border-white/20
+          bg-black/20
+          px-4
+          py-2
+          text-[9px]
+          text-white/85
+          backdrop-blur-md
+        "
+      >
+        <span className="h-1.5 w-1.5 rounded-full bg-white" />
 
-            <div className="articles-search mt-9 max-w-[560px]">
-              <div className="flex h-[58px] items-center rounded-2xl border border-white/10 bg-white p-1.5 shadow-[0_20px_50px_rgba(0,0,0,0.12)]">
-                <div className="flex flex-1 items-center gap-3 px-4">
-                  <i className="bi bi-search text-[14px] text-[#17633f]" />
+        مجله قماش شیخ الاسلامی
+      </div>
 
-                  <input
-                    type="text"
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    placeholder="جستجو در مقالات..."
-                    className="w-full bg-transparent text-[11px] text-[#333] outline-none placeholder:text-[#aaa]"
-                  />
-                </div>
+      <h1
+        className="
+          articles-hero-title
+          mt-7
+          text-[32px]
+          font-bold
+          leading-[1.6]
+          tracking-[-1px]
+          text-white
+          sm:text-[44px]
+          lg:text-[54px]
+        "
+      >
+        راهنمای انتخاب،
+        <br />
+        شناخت و خرید بهتر پارچه
+      </h1>
 
-                {search && (
-                  <button
-                    type="button"
-                    onClick={() => setSearch("")}
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-[#999] transition-colors hover:bg-[#f3f3f0] hover:text-[#17633f]"
-                  >
-                    <i className="bi bi-x-lg text-[11px]" />
-                  </button>
-                )}
-              </div>
-            </div>
+      <p
+        className="
+          articles-hero-text
+          mt-5
+          max-w-[600px]
+          text-[12px]
+          leading-8
+          text-white/80
+          sm:text-[13px]
+        "
+      >
+        مطالب کاربردی درباره انواع پارچه، روش تشخیص کیفیت،
+        انتخاب مناسب برای لباس و نکاتی که قبل از خرید باید بدانید.
+      </p>
+
+      {/* =========================
+          Search
+      ========================= */}
+
+      <div className="articles-search mt-9 max-w-[560px]">
+        <div
+          className="
+            flex
+            h-[58px]
+            items-center
+            rounded-2xl
+            border
+            border-white/10
+            bg-white
+            p-1.5
+            shadow-[0_20px_50px_rgba(0,0,0,0.2)]
+          "
+        >
+          <div className="flex flex-1 items-center gap-3 px-4">
+            <i className="bi bi-search text-[14px] text-[#17633f]" />
+
+            <input
+              type="text"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="جستجو در مقالات..."
+              className="
+                w-full
+                bg-transparent
+                text-[11px]
+                text-[#333]
+                outline-none
+                placeholder:text-[#aaa]
+              "
+            />
           </div>
+
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              className="
+                flex
+                h-10
+                w-10
+                shrink-0
+                items-center
+                justify-center
+                rounded-xl
+                text-[#999]
+                transition-colors
+                hover:bg-[#f3f3f0]
+                hover:text-[#17633f]
+              "
+            >
+              <i className="bi bi-x-lg text-[11px]" />
+            </button>
+          )}
         </div>
-      </section>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 
       {/* =====================================================
           CATEGORIES
@@ -531,41 +632,7 @@ export default function Articles() {
 
       <section className="mx-auto max-w-[1400px] px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
 
-      <section className="sticky top-0 z-30 border-b border-[#e3e0d9] bg-[#f7f6f2]/95 backdrop-blur-md">
-        <div className="mx-auto max-w-[1400px] px-5 sm:px-8 lg:px-16">
-          <div className="flex gap-1 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {categories.map((category) => {
-              const active = activeCategory === category;
-
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  onClick={() => setActiveCategory(category)}
-                  className={`
-                    relative
-                    shrink-0
-                    rounded-lg
-                    px-5
-                    py-2.5
-                    text-[10px]
-                    font-medium
-                    transition-all
-                    duration-300
-                    ${
-                      active
-                        ? "bg-[#17633f] text-white shadow-[0_5px_18px_rgba(23,99,63,0.18)]"
-                        : "text-[#777] hover:bg-[#f0f2ed] hover:text-[#17633f]"
-                    }
-                  `}
-                >
-                  {category}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+     
 
         <div className="premium-reveal mb-9 flex items-end justify-between">
           <div>

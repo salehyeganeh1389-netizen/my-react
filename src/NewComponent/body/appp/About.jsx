@@ -221,7 +221,7 @@ export default function About() {
             "
           >
             <img
-              src="https://ghomasherohani.ir/images/mr-rohani-pic.jpg"
+              src="/file_00000000d58c820da9bfbc1b74d4fefb.png"
               alt="قماش شیخ الاسلامی"
               className="
                 h-full
@@ -442,17 +442,15 @@ export default function About() {
         title="ضمانت و اعتماد"
         text="تلاش می‌کنیم خرید شما با اطمینان، شفافیت و تجربه‌ای مطمئن همراه باشد."
       />
-
       <Feature
         number="02"
-        image="./undraw_message-sent_iyz6.svg"
+        image="./undraw_mail-sent_dagx.svg"
         title="کیفیت و تنوع بالا"
         text="انتخاب محصولاتی متنوع با تمرکز بر کیفیت، ظاهر و ارزش واقعی خرید."
       />
-
       <Feature
         number="03"
-        image="./undraw_user-feedback_5fp8.svg"
+        image="./undraw_mail-sent_dagx.svg"
         title="پشتیبانی آنلاین"
         text="در مسیر انتخاب و خرید، ارتباط و پشتیبانی را بخشی از تجربه مشتری می‌دانیم."
       />

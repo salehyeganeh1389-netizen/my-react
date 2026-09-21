@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import logo from "../../assets/file_0000000068e481f5a07d2dd86cdc6e45.png";
 
 export default function NavbarTop({
@@ -13,9 +14,7 @@ export default function NavbarTop({
         duration-500
         ${
           scrolled
-            ? "border-transparent"
-            : "border-b border-[#eeeeee]"
-        }
+                    }
       `}
     >
       <div
@@ -70,7 +69,7 @@ export default function NavbarTop({
             لوگو
         ========================= */}
         <a
-          href="#"
+          href="/"
           aria-label="قماش شیخ الاسلامی"
           className={`
             flex
@@ -203,6 +202,8 @@ function SearchBox({ scrolled = false }) {
 ========================= */
 
 function NavbarActions({ scrolled = false }) {
+  const navigate = useNavigate();
+
   return (
     <div
       className={`
@@ -270,6 +271,7 @@ function NavbarActions({ scrolled = false }) {
       ========================= */}
       <button
         type="button"
+        onClick={() => navigate("/login")}
         aria-label="ورود یا ثبت نام"
         className={`
           group

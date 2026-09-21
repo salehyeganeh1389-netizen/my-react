@@ -1,183 +1,150 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode } from "swiper/modules";
+import { FreeMode, Navigation } from "swiper/modules";
+
+import { Link } from "react-router-dom";
 
 import "swiper/css";
+import "swiper/css/navigation";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const categories = {
-  fabric: [
-    {
-      title: "پارچه مجلسی",
-      subtitle: "پارچه‌های خاص و شیک",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/fabric/formal",
-    },
-    {
-      title: "پارچه مجلسی",
-      subtitle: "پارچه‌های خاص و شیک",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/fabric/formal",
-    },
-    {
-      title: "پارچه مجلسی",
-      subtitle: "پارچه‌های خاص و شیک",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/fabric/formal",
-    },
-    {
-      title: "پارچه نخی",
-      subtitle: "سبک، خنک و راحت",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/fabric/cotton",
-    },
-    {
-      title: "پارچه تابستانی",
-      subtitle: "مناسب روزهای گرم",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/fabric/summer",
-    },
-    {
-      title: "پارچه زمستانی",
-      subtitle: "گرم و باکیفیت",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/fabric/winter",
-    },
-  ],
-
-  clothing: [
-    {
-      title: "تیشرت",
-      subtitle: "تیشرت‌های روزمره و اسپرت",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/clothing/tshirt",
-    },
-    {
-      title: "تیشرت",
-      subtitle: "تیشرت‌های روزمره و اسپرت",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/clothing/tshirt",
-    },
-    {
-      title: "تیشرت",
-      subtitle: "تیشرت‌های روزمره و اسپرت",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/clothing/tshirt",
-    },
-    {
-      title: "شلوار",
-      subtitle: "مدل‌های متنوع مردانه",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/clothing/pants",
-    },
-    {
-      title: "لباس مردانه",
-      subtitle: "استایل مردانه",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/clothing/men",
-    },
-    {
-      title: "لباس زنانه",
-      subtitle: "انتخاب‌های متنوع زنانه",
-      image:
-        "https://down-th.img.susercontent.com/file/a3102014a9dee1d9d105ef1183d403ee",
-      link: "/products/clothing/women",
-    },
-  ],
-};
+const API_URL = "https://fakestoreapi.com/products";
 
 export default function ProductCategories() {
   const sectionRef = useRef(null);
 
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    async function getProducts() {
+      try {
+        setLoading(true);
+
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+          throw new Error("Products not found");
+        }
+
+        const data = await response.json();
+
+        setProducts(data);
+      } catch (error) {
+        console.error(error);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getProducts();
+  }, []);
+
+  /*
+    Fake Store API = 20 محصول
+    نصف اول = پارچه
+    نصف دوم = پوشاک
+  */
+
+  const fabricProducts = products.slice(0, Math.ceil(products.length / 2));
+
+  const clothingProducts = products.slice(Math.ceil(products.length / 2));
+
   useLayoutEffect(() => {
+    if (loading || !products.length) return;
+
     const ctx = gsap.context(() => {
-      /* =================================
-         عنوان اصلی
-      ================================= */
+      /* عنوان اصلی */
 
       gsap.fromTo(
         ".categories-main-title",
         {
           opacity: 0,
-          y: 25,
+          clipPath: "inset(0 100% 0 0)",
         },
         {
           opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: "power3.out",
+          clipPath: "inset(0 0% 0 0)",
+          duration: 0.8,
+          ease: "power3.inOut",
 
           scrollTrigger: {
             trigger: ".categories-main-title",
             start: "top 88%",
-            toggleActions: "play none none none",
+            once: true,
           },
         }
       );
 
-      /* =================================
-         سکشن‌های دسته‌بندی
-      ================================= */
+      /* سکشن‌ها */
 
       gsap.utils.toArray(".category-section").forEach((section) => {
+        const header = section.querySelector(".category-header");
+        const cards = section.querySelectorAll(".category-card");
+        const images = section.querySelectorAll(".category-card-image");
+
         gsap.fromTo(
-          section,
+          header,
           {
             opacity: 0,
-            y: 30,
+            clipPath: "inset(0 100% 0 0)",
           },
           {
             opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power3.out",
+            clipPath: "inset(0 0% 0 0)",
+            duration: 0.65,
+            ease: "power3.inOut",
 
             scrollTrigger: {
               trigger: section,
               start: "top 88%",
-              toggleActions: "play none none none",
+              once: true,
             },
           }
         );
-      });
 
-      /* =================================
-         کارت‌ها
-      ================================= */
-
-      gsap.utils.toArray(".category-card").forEach((card, index) => {
         gsap.fromTo(
-          card,
+          cards,
           {
             opacity: 0,
-            y: 35,
+            clipPath: "inset(0 0 100% 0)",
           },
           {
             opacity: 1,
-            y: 0,
+            clipPath: "inset(0 0 0% 0)",
             duration: 0.75,
-            delay: (index % 6) * 0.07,
+            stagger: 0.09,
+            ease: "power3.inOut",
+
+            scrollTrigger: {
+              trigger: section,
+              start: "top 82%",
+              once: true,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          images,
+          {
+            scale: 1.12,
+          },
+          {
+            scale: 1,
+            duration: 1.1,
+            stagger: 0.09,
             ease: "power3.out",
 
             scrollTrigger: {
-              trigger: card,
-              start: "top 91%",
-              toggleActions: "play none none none",
+              trigger: section,
+              start: "top 82%",
+              once: true,
             },
           }
         );
@@ -185,7 +152,20 @@ export default function ProductCategories() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [loading, products]);
+
+  if (error) {
+    return (
+      <section
+        dir="rtl"
+        className="mx-auto w-full max-w-[1650px] px-4 py-20 text-center"
+      >
+        <p className="text-sm text-red-500">
+          دریافت محصولات با خطا مواجه شد.
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -202,7 +182,7 @@ export default function ProductCategories() {
         lg:py-20
       "
     >
-      {/* عنوان اصلی */}
+      {/* عنوان */}
 
       <div className="categories-main-title mb-8 sm:mb-10 lg:mb-12">
         <h2
@@ -230,39 +210,45 @@ export default function ProductCategories() {
         </p>
       </div>
 
-      {/* دسته پارچه */}
+      {loading ? (
+        <CategoriesSkeleton />
+      ) : (
+        <>
+          {/* پارچه */}
 
-      <div className="category-section">
-        <CategorySection
-          title="پارچه"
-          subtitle="انتخابی از پارچه‌های باکیفیت"
-          items={categories.fabric}
-        />
-      </div>
+          <div className="category-section">
+            <CategorySection
+              title="پارچه"
+              subtitle="انتخابی از محصولات پارچه"
+              items={fabricProducts}
+              type="fabric"
+            />
+          </div>
 
-      {/* دسته پوشاک */}
+          {/* پوشاک */}
 
-      <div className="category-section mt-14 sm:mt-16 lg:mt-20">
-        <CategorySection
-          title="پوشاک"
-          subtitle="استایل خود را از اینجا انتخاب کنید"
-          items={categories.clothing}
-        />
-      </div>
+          <div className="category-section mt-14 sm:mt-16 lg:mt-20">
+            <CategorySection
+              title="پوشاک"
+              subtitle="مجموعه‌ای از پوشاک فروشگاه"
+              items={clothingProducts}
+              type="clothing"
+            />
+          </div>
+        </>
+      )}
     </section>
   );
 }
 
-/* =========================
-   Category Section
-========================= */
+/* =====================================================
+   CATEGORY SECTION
+===================================================== */
 
-function CategorySection({ title, subtitle, items }) {
+function CategorySection({ title, subtitle, items, type }) {
   return (
     <div>
-      {/* عنوان دسته */}
-
-      <div className="mb-5 flex items-end sm:mb-6">
+      <div className="category-header mb-5 flex items-end sm:mb-6">
         <div>
           <h3
             className="
@@ -289,8 +275,8 @@ function CategorySection({ title, subtitle, items }) {
           </p>
         </div>
 
-        <a
-          href="#"
+        <Link
+          to={`/products/${type}`}
           className="
             group
             mr-auto
@@ -321,7 +307,7 @@ function CategorySection({ title, subtitle, items }) {
               sm:text-[12px]
             "
           />
-        </a>
+        </Link>
       </div>
 
       {/* موبایل */}
@@ -336,56 +322,133 @@ function CategorySection({ title, subtitle, items }) {
           }}
           slidesPerView="auto"
           spaceBetween={12}
-          loop={true}
-          grabCursor={true}
-          resistance={true}
+          grabCursor
+          resistance
           resistanceRatio={0.7}
           className="!overflow-visible"
         >
           {items.map((item, index) => (
             <SwiperSlide
-              key={`${item.title}-mobile-${index}`}
+              key={`${item.id}-mobile`}
               className="!w-[190px]"
             >
-              <CategoryCard item={item} index={index} />
+              <CategoryCard
+                item={item}
+                index={index}
+                type={type}
+              />
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
 
-      {/* تبلت و دسکتاپ */}
+      {/* دسکتاپ */}
 
-      <div
-        className="
-          hidden
-          sm:grid
-          sm:grid-cols-3
-          sm:gap-4
-          lg:flex
-          lg:flex-wrap
-          lg:gap-4
-        "
-      >
-        {items.map((item, index) => (
-          <CategoryCard
-            key={`${item.title}-${index}`}
-            item={item}
-            index={index}
-          />
-        ))}
+      <div className="relative hidden sm:block">
+        <Swiper
+          modules={[Navigation]}
+          navigation={{
+            nextEl: `.next-${type}`,
+            prevEl: `.prev-${type}`,
+          }}
+          slidesPerView={3}
+          spaceBetween={16}
+          breakpoints={{
+            640: {
+              slidesPerView: 3,
+            },
+            1024: {
+              slidesPerView: 4,
+            },
+            1280: {
+              slidesPerView: 5,
+            },
+            1536: {
+              slidesPerView: 6,
+            },
+          }}
+        >
+          {items.map((item, index) => (
+            <SwiperSlide key={item.id}>
+              <CategoryCard
+                item={item}
+                index={index}
+                type={type}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        {/* دکمه قبلی */}
+
+        <button
+          className={`
+            prev-${type}
+            absolute
+            -right-5
+            top-1/2
+            z-20
+            flex
+            h-10
+            w-10
+            -translate-y-1/2
+            items-center
+            justify-center
+            rounded-full
+            border
+            border-[#e5e5e5]
+            bg-white
+            text-[#333]
+            shadow-sm
+            transition
+            hover:bg-[#173a2c]
+            hover:text-white
+          `}
+        >
+          <i className="bi bi-arrow-right" />
+        </button>
+
+        {/* دکمه بعدی */}
+
+        <button
+          className={`
+            next-${type}
+            absolute
+            -left-5
+            top-1/2
+            z-20
+            flex
+            h-10
+            w-10
+            -translate-y-1/2
+            items-center
+            justify-center
+            rounded-full
+            border
+            border-[#e5e5e5]
+            bg-white
+            text-[#333]
+            shadow-sm
+            transition
+            hover:bg-[#173a2c]
+            hover:text-white
+          `}
+        >
+          <i className="bi bi-arrow-left" />
+        </button>
       </div>
     </div>
   );
 }
 
-/* =========================
-   Category Card
-========================= */
+/* =====================================================
+   CARD
+===================================================== */
 
-function CategoryCard({ item, index }) {
+function CategoryCard({ item, index, type }) {
   return (
-    <a
-      href={item.link}
+    <Link
+      to={`/products/${type}/${item.id}`}
       className="
         category-card
         group
@@ -396,19 +459,15 @@ function CategoryCard({ item, index }) {
         rounded-[12px]
         bg-[#eee]
         sm:rounded-[14px]
-        lg:w-[210px]
-        xl:w-[220px]
-        2xl:w-[230px]
       "
     >
       <div className="relative aspect-square overflow-hidden">
-        {/* تصویر */}
-
         <img
           src={item.image}
           alt={item.title}
           loading="lazy"
           className="
+            category-card-image
             absolute
             inset-0
             h-full
@@ -428,7 +487,7 @@ function CategoryCard({ item, index }) {
             absolute
             inset-0
             bg-gradient-to-t
-            from-black/75
+            from-black/80
             via-black/10
             to-transparent
           "
@@ -450,7 +509,7 @@ function CategoryCard({ item, index }) {
             sm:text-[9px]
           "
         >
-          0{index + 1}
+          {String(index + 1).padStart(2, "0")}
         </span>
 
         {/* محتوا */}
@@ -468,8 +527,10 @@ function CategoryCard({ item, index }) {
         >
           <h4
             className="
+              line-clamp-2
               text-[12px]
               font-bold
+              leading-5
               text-white
               sm:text-[14px]
               lg:text-[15px]
@@ -480,19 +541,14 @@ function CategoryCard({ item, index }) {
 
           <p
             className="
-              mt-0.5
-              truncate
-              text-[8px]
-              text-white/65
-              sm:mt-1
-              sm:text-[9px]
-              lg:text-[10px]
+              mt-1
+              text-[9px]
+              text-white/70
+              sm:text-[10px]
             "
           >
-            {item.subtitle}
+            {formatPrice(item.price)}
           </p>
-
-          {/* مشاهده محصولات */}
 
           <div
             className="
@@ -509,10 +565,9 @@ function CategoryCard({ item, index }) {
               group-hover:translate-y-0
               group-hover:opacity-100
               sm:flex
-              sm:mt-3
             "
           >
-            مشاهده محصولات
+            مشاهده محصول
 
             <span
               className="
@@ -531,6 +586,48 @@ function CategoryCard({ item, index }) {
           </div>
         </div>
       </div>
-    </a>
+    </Link>
   );
+}
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+function CategoriesSkeleton() {
+  return (
+    <div className="space-y-12">
+      {[1, 2].map((section) => (
+        <div key={section}>
+          <div className="mb-6">
+            <div className="h-5 w-24 animate-pulse rounded bg-gray-200" />
+
+            <div className="mt-2 h-3 w-48 animate-pulse rounded bg-gray-100" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {[1, 2, 3, 4, 5].map((item) => (
+              <div
+                key={item}
+                className="
+                  aspect-square
+                  animate-pulse
+                  rounded-[14px]
+                  bg-gray-200
+                "
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* =====================================================
+   PRICE
+===================================================== */
+
+function formatPrice(price) {
+  return `$${Number(price).toLocaleString("en-US")}`;
 }

@@ -1,4 +1,5 @@
 import logo from "../../assets/file_0000000068e481f5a07d2dd86cdc6e45.png";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -8,6 +9,7 @@ export default function Footer() {
             بخش اصلی
         ========================= */}
         <div className="grid grid-cols-1 gap-9 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
+          
           {/* معرفی */}
           <div className="lg:col-span-1">
             <img
@@ -32,20 +34,20 @@ export default function Footer() {
 
           {/* راهنمای خرید */}
           <FooterColumn title="راهنمای خرید">
-            <FooterLink text="نحوه ثبت سفارش" />
-            <FooterLink text="روش‌های ارسال" />
-            <FooterLink text="پیگیری سفارش" />
-            <FooterLink text="مرجوعی و تعویض" />
-            <FooterLink text="پرسش‌های متداول" />
+            <FooterLink text="نحوه ثبت سفارش" to="/order" />
+            <FooterLink text="روش‌های ارسال" to="/shipping" />
+            <FooterLink text="پیگیری سفارش" to="/tracking" />
+            <FooterLink text="مرجوعی و تعویض" to="/return" />
+            <FooterLink text="پرسش‌های متداول" to="/faq" />
           </FooterColumn>
 
           {/* پیوندها */}
           <FooterColumn title="پیوندها">
-            <FooterLink text="صفحه اصلی" />
-            <FooterLink text="محصولات" />
-            <FooterLink text="مقالات" />
-            <FooterLink text="درباره ما" />
-            <FooterLink text="تماس با ما" />
+            <FooterLink text="صفحه اصلی" to="/" />
+            <FooterLink text="محصولات" to="/products" />
+            <FooterLink text="مقالات" to="/articles" />
+            <FooterLink text="درباره ما" to="/about" />
+            <FooterLink text="تماس با ما" to="/contact" />
           </FooterColumn>
 
           {/* شعبه */}
@@ -59,8 +61,7 @@ export default function Footer() {
                 <i className="bi bi-geo-alt mt-1 shrink-0 text-[14px] text-[#166534]" />
 
                 <span>
-                  مشهد، خیابان سناباد، سناباد 19،
-                 پلاک 225
+                  مشهد، خیابان سناباد، سناباد 19، پلاک 225
                 </span>
               </div>
 
@@ -91,30 +92,22 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* =========================
-            خط جداکننده
-        ========================= */}
+        {/* خط جداکننده */}
         <div className="my-8 h-px bg-[#e8e5df]" />
 
-        {/* =========================
-            پایین فوتر
-        ========================= */}
+        {/* پایین فوتر */}
         <div
           className="
             flex
             flex-col
             items-center
-            justify-between
+            justify-center
             gap-3
             text-center
             sm:flex-row
             sm:text-right
           "
         >
-          <p className="text-[11px] text-[#777]">
-            تمامی حقوق این وب‌سایت محفوظ است ©
-          </p>
-
           <p className="text-[11px] text-[#777]">
             توسعه داده شده توسط{" "}
             <a
@@ -123,6 +116,10 @@ export default function Footer() {
             >
               نیکان های تک
             </a>
+          </p>
+
+          <p className="text-[11px] text-[#777]">
+            تمامی حقوق این وب‌سایت محفوظ است ©
           </p>
         </div>
       </div>
@@ -152,10 +149,10 @@ function FooterColumn({ title, children }) {
    Footer Link
 ========================= */
 
-function FooterLink({ text }) {
+function FooterLink({ text, to }) {
   return (
-    <a
-      href="#"
+    <Link
+      to={to}
       className="
         text-[12px]
         text-[#666]
@@ -166,7 +163,7 @@ function FooterLink({ text }) {
       "
     >
       {text}
-    </a>
+    </Link>
   );
 }
 
