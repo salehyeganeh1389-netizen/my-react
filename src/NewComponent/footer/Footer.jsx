@@ -102,7 +102,6 @@ export default function Footer() {
             flex-col
             items-center
             justify-center
-            gap-3
             text-center
             sm:flex-row
             sm:text-right
@@ -114,7 +113,7 @@ export default function Footer() {
               href="#"
               className="font-medium text-[#166534] transition hover:text-[#bd9257]"
             >
-              نیکان های تک
+              صالح یگانه
             </a>
           </p>
 

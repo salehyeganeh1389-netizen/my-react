@@ -9,8 +9,13 @@ import Articles from "./NewComponent/body/appp/Articles";
 import BodyAll from "./NewComponent/body/BodyAll";
 import Contact from "./NewComponent/body/appp/Contact";
 import Login from "./NewComponent/pagee/Login";
+
+import ArticleDetail from "./NewComponent/body/appp/ArticleDetail";
+
+import ProductsOverview from "./NewComponent/body/card/ProductsOverview";
 import ProductsPage from "./NewComponent/body/card/ProductsPage";
-// import ProductCategories from "./NewComponent/body/card/ProductCategories";
+import CategoryProductsPage from "./NewComponent/body/card/CategoryProductsPage";
+import ProductDetail from "./NewComponent/body/card/ProductDetail";
 
 // ========================================
 // Page Transition
@@ -38,6 +43,24 @@ function PageTransition() {
 }
 
 // ========================================
+// Scroll To Top
+// ========================================
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "instant",
+    });
+  }, [pathname]);
+
+  return null;
+}
+
+// ========================================
 // App Content
 // ========================================
 
@@ -50,10 +73,8 @@ function AppContent() {
     <>
       <PageTransition />
 
-      {/* ========================================
-          Login Page
-          بدون Navbar و Footer
-      ======================================== */}
+      {/* با هر تغییر صفحه، صفحه از بالا شروع می‌شود */}
+      <ScrollToTop />
 
       {isLoginPage ? (
         <Routes>
@@ -61,38 +82,74 @@ function AppContent() {
         </Routes>
       ) : (
         <>
-          {/* ========================================
-              Navbar
-          ======================================== */}
-
           <Navbar />
 
-          {/* ========================================
-              Main Routes
-          ======================================== */}
+          <Routes>
+            {/* ========================================
+                صفحه اصلی
+            ======================================== */}
 
-       <Routes>
-  <Route
-    path="/products/:type"
-    element={<ProductsPage />}
-  />
+            <Route
+              path="/"
+              element={<BodyAll />}
+            />
 
-  {/* <Route
-    path="/products/:type/:id"
-    element={<ProductCategories />}
-  /> */}
+            {/* ========================================
+                مقالات
+            ======================================== */}
 
-  <Route path="/" element={<BodyAll />} />
+            <Route
+              path="/articles"
+              element={<Articles />}
+            />
 
-  <Route path="/articles" element={<Articles />} />
+            <Route
+              path="/articles/:id"
+              element={<ArticleDetail />}
+            />
 
-  <Route path="/about" element={<About />} />
+            {/* ========================================
+                درباره ما
+            ======================================== */}
 
-  <Route path="/contact" element={<Contact />} />
-</Routes>
-          {/* ========================================
-              Footer
-          ======================================== */}
+            <Route
+              path="/about"
+              element={<About />}
+            />
+
+            {/* ========================================
+                تماس با ما
+            ======================================== */}
+
+            <Route
+              path="/contact"
+              element={<Contact />}
+            />
+
+            {/* ========================================
+                محصولات
+            ======================================== */}
+
+            <Route
+              path="/products"
+              element={<ProductsOverview />}
+            />
+
+            <Route
+              path="/products/:type"
+              element={<ProductsPage />}
+            />
+
+            <Route
+              path="/products/:type/:categoryId"
+              element={<CategoryProductsPage />}
+            />
+
+            <Route
+              path="/product/:id"
+              element={<ProductDetail />}
+            />
+          </Routes>
 
           <Footer />
         </>

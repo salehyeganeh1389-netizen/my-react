@@ -7,18 +7,14 @@ export default function ProductsPage() {
   const { type } = useParams();
 
   const [products, setProducts] = useState([]);
-
   const [loading, setLoading] = useState(true);
 
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
   const [category, setCategory] = useState("all");
-
   const [rating, setRating] = useState("all");
-
   const [sort, setSort] = useState("default");
-
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -34,16 +30,29 @@ export default function ProductsPage() {
 
         const data = await response.json();
 
+        /*
+          FakeStore = 20 محصول
+
+          محصولات 1 تا 10 → پارچه
+          محصولات 11 تا 20 → پوشاک
+        */
+
         const half = Math.ceil(data.length / 2);
 
-        const result =
-          type === "fabric"
-            ? data.slice(0, half)
-            : data.slice(half);
+        let result = [];
+
+        if (type === "fabric") {
+          result = data.slice(0, half);
+        }
+
+        if (type === "clothing") {
+          result = data.slice(half);
+        }
 
         setProducts(result);
       } catch (error) {
         console.error(error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
@@ -52,19 +61,22 @@ export default function ProductsPage() {
     getProducts();
   }, [type]);
 
-  /* دسته‌های موجود */
+  /*
+    دسته‌بندی‌های موجود
+  */
 
   const categories = useMemo(() => {
     return [...new Set(products.map((item) => item.category))];
   }, [products]);
 
-  /* فیلتر */
+  /*
+    فیلتر و مرتب‌سازی
+  */
 
   const filteredProducts = useMemo(() => {
     let result = [...products];
 
-    /* سرچ */
-
+    // جستجو
     if (search.trim()) {
       result = result.filter((product) =>
         product.title
@@ -73,38 +85,35 @@ export default function ProductsPage() {
       );
     }
 
-    /* قیمت */
-
+    // حداقل قیمت
     if (minPrice !== "") {
       result = result.filter(
         (product) => product.price >= Number(minPrice)
       );
     }
 
+    // حداکثر قیمت
     if (maxPrice !== "") {
       result = result.filter(
         (product) => product.price <= Number(maxPrice)
       );
     }
 
-    /* دسته */
-
+    // دسته‌بندی
     if (category !== "all") {
       result = result.filter(
         (product) => product.category === category
       );
     }
 
-    /* امتیاز */
-
+    // امتیاز
     if (rating !== "all") {
       result = result.filter(
         (product) => product.rating.rate >= Number(rating)
       );
     }
 
-    /* مرتب‌سازی */
-
+    // مرتب‌سازی
     if (sort === "price-low") {
       result.sort((a, b) => a.price - b.price);
     }
@@ -136,6 +145,10 @@ export default function ProductsPage() {
     sort,
   ]);
 
+  /*
+    پاک کردن فیلترها
+  */
+
   const resetFilters = () => {
     setMinPrice("");
     setMaxPrice("");
@@ -145,10 +158,40 @@ export default function ProductsPage() {
     setSearch("");
   };
 
+  /*
+    عنوان صفحه
+  */
+
   const title =
     type === "fabric"
       ? "پارچه"
-      : "پوشاک";
+      : type === "clothing"
+      ? "پوشاک"
+      : "محصولات";
+
+  /*
+    اگر آدرس اشتباه باشد
+  */
+
+  if (type !== "fabric" && type !== "clothing") {
+    return (
+      <main
+        dir="rtl"
+        className="mx-auto max-w-[1500px] px-4 py-20 text-center"
+      >
+        <h1 className="text-xl font-bold text-[#173a2c]">
+          دسته‌بندی پیدا نشد
+        </h1>
+
+        <Link
+          to="/"
+          className="mt-5 inline-block text-sm text-[#166534]"
+        >
+          بازگشت به صفحه اصلی
+        </Link>
+      </main>
+    );
+  }
 
   return (
     <main
@@ -163,11 +206,11 @@ export default function ProductsPage() {
         lg:py-16
       "
     >
-      {/* Header */}
+      {/* HEADER */}
 
       <div className="mb-8">
         <p className="mb-2 text-xs text-[#999]">
-          قماش شیخ الاسلامی / فروشگاه
+          قماش شیخ الاسلامی / فروشگاه / {title}
         </p>
 
         <div className="flex items-end justify-between gap-4">
@@ -232,7 +275,7 @@ export default function ProductsPage() {
             </button>
           </div>
 
-          {/* سرچ */}
+          {/* SEARCH */}
 
           <FilterTitle title="جستجو" />
 
@@ -255,7 +298,7 @@ export default function ProductsPage() {
             "
           />
 
-          {/* قیمت */}
+          {/* PRICE */}
 
           <FilterTitle title="محدوده قیمت" />
 
@@ -295,7 +338,7 @@ export default function ProductsPage() {
             />
           </div>
 
-          {/* دسته */}
+          {/* CATEGORY */}
 
           <FilterTitle title="دسته‌بندی" />
 
@@ -316,7 +359,7 @@ export default function ProductsPage() {
             ))}
           </div>
 
-          {/* امتیاز */}
+          {/* RATING */}
 
           <FilterTitle title="امتیاز" />
 
@@ -519,7 +562,7 @@ function ProductCard({ product, type }) {
 }
 
 /* =====================================================
-   FILTER COMPONENTS
+   FILTER TITLE
 ===================================================== */
 
 function FilterTitle({ title }) {
@@ -529,6 +572,10 @@ function FilterTitle({ title }) {
     </h3>
   );
 }
+
+/* =====================================================
+   FILTER RADIO
+===================================================== */
 
 function FilterRadio({ active, onClick, text }) {
   return (

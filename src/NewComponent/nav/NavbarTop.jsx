@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import logo from "../../assets/file_0000000068e481f5a07d2dd86cdc6e45.png";
+import logo from "/qomash_sheikh_eslami_logo_transparent-3.png";
 
 export default function NavbarTop({
   mobileMenu,

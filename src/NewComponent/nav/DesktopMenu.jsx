@@ -17,9 +17,10 @@ export default function DesktopMenu() {
           <NavItem text="خانه" to="/" />
 
           {/* محصولات */}
+
           <div className="group relative flex h-full items-center">
-            <button
-              type="button"
+            <Link
+              to="/products"
               className="
                 flex
                 h-[38px]
@@ -50,9 +51,10 @@ export default function DesktopMenu() {
                   group-hover:rotate-180
                 "
               />
-            </button>
+            </Link>
 
             {/* منوی محصولات */}
+
             <div
               className="
                 invisible
@@ -76,33 +78,69 @@ export default function DesktopMenu() {
                 group-hover:opacity-100
               "
             >
+              {/* پارچه */}
+
               <ProductCategory
                 title="پارچه"
+                to="/products/fabric"
                 items={[
-                  "پارچه مجلسی",
-                  "پارچه نخی",
-                  "پارچه تابستانی",
-                  "پارچه زمستانی",
+                  {
+                    title: "پارچه کتان",
+                    to: "/products/fabric/cotton",
+                  },
+                  {
+                    title: "پارچه لینن",
+                    to: "/products/fabric/linen",
+                  },
+                  {
+                    title: "پارچه رسمی",
+                    to: "/products/fabric/formal",
+                  },
+                  {
+                    title: "پارچه کژوال",
+                    to: "/products/fabric/casual",
+                  },
+                  {
+                    title: "پارچه کلاسیک",
+                    to: "/products/fabric/classic",
+                  },
+                  {
+                    title: "پارچه ویژه",
+                    to: "/products/fabric/special",
+                  },
                 ]}
               />
+
+              {/* پوشاک */}
 
               <ProductCategory
                 title="پوشاک"
+                to="/products/clothing"
                 items={[
-                  "تیشرت",
-                  "شلوار",
-                  "لباس مردانه",
-                  "لباس زنانه",
-                ]}
-              />
-
-              <ProductCategory
-                title="سایر محصولات"
-                items={[
-                  "جوراب",
-                  "حوله",
-                  "محصولات جدید",
-                  "پرفروش‌ها",
+                  {
+                    title: "تی‌شرت",
+                    to: "/products/clothing/tshirt",
+                  },
+                  {
+                    title: "شلوار",
+                    to: "/products/clothing/pants",
+                  },
+                  {
+                    title: "جوراب",
+                    to: "/products/clothing/socks",
+                  },
+                  {
+                    title: "حوله",
+                    to: "/products/clothing/towel",
+                  },
+                  {
+                    title: "پیراهن",
+                    to: "/products/clothing/shirt",
+                  },
+                  {
+                    title: "لباس راحتی",
+                    to: "/products/clothing/homewear",
+                  },
                 ]}
               />
             </div>
@@ -114,6 +152,7 @@ export default function DesktopMenu() {
         </nav>
 
         {/* تلفن */}
+
         <a
           href="tel:02532939863"
           className="
@@ -178,11 +217,11 @@ function NavItem({ text, to }) {
    Product Category
 ========================= */
 
-function ProductCategory({ title, items }) {
+function ProductCategory({ title, to, items }) {
   return (
     <div className="group/category relative">
-      <button
-        type="button"
+      <Link
+        to={to}
         className="
           flex
           h-[40px]
@@ -214,9 +253,10 @@ function ProductCategory({ title, items }) {
             group-hover/category:text-[#166534]
           "
         />
-      </button>
+      </Link>
 
       {/* زیرمنو */}
+
       <div
         className="
           invisible
@@ -243,8 +283,8 @@ function ProductCategory({ title, items }) {
       >
         {items.map((item) => (
           <Link
-            key={item}
-            to={`/products/${item}`}
+            key={item.to}
+            to={item.to}
             className="
               flex
               h-[38px]
@@ -261,7 +301,7 @@ function ProductCategory({ title, items }) {
               hover:text-[#15803d]
             "
           >
-            {item}
+            {item.title}
           </Link>
         ))}
       </div>

@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
+import { Link } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -73,7 +73,6 @@ const articles = [
       "/file_00000000d58c820da9bfbc1b74d4fefb.png",
   },
 ];
-
 
 const popularTopics = [
   {
@@ -266,179 +265,156 @@ export default function Articles() {
       {/* =====================================================
           HERO
       ===================================================== */}
-<section className="relative overflow-hidden">
 
-  {/* =========================
-      Background Image
-  ========================= */}
+      <section className="relative overflow-hidden">
+        <img
+          src="/file_00000000d58c820da9bfbc1b74d4fefb.png"
+          alt=""
+          className="
+            absolute
+            inset-0
+            h-full
+            w-full
+            object-cover
+            object-center
+          "
+        />
 
-  <img
-    src="/file_00000000d58c820da9bfbc1b74d4fefb.png"
-    alt=""
-    className="
-      absolute
-      inset-0
-      h-full
-      w-full
-      object-cover
-      object-center
-    "
-  />
+        <div className="absolute inset-0 bg-black/45" />
 
-  {/* =========================
-      Dark Overlay
-  ========================= */}
-
-  <div className="absolute inset-0 bg-black/45" />
-
-  {/* =========================
-      Content
-  ========================= */}
-
-  <div
-    className="
-      relative
-      mx-auto
-      max-w-[1400px]
-      px-5
-      py-20
-      sm:px-8
-      sm:py-24
-      lg:px-16
-      lg:py-28
-    "
-  >
-    <div className="max-w-[720px]">
-
-      <div
-        className="
-          articles-hero-badge
-          inline-flex
-          items-center
-          gap-2
-          rounded-full
-          border
-          border-white/20
-          bg-black/20
-          px-4
-          py-2
-          text-[9px]
-          text-white/85
-          backdrop-blur-md
-        "
-      >
-        <span className="h-1.5 w-1.5 rounded-full bg-white" />
-
-        مجله قماش شیخ الاسلامی
-      </div>
-
-      <h1
-        className="
-          articles-hero-title
-          mt-7
-          text-[32px]
-          font-bold
-          leading-[1.6]
-          tracking-[-1px]
-          text-white
-          sm:text-[44px]
-          lg:text-[54px]
-        "
-      >
-        راهنمای انتخاب،
-        <br />
-        شناخت و خرید بهتر پارچه
-      </h1>
-
-      <p
-        className="
-          articles-hero-text
-          mt-5
-          max-w-[600px]
-          text-[12px]
-          leading-8
-          text-white/80
-          sm:text-[13px]
-        "
-      >
-        مطالب کاربردی درباره انواع پارچه، روش تشخیص کیفیت،
-        انتخاب مناسب برای لباس و نکاتی که قبل از خرید باید بدانید.
-      </p>
-
-      {/* =========================
-          Search
-      ========================= */}
-
-      <div className="articles-search mt-9 max-w-[560px]">
         <div
           className="
-            flex
-            h-[58px]
-            items-center
-            rounded-2xl
-            border
-            border-white/10
-            bg-white
-            p-1.5
-            shadow-[0_20px_50px_rgba(0,0,0,0.2)]
+            relative
+            mx-auto
+            max-w-[1400px]
+            px-5
+            py-20
+            sm:px-8
+            sm:py-24
+            lg:px-16
+            lg:py-28
           "
         >
-          <div className="flex flex-1 items-center gap-3 px-4">
-            <i className="bi bi-search text-[14px] text-[#17633f]" />
-
-            <input
-              type="text"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="جستجو در مقالات..."
+          <div className="max-w-[720px]">
+            <div
               className="
-                w-full
-                bg-transparent
-                text-[11px]
-                text-[#333]
-                outline-none
-                placeholder:text-[#aaa]
-              "
-            />
-          </div>
-
-          {search && (
-            <button
-              type="button"
-              onClick={() => setSearch("")}
-              className="
-                flex
-                h-10
-                w-10
-                shrink-0
+                articles-hero-badge
+                inline-flex
                 items-center
-                justify-center
-                rounded-xl
-                text-[#999]
-                transition-colors
-                hover:bg-[#f3f3f0]
-                hover:text-[#17633f]
+                gap-2
+                rounded-full
+                border
+                border-white/20
+                bg-black/20
+                px-4
+                py-2
+                text-[9px]
+                text-white/85
+                backdrop-blur-md
               "
             >
-              <i className="bi bi-x-lg text-[11px]" />
-            </button>
-          )}
+              <span className="h-1.5 w-1.5 rounded-full bg-white" />
+              مجله قماش شیخ الاسلامی
+            </div>
+
+            <h1
+              className="
+                articles-hero-title
+                mt-7
+                text-[32px]
+                font-bold
+                leading-[1.6]
+                tracking-[-1px]
+                text-white
+                sm:text-[44px]
+                lg:text-[54px]
+              "
+            >
+              راهنمای انتخاب،
+              <br />
+              شناخت و خرید بهتر پارچه
+            </h1>
+
+            <p
+              className="
+                articles-hero-text
+                mt-5
+                max-w-[600px]
+                text-[12px]
+                leading-8
+                text-white/80
+                sm:text-[13px]
+              "
+            >
+              مطالب کاربردی درباره انواع پارچه، روش تشخیص کیفیت،
+              انتخاب مناسب برای لباس و نکاتی که قبل از خرید باید بدانید.
+            </p>
+
+            <div className="articles-search mt-9 max-w-[560px]">
+              <div
+                className="
+                  flex
+                  h-[58px]
+                  items-center
+                  rounded-2xl
+                  border
+                  border-white/10
+                  bg-white
+                  p-1.5
+                  shadow-[0_20px_50px_rgba(0,0,0,0.2)]
+                "
+              >
+                <div className="flex flex-1 items-center gap-3 px-4">
+                  <i className="bi bi-search text-[14px] text-[#17633f]" />
+
+                  <input
+                    type="text"
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder="جستجو در مقالات..."
+                    className="
+                      w-full
+                      bg-transparent
+                      text-[11px]
+                      text-[#333]
+                      outline-none
+                      placeholder:text-[#aaa]
+                    "
+                  />
+                </div>
+
+                {search && (
+                  <button
+                    type="button"
+                    onClick={() => setSearch("")}
+                    className="
+                      flex
+                      h-10
+                      w-10
+                      shrink-0
+                      items-center
+                      justify-center
+                      rounded-xl
+                      text-[#999]
+                      transition-colors
+                      hover:bg-[#f3f3f0]
+                      hover:text-[#17633f]
+                    "
+                  >
+                    <i className="bi bi-x-lg text-[11px]" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
+      </section>
 
       {/* =====================================================
-          CATEGORIES
+          POPULAR TOPICS
       ===================================================== */}
 
-      {/* =====================================================
-          FEATURED
-      ===================================================== */}
-       <section className="border-y border-[#e4e1da] bg-white">
+      <section className="border-y border-[#e4e1da] bg-white">
         <div className="mx-auto max-w-[1400px] px-5 py-12 sm:px-8 lg:px-16 lg:py-16">
           <div className="premium-reveal mb-7">
             <span className="text-[9px] font-medium text-[#17633f]">
@@ -470,7 +446,9 @@ export default function Articles() {
                   }
 
                   window.scrollTo({
-                    top: document.querySelector(".articles-grid")?.offsetTop - 100 || 0,
+                    top:
+                      document.querySelector(".articles-grid")?.offsetTop -
+                        100 || 0,
                     behavior: "smooth",
                   });
                 }}
@@ -499,6 +477,10 @@ export default function Articles() {
         </div>
       </section>
 
+      {/* =====================================================
+          FEATURED ARTICLE
+      ===================================================== */}
+
       <section className="mx-auto max-w-[1400px] px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
         <div className="premium-reveal mb-8 flex items-end justify-between">
           <div>
@@ -525,7 +507,10 @@ export default function Articles() {
         <article className="premium-reveal group grid overflow-hidden rounded-[22px] border border-[#dfdcd5] bg-white shadow-[0_15px_60px_rgba(25,35,30,0.06)] lg:grid-cols-[1.08fr_0.92fr]">
           {/* Image */}
 
-          <div className="relative min-h-[320px] overflow-hidden sm:min-h-[430px] lg:min-h-[480px]">
+          <Link
+            to={`/articles/${articles[0].id}`}
+            className="relative block min-h-[320px] overflow-hidden sm:min-h-[430px] lg:min-h-[480px]"
+          >
             <img
               src={articles[0].image}
               alt={articles[0].title}
@@ -555,7 +540,7 @@ export default function Articles() {
                 <i className="bi bi-arrow-left" />
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Content */}
 
@@ -608,32 +593,25 @@ export default function Articles() {
               </div>
             </div>
 
-            <button
-              type="button"
-              className="mt-9 flex w-full items-center justify-between rounded-xl bg-[#17633f] px-5 py-4 text-[10px] font-medium text-white transition-all duration-300 hover:bg-[#125333] hover:shadow-[0_10px_30px_rgba(23,99,63,0.2)]"
+            <Link
+              to={`/articles/${articles[0].id}`}
+              className="mt-8 flex items-center gap-2 text-[9px] font-medium text-[#17633f]"
             >
-              <span>مطالعه کامل مقاله</span>
+              مطالعه مقاله
 
-              <i className="bi bi-arrow-left" />
-            </button>
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#dedbd4] transition-all duration-300 group-hover:border-[#17633f] group-hover:bg-[#17633f] group-hover:text-white">
+                <i className="bi bi-arrow-left text-[8px]" />
+              </span>
+            </Link>
           </div>
         </article>
       </section>
-
-      {/* =====================================================
-          POPULAR TOPICS
-      ===================================================== */}
-
-     
 
       {/* =====================================================
           ARTICLES
       ===================================================== */}
 
       <section className="mx-auto max-w-[1400px] px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
-
-     
-
         <div className="premium-reveal mb-9 flex items-end justify-between">
           <div>
             <div className="flex items-center gap-2">
@@ -663,7 +641,10 @@ export default function Articles() {
               >
                 {/* Image */}
 
-                <div className="relative h-[245px] overflow-hidden bg-[#eee]">
+                <Link
+                  to={`/articles/${article.id}`}
+                  className="relative block h-[245px] overflow-hidden bg-[#eee]"
+                >
                   <img
                     src={article.image}
                     alt={article.title}
@@ -684,14 +665,16 @@ export default function Articles() {
                       {article.time}
                     </span>
                   </div>
-                </div>
+                </Link>
 
                 {/* Content */}
 
                 <div className="p-6">
-                  <h3 className="text-[17px] font-bold leading-[1.9] transition-colors duration-300 group-hover:text-[#17633f]">
-                    {article.title}
-                  </h3>
+                  <Link to={`/articles/${article.id}`}>
+                    <h3 className="text-[17px] font-bold leading-[1.9] transition-colors duration-300 group-hover:text-[#17633f]">
+                      {article.title}
+                    </h3>
+                  </Link>
 
                   <p className="mt-3 line-clamp-3 text-[11px] leading-7 text-[#7c7c77]">
                     {article.excerpt}
@@ -702,8 +685,8 @@ export default function Articles() {
                       قماش شیخ الاسلامی
                     </span>
 
-                    <button
-                      type="button"
+                    <Link
+                      to={`/articles/${article.id}`}
                       className="flex items-center gap-2 text-[9px] font-medium text-[#17633f]"
                     >
                       مطالعه مقاله
@@ -711,7 +694,7 @@ export default function Articles() {
                       <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#dedbd4] transition-all duration-300 group-hover:border-[#17633f] group-hover:bg-[#17633f] group-hover:text-white">
                         <i className="bi bi-arrow-left text-[8px]" />
                       </span>
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </article>
@@ -767,14 +750,14 @@ export default function Articles() {
                 و محصول مناسب خود را پیدا کنید.
               </p>
 
-              <button
-                type="button"
+              <Link
+                to="/products"
                 className="mt-7 inline-flex items-center gap-3 rounded-xl bg-white px-6 py-3.5 text-[10px] font-medium text-[#17633f] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
               >
                 مشاهده محصولات
 
                 <i className="bi bi-arrow-left" />
-              </button>
+              </Link>
             </div>
           </div>
         </div>

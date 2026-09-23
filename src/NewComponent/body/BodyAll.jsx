@@ -4,6 +4,7 @@ import gsap from "gsap";
 import HiroFour from "./hiro/HiroFour.jsx";
 import ProductCategories from "./card/ProductCategories";
 import ShoppingBenefits from "./ShoppingBenefits";
+import LatestArticles from "./appp/LatestArticles.jsx";
 
 export default function BodyAll() {
   const bodyRef = useRef(null);
@@ -22,7 +23,6 @@ export default function BodyAll() {
         scale: 0.97,
         duration: 1.2,
       })
-
         .from(
           ".page-benefits",
           {
@@ -34,7 +34,6 @@ export default function BodyAll() {
           },
           "-=0.65"
         )
-
         .from(
           ".page-categories",
           {
@@ -44,6 +43,16 @@ export default function BodyAll() {
             duration: 1.1,
           },
           "-=0.55"
+        )
+        .from(
+          ".page-articles",
+          {
+            opacity: 0,
+            y: 70,
+            scale: 0.97,
+            duration: 1,
+          },
+          "-=0.5"
         );
     }, bodyRef);
 
@@ -62,6 +71,11 @@ export default function BodyAll() {
 
       <div className="page-categories">
         <ProductCategories />
+      </div>
+
+      {/* فقط ۵ مقاله برای صفحه خانه */}
+      <div className="page-articles">
+        <LatestArticles />
       </div>
     </div>
   );
