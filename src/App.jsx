@@ -9,6 +9,8 @@ import Articles from "./NewComponent/body/appp/Articles";
 import BodyAll from "./NewComponent/body/BodyAll";
 import Contact from "./NewComponent/body/appp/Contact";
 import Login from "./NewComponent/pagee/Login";
+import ShopppSbaddd from "./NewComponent/pagee/ShopppSbaddd";
+import Profile from "./NewComponent/pagee/Profile";
 
 import ArticleDetail from "./NewComponent/body/appp/ArticleDetail";
 
@@ -16,6 +18,7 @@ import ProductsOverview from "./NewComponent/body/card/ProductsOverview";
 import ProductsPage from "./NewComponent/body/card/ProductsPage";
 import CategoryProductsPage from "./NewComponent/body/card/CategoryProductsPage";
 import ProductDetail from "./NewComponent/body/card/ProductDetail";
+
 
 // ========================================
 // Page Transition
@@ -149,6 +152,8 @@ function AppContent() {
               path="/product/:id"
               element={<ProductDetail />}
             />
+            <Route path="/ShopppSbaddd" element={<ShopppSbaddd />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
 
           <Footer />

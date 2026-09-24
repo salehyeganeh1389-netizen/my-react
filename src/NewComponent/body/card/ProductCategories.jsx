@@ -990,7 +990,9 @@ function MiddleBanner() {
         mt-16
         overflow-hidden
         rounded-[22px]
-        bg-[#173a2c]
+        bg-[url('/file_00000000d58c820da9bfbc1b74d4fefb.png')]
+        bg-cover
+        bg-center
         px-6
         py-10
         sm:mt-20
@@ -1002,6 +1004,9 @@ function MiddleBanner() {
       "
       dir="rtl"
     >
+      {/* لایه روی عکس برای خوانایی متن */}
+      <div className="absolute inset-0 bg-black/35" />
+
       {/* دکور */}
 
       <div

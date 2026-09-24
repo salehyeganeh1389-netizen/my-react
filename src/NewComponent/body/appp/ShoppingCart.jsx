@@ -1,3 +1,4 @@
+
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -32,7 +33,7 @@ const benefits = [
   },
 ];
 
-export default function ShoppingBenefits() {
+export default function ShoppingCart() {
   const sectionRef = useRef(null);
 
   useLayoutEffect(() => {

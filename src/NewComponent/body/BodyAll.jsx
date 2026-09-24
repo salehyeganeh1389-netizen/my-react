@@ -3,9 +3,9 @@ import gsap from "gsap";
 
 import HiroFour from "./hiro/HiroFour.jsx";
 import ProductCategories from "./card/ProductCategories";
-import ShoppingBenefits from "./ShoppingBenefits";
 import LatestArticles from "./appp/LatestArticles.jsx";
 
+import ShoppingCart from "./appp/ShoppingCart.jsx";
 export default function BodyAll() {
   const bodyRef = useRef(null);
 
@@ -65,10 +65,10 @@ export default function BodyAll() {
         <HiroFour />
       </div>
 
-      <div className="page-benefits">
-        <ShoppingBenefits />
-      </div>
-
+      
+        <div className="page-shopping-cart">
+  <ShoppingCart />
+</div>
       <div className="page-categories">
         <ProductCategories />
       </div>
