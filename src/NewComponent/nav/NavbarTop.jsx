@@ -13,9 +13,13 @@ import logo from "/undraw_mail-sent_dagx.svg";
 
 import { Link } from "react-router-dom";
 
-export default function NavbarTop({ mobileMenu, setMobileMenu, scrolled }) {
-  const [searchOpen, setSearchOpen] = useState(false);
-
+export default function NavbarTop({
+  mobileMenu,
+  setMobileMenu,
+  scrolled,
+  searchOpen,
+  setSearchOpen,
+}) {
   return (
     <>
       {/* =========================
@@ -42,7 +46,6 @@ export default function NavbarTop({ mobileMenu, setMobileMenu, scrolled }) {
           transition-all
           duration-500
           ${searchOpen ? "pointer-events-none" : ""}
-          ${scrolled ? "" : ""}
         `}
       >
         <div
@@ -60,99 +63,136 @@ export default function NavbarTop({ mobileMenu, setMobileMenu, scrolled }) {
           `}
         >
           {/* =========================
-              منوی موبایل
+              منوی موبایل اصلی
           ========================= */}
-          <button
-            type="button"
-            onClick={() => setMobileMenu(!mobileMenu)}
-            aria-label={mobileMenu ? "بستن منو" : "باز کردن منو"}
-            className="
-              ml-1
-              flex
-              h-9
-              w-9
-              shrink-0
-              items-center
-              justify-center
-              rounded-full
-              text-[#333]
-              transition-all
-              duration-200
-              hover:bg-[#f7f4ef]
-              hover:text-[#166534]
-              sm:ml-2
-              lg:hidden
-            "
-          >
-            <i
-              className={`
-                bi
-                ${mobileMenu ? "bi-x-lg" : "bi-list"}
-                text-[20px]
-              `}
-            />
-          </button>
+          {!scrolled && (
+            <button
+              type="button"
+              onClick={() => setMobileMenu(!mobileMenu)}
+              aria-label={mobileMenu ? "بستن منو" : "باز کردن منو"}
+              className="
+                ml-1
+                flex
+                h-9
+                w-9
+                shrink-0
+                items-center
+                justify-center
+                rounded-full
+                text-[#333]
+                transition-all
+                duration-200
+                hover:bg-[#f7f4ef]
+                hover:text-[#166534]
+                sm:ml-2
+                lg:hidden
+              "
+            >
+              <i
+                className={`
+                  bi
+                  ${mobileMenu ? "bi-x-lg" : "bi-list"}
+                  text-[20px]
+                `}
+              />
+            </button>
+          )}
 
           {/* =========================
               لوگو
           ========================= */}
-          <a
-            href="/"
-            aria-label="قماش شیخ الاسلامی"
-            className={`
-              flex
-              shrink-0
-              items-center
-              transition-all
-              duration-500
-              ${
-                scrolled
-                  ? "w-[100px] sm:w-[105px]"
-                  : "w-[115px] sm:w-[145px] lg:w-[175px]"
-              }
-            `}
-          >
-            <img
-              src={logo}
-              alt="قماش شیخ الاسلامی"
+          <div className="flex shrink-0 items-center">
+            {/* همبرگری فقط در Navbar شناور */}
+            {scrolled && (
+              <button
+                type="button"
+                onClick={() => setMobileMenu(!mobileMenu)}
+                aria-label={mobileMenu ? "بستن منو" : "باز کردن منو"}
+                className="
+                  ml-1
+                  flex
+                  h-9
+                  w-9
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-full
+                  text-[#333]
+                  transition-all
+                  duration-200
+                  hover:bg-[#f7f4ef]
+                  hover:text-[#166534]
+                "
+              >
+                <i
+                  className={`
+                    bi
+                    ${mobileMenu ? "bi-x-lg" : "bi-list"}
+                    text-[20px]
+                  `}
+                />
+              </button>
+            )}
+
+            <a
+              href="/"
+              aria-label="قماش شیخ الاسلامی"
               className={`
-                block
-                max-w-full
-                object-contain
+                flex
+                shrink-0
+                items-center
                 transition-all
                 duration-500
                 ${
                   scrolled
-                    ? "max-h-[36px]"
-                    : "max-h-[50px] sm:max-h-[56px] lg:max-h-[62px]"
+                    ? "w-[100px] sm:w-[105px]"
+                    : "w-[115px] sm:w-[145px] lg:w-[175px]"
                 }
               `}
-            />
-          </a>
+            >
+              <img
+                src={logo}
+                alt="قماش شیخ الاسلامی"
+                className={`
+                  block
+                  max-w-full
+                  object-contain
+                  transition-all
+                  duration-500
+                  ${
+                    scrolled
+                      ? "max-h-[36px]"
+                      : "max-h-[50px] sm:max-h-[56px] lg:max-h-[62px]"
+                  }
+                `}
+              />
+            </a>
+          </div>
 
           {/* =========================
               سرچ دسکتاپ
+              فقط در Navbar اصلی
           ========================= */}
-          <div
-            className={`
-              hidden
-              lg:block
-              w-full
-              transition-all
-              duration-500
-              ${
-                scrolled
-                  ? "mr-5 max-w-[380px]"
-                  : "mr-6 max-w-[540px] xl:mr-10"
-              }
-            `}
-          >
-            <SearchBox
-              scrolled={scrolled}
-              searchOpen={searchOpen}
-              setSearchOpen={setSearchOpen}
-            />
-          </div>
+          {!scrolled && (
+            <div
+              className="
+                hidden
+                lg:block
+                w-full
+                mr-6
+                max-w-[540px]
+                transition-all
+                duration-500
+                xl:mr-10
+              "
+            >
+              <SearchBox
+                scrolled={false}
+                searchOpen={searchOpen}
+                setSearchOpen={setSearchOpen}
+              />
+            </div>
+          )}
 
           {/* فضای خالی */}
           <div className="hidden flex-1 lg:block" />
@@ -160,15 +200,44 @@ export default function NavbarTop({ mobileMenu, setMobileMenu, scrolled }) {
           {/* =========================
               اقدامات
           ========================= */}
-          <NavbarActions scrolled={scrolled} />
+          <NavbarActions
+            scrolled={scrolled}
+            searchOpen={searchOpen}
+            setSearchOpen={setSearchOpen}
+          />
         </div>
 
         {/* =========================
             سرچ موبایل
+            فقط Navbar اصلی
         ========================= */}
         {!scrolled && (
           <div className="px-4 pb-4 sm:px-6 lg:hidden">
             <SearchBox
+              searchOpen={searchOpen}
+              setSearchOpen={setSearchOpen}
+            />
+          </div>
+        )}
+
+        {/* =========================
+            سرچ Navbar شناور
+            با کلیک روی ذره‌بین باز می‌شود
+        ========================= */}
+        {scrolled && searchOpen && (
+          <div
+            className="
+              pointer-events-auto
+              absolute
+              left-1/2
+              top-[calc(100%+10px)]
+              z-[250]
+              w-[min(680px,calc(100vw-32px))]
+              -translate-x-1/2
+            "
+          >
+            <SearchBox
+              scrolled={true}
               searchOpen={searchOpen}
               setSearchOpen={setSearchOpen}
             />
@@ -528,7 +597,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
             border-[#eeeeee]
             bg-white
             shadow-[0_20px_60px_rgba(0,0,0,0.14)]
-            ${scrolled ? "w-[min(680px,calc(100vw-32px))]" : "w-full"}
+            ${scrolled ? "w-full" : "w-full"}
           `}
         >
           {/* =========================
@@ -1146,7 +1215,11 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
    Navbar Actions
 ========================================================= */
 
-function NavbarActions({ scrolled = false }) {
+function NavbarActions({
+  scrolled = false,
+  searchOpen,
+  setSearchOpen,
+}) {
   const navigate = useNavigate();
 
   /* =========================
@@ -1229,8 +1302,47 @@ function NavbarActions({ scrolled = false }) {
       `}
     >
       {/* =========================
+          ذره‌بین Navbar شناور
+      ========================= */}
+
+      {scrolled && (
+        <button
+          type="button"
+          onClick={() => setSearchOpen(true)}
+          aria-label="جستجو"
+          className="
+            group
+            flex
+            h-10
+            w-10
+            shrink-0
+            items-center
+            justify-center
+            rounded-full
+            text-[#333]
+            transition-all
+            duration-200
+            hover:bg-[#f7f4ef]
+            hover:text-[#166534]
+          "
+        >
+          <i
+            className="
+              bi
+              bi-search
+              text-[18px]
+              transition-colors
+              duration-200
+              group-hover:text-[#166534]
+            "
+          />
+        </button>
+      )}
+
+      {/* =========================
           اعلان
       ========================= */}
+
       <button
         type="button"
         aria-label="اعلان‌ها"
@@ -1373,10 +1485,6 @@ function NavbarActions({ scrolled = false }) {
               group-hover:opacity-100
             "
           >
-            {/* =========================
-                اطلاعات کاربر
-            ========================= */}
-
             <div
               className="
                 mb-1
@@ -1426,10 +1534,6 @@ function NavbarActions({ scrolled = false }) {
               </div>
             </div>
 
-            {/* =========================
-                پروفایل
-            ========================= */}
-
             <button
               type="button"
               onClick={() => navigate("/profile")}
@@ -1455,10 +1559,6 @@ function NavbarActions({ scrolled = false }) {
 
               <i className="bi bi-chevron-left mr-auto text-[9px] text-[#aaa]" />
             </button>
-
-            {/* =========================
-                سفارش‌ها
-            ========================= */}
 
             <button
               type="button"
@@ -1487,10 +1587,6 @@ function NavbarActions({ scrolled = false }) {
             </button>
 
             <div className="my-1 border-t border-[#f0f0f0]" />
-
-            {/* =========================
-                خروج
-            ========================= */}
 
             <button
               type="button"

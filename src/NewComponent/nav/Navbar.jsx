@@ -8,6 +8,7 @@ import MobileMenu from "./MobileMenu";
 export default function Navbar() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [floatingSearchOpen, setFloatingSearchOpen] = useState(false);
 
   const floatingNavRef = useRef(null);
   const hasEnteredScroll = useRef(false);
@@ -35,6 +36,17 @@ export default function Navbar() {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  /* =========================
+     وقتی Navbar شناور فعال نیست
+     سرچ شناور بسته شود
+  ========================= */
+
+  useEffect(() => {
+    if (!scrolled) {
+      setFloatingSearchOpen(false);
+    }
+  }, [scrolled]);
 
   /* =========================
      انیمیشن Navbar شناور
@@ -129,14 +141,16 @@ export default function Navbar() {
           mobileMenu={mobileMenu}
           setMobileMenu={setMobileMenu}
           scrolled={false}
+          searchOpen={false}
+          setSearchOpen={() => {}}
         />
 
         <DesktopMenu />
 
-<MobileMenu
-  mobileMenu={mobileMenu}
-  setMobileMenu={setMobileMenu}
-/>        
+        <MobileMenu
+          mobileMenu={mobileMenu}
+          setMobileMenu={setMobileMenu}
+        />
       </header>
 
       {/* =========================
@@ -180,6 +194,8 @@ export default function Navbar() {
           mobileMenu={mobileMenu}
           setMobileMenu={setMobileMenu}
           scrolled={true}
+          searchOpen={floatingSearchOpen}
+          setSearchOpen={setFloatingSearchOpen}
         />
       </header>
     </>

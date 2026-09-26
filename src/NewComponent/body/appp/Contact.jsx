@@ -2,12 +2,12 @@ import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Select from "react-select";
+
 gsap.registerPlugin(ScrollTrigger);
 
 const branch = {
   title: "شعبه مرکزی",
-  address:
-    "قم، خیابان ۱۹ دی، مجتمع تجاری حجت، طبقه ۳، پلاک ۱۴۴",
+  address: "قم، خیابان ۱۹ دی، مجتمع تجاری حجت، طبقه ۳، پلاک ۱۴۴",
   hours: "۱۰ الی ۱۴ - ۱۶ الی ۲۲",
   phone: "۰۲۵-۳۷۷۲۳۱۴۵",
   phoneLink: "02537723145",
@@ -63,7 +63,7 @@ export default function Contact() {
             y: 0,
             duration: 0.45,
             ease: "power3.out",
-          }
+          },
         )
         .fromTo(
           ".contact-title",
@@ -77,7 +77,7 @@ export default function Contact() {
             duration: 0.65,
             ease: "power3.out",
           },
-          "-=0.2"
+          "-=0.2",
         )
         .fromTo(
           ".contact-description",
@@ -91,7 +91,7 @@ export default function Contact() {
             duration: 0.55,
             ease: "power3.out",
           },
-          "-=0.3"
+          "-=0.3",
         )
         .fromTo(
           ".contact-hero-image",
@@ -105,7 +105,7 @@ export default function Contact() {
             duration: 1,
             ease: "power3.out",
           },
-          "-=0.7"
+          "-=0.7",
         );
 
       /* =========================
@@ -129,7 +129,7 @@ export default function Contact() {
               start: "top 85%",
               once: true,
             },
-          }
+          },
         );
       });
 
@@ -154,7 +154,7 @@ export default function Contact() {
             start: "top 82%",
             once: true,
           },
-        }
+        },
       );
 
       /* =========================
@@ -178,7 +178,7 @@ export default function Contact() {
             start: "top 85%",
             once: true,
           },
-        }
+        },
       );
 
       /* =========================
@@ -202,7 +202,7 @@ export default function Contact() {
             start: "top 82%",
             once: true,
           },
-        }
+        },
       );
 
       /* =========================
@@ -225,7 +225,7 @@ export default function Contact() {
             start: "top 88%",
             once: true,
           },
-        }
+        },
       );
     }, pageRef);
 
@@ -373,9 +373,8 @@ export default function Contact() {
                   sm:text-[14px]
                 "
               >
-                برای خرید، پیگیری سفارش، دریافت اطلاعات محصولات
-                و راهنمایی بیشتر، از طریق راه‌های ارتباطی زیر با
-                ما در تماس باشید.
+                برای خرید، پیگیری سفارش، دریافت اطلاعات محصولات و راهنمایی
+                بیشتر، از طریق راه‌های ارتباطی زیر با ما در تماس باشید.
               </p>
             </div>
           </div>
@@ -470,9 +469,7 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <p className="text-[10px] text-[#999]">
-                    آدرس
-                  </p>
+                  <p className="text-[10px] text-[#999]">آدرس</p>
 
                   <p className="mt-1.5 text-[12px] leading-6 text-[#444]">
                     {branch.address}
@@ -502,9 +499,7 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <p className="text-[10px] text-[#999]">
-                    ساعت کاری
-                  </p>
+                  <p className="text-[10px] text-[#999]">ساعت کاری</p>
 
                   <p className="mt-1.5 text-[12px] text-[#444]">
                     {branch.hours}
@@ -534,9 +529,7 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <p className="text-[10px] text-[#999]">
-                    تلفن تماس
-                  </p>
+                  <p className="text-[10px] text-[#999]">تلفن تماس</p>
 
                   <p
                     dir="ltr"
@@ -571,9 +564,7 @@ export default function Contact() {
                 "
               >
                 تماس با ما
-
                 <i className="bi bi-telephone text-[11px]" />
-
                 <i className="bi bi-arrow-left text-[9px]" />
               </a>
             </div>
@@ -668,8 +659,7 @@ export default function Contact() {
               </h2>
 
               <p className="mt-2 text-[11px] text-[#999]">
-                از طریق شبکه‌های اجتماعی نیز می‌توانید با ما در
-                ارتباط باشید.
+                از طریق شبکه‌های اجتماعی نیز می‌توانید با ما در ارتباط باشید.
               </p>
 
               <div
@@ -683,10 +673,7 @@ export default function Contact() {
                 "
               >
                 {socials.map((social) => (
-                  <SocialCard
-                    key={social.title}
-                    {...social}
-                  />
+                  <SocialCard key={social.title} {...social} />
                 ))}
               </div>
             </article>
@@ -737,8 +724,8 @@ export default function Contact() {
                   </h3>
 
                   <p className="mt-2 max-w-[470px] text-[10px] leading-6 text-white/60">
-                    تیم پشتیبانی قماش شیخ الاسلامی آماده پاسخگویی
-                    به سوالات شماست.
+                    تیم پشتیبانی قماش شیخ الاسلامی آماده پاسخگویی به سوالات
+                    شماست.
                   </p>
 
                   <a
@@ -761,7 +748,6 @@ export default function Contact() {
                     "
                   >
                     تماس با پشتیبانی
-
                     <i className="bi bi-arrow-left text-[9px]" />
                   </a>
                 </div>
@@ -903,133 +889,157 @@ export default function Contact() {
 
               {/* Subject */}
 
-         <div className="form-item">
-  <label className="mb-1.5 block text-[10px] font-medium text-[#666]">
-    موضوع پیام
-    <span className="mr-1 text-[#c46b55]">*</span>
-  </label>
+              <div className="form-item relative z-[100]">
+                <label className="mb-1.5 block text-[10px] font-medium text-[#666]">
+                  موضوع پیام
+                  <span className="mr-1 text-[#c46b55]">*</span>
+                </label>
 
-  <Select
-    placeholder="موضوع پیام را انتخاب کنید"
-    isSearchable={false}
-    options={[
-      {
-        value: "order",
-        label: "پیگیری سفارش",
-      },
-      {
-        value: "shopping",
-        label: "راهنمایی خرید",
-      },
-      {
-        value: "product",
-        label: "اطلاعات محصول",
-      },
-      {
-        value: "stock",
-        label: "موجودی و سایزبندی",
-      },
-      {
-        value: "feedback",
-        label: "پیشنهاد و انتقاد",
-      },
-      {
-        value: "cooperation",
-        label: "همکاری",
-      },
-      {
-        value: "other",
-        label: "سایر",
-      },
-    ]}
-    styles={{
-      control: (base, state) => ({
-        ...base,
-        minHeight: "41px",
-        height: "41px",
-        borderRadius: "8px",
-        borderColor: state.isFocused ? "#91ae9f" : "#e6e4df",
-        backgroundColor: state.isFocused ? "#ffffff" : "#fafaf9",
-        boxShadow: state.isFocused
-          ? "0 0 0 3px rgba(0,107,79,0.05)"
-          : "none",
-        cursor: "pointer",
-        transition: "all 0.2s ease",
-        "&:hover": {
-          borderColor: "#d4d2cb",
-        },
-      }),
+                <Select
+                  placeholder="موضوع پیام را انتخاب کنید"
+                  isSearchable={false}
+                  menuPlacement="bottom"
+                  menuPosition="fixed"
+                  menuPortalTarget={
+                    typeof document !== "undefined"
+                      ? document.body
+                      : null
+                  }
+                  options={[
+                    {
+                      value: "order",
+                      label: "پیگیری سفارش",
+                    },
+                    {
+                      value: "shopping",
+                      label: "راهنمایی خرید",
+                    },
+                    {
+                      value: "product",
+                      label: "اطلاعات محصول",
+                    },
+                    {
+                      value: "stock",
+                      label: "موجودی و سایزبندی",
+                    },
+                    {
+                      value: "feedback",
+                      label: "پیشنهاد و انتقاد",
+                    },
+                    {
+                      value: "cooperation",
+                      label: "همکاری",
+                    },
+                    {
+                      value: "other",
+                      label: "سایر",
+                    },
+                  ]}
+                  styles={{
+                    control: (base, state) => ({
+                      ...base,
+                      minHeight: "41px",
+                      height: "41px",
+                      borderRadius: "8px",
+                      borderColor: state.isFocused
+                        ? "#91ae9f"
+                        : "#e6e4df",
+                      backgroundColor: state.isFocused
+                        ? "#ffffff"
+                        : "#fafaf9",
+                      boxShadow: state.isFocused
+                        ? "0 0 0 3px rgba(0,107,79,0.05)"
+                        : "none",
+                      cursor: "pointer",
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        borderColor: "#d4d2cb",
+                      },
+                    }),
 
-      valueContainer: (base) => ({
-        ...base,
-        padding: "0 12px",
-      }),
+                    valueContainer: (base) => ({
+                      ...base,
+                      padding: "0 12px",
+                    }),
 
-      singleValue: (base) => ({
-        ...base,
-        fontSize: "10px",
-        color: "#555",
-        margin: 0,
-      }),
+                    singleValue: (base) => ({
+                      ...base,
+                      fontSize: "10px",
+                      color: "#555",
+                      margin: 0,
+                    }),
 
-      placeholder: (base) => ({
-        ...base,
-        fontSize: "10px",
-        color: "#aaa",
-      }),
+                    placeholder: (base) => ({
+                      ...base,
+                      fontSize: "10px",
+                      color: "#aaa",
+                    }),
 
-      indicatorSeparator: () => ({
-        display: "none",
-      }),
+                    indicatorSeparator: () => ({
+                      display: "none",
+                    }),
 
-      dropdownIndicator: (base, state) => ({
-        ...base,
-        padding: "0 10px",
-        color: "#999",
-        transform: state.selectProps.menuIsOpen
-          ? "rotate(180deg)"
-          : "rotate(0deg)",
-        transition: "transform 0.25s ease",
-        "&:hover": {
-          color: "#006b4f",
-        },
-      }),
+                    dropdownIndicator: (base, state) => ({
+                      ...base,
+                      padding: "0 10px",
+                      color: "#999",
+                      transform: state.selectProps.menuIsOpen
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                      transition: "transform 0.25s ease",
+                      "&:hover": {
+                        color: "#006b4f",
+                      },
+                    }),
 
-      menu: (base) => ({
-        ...base,
-        marginTop: "6px",
-        borderRadius: "10px",
-        overflow: "hidden",
-        border: "1px solid #e6e4df",
-        boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
-        backgroundColor: "#ffffff",
-        zIndex: 50,
-      }),
+                    /* =========================
+                       DROPDOWN
+                       پایین باز می‌شود
+                       و روی فیلد بعدی قرار می‌گیرد
+                    ========================= */
 
-      menuList: (base) => ({
-        ...base,
-        padding: "5px",
-      }),
+                    menuPortal: (base) => ({
+                      ...base,
+                      zIndex: 999999,
+                    }),
 
-      option: (base, state) => ({
-        ...base,
-        direction: "rtl",
-        textAlign: "right",
-        borderRadius: "7px",
-        padding: "9px 11px",
-        fontSize: "10px",
-        color: state.isSelected ? "#006b4f" : "#555",
-        backgroundColor: state.isSelected
-          ? "#eef7f3"
-          : state.isFocused
-          ? "#f7faf8"
-          : "transparent",
-        cursor: "pointer",
-        transition: "all 0.15s ease",
-      }),
-    }}
-  />
-</div>
+                    menu: (base) => ({
+                      ...base,
+                      marginTop: "6px",
+                      marginBottom: 0,
+                      borderRadius: "10px",
+                      overflow: "hidden",
+                      border: "1px solid #e6e4df",
+                      boxShadow: "0 12px 30px rgba(0,0,0,0.08)",
+                      backgroundColor: "#ffffff",
+                      zIndex: 999999,
+                    }),
+
+                    menuList: (base) => ({
+                      ...base,
+                      padding: "5px",
+                      maxHeight: "220px",
+                    }),
+
+                    option: (base, state) => ({
+                      ...base,
+                      direction: "rtl",
+                      textAlign: "right",
+                      borderRadius: "7px",
+                      padding: "9px 11px",
+                      fontSize: "10px",
+                      color: state.isSelected ? "#006b4f" : "#555",
+                      backgroundColor: state.isSelected
+                        ? "#eef7f3"
+                        : state.isFocused
+                          ? "#f7faf8"
+                          : "transparent",
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }),
+                  }}
+                />
+              </div>
 
               {/* Message */}
 
@@ -1117,12 +1127,7 @@ export default function Contact() {
    SOCIAL CARD
 ================================================== */
 
-function SocialCard({
-  title,
-  username,
-  href,
-  icon,
-}) {
+function SocialCard({ title, username, href, icon }) {
   return (
     <a
       href={href}
@@ -1169,10 +1174,7 @@ function SocialCard({
         {title}
       </p>
 
-      <p
-        dir="ltr"
-        className="mt-1 text-[8px] text-[#999]"
-      >
+      <p dir="ltr" className="mt-1 text-[8px] text-[#999]">
         {username}
       </p>
 

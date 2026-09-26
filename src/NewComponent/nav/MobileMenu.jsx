@@ -80,32 +80,32 @@ export default function MobileMenu({ mobileMenu, setMobileMenu }) {
     <>
       {/* Overlay */}
       <div
-        onClick={() => setMobileMenu(false)}
-        className={`
-          fixed
-          inset-0
-          z-40
-          bg-black/30
-          backdrop-blur-[2px]
-          transition-opacity
-          duration-300
-          lg:hidden
-          ${
-            mobileMenu
-              ? "pointer-events-auto opacity-100"
-              : "pointer-events-none opacity-0"
-          }
-        `}
+  onClick={() => setMobileMenu(false)}
+  className={`
+    fixed
+    inset-0
+    z-[190]
+    bg-black/30
+    backdrop-blur-[2px]
+    transition-opacity
+    duration-300
+    lg:hidden
+    ${
+      mobileMenu
+        ? "pointer-events-auto opacity-100"
+        : "pointer-events-none opacity-0"
+    }
+  `}
       />
 
       {/* Mobile Drawer */}
-      <div
-        ref={menuRef}
-        className="
-          fixed
-          right-0
-          top-0
-          z-50
+ <div
+  ref={menuRef}
+  className="
+    fixed
+    right-0
+    top-0
+    z-[200]
           hidden
           h-screen
           w-[85%]
