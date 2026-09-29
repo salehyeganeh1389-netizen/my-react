@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import gsap from "gsap";
+
 import {
   SearchX,
   PackageSearch,
@@ -9,9 +10,8 @@ import {
   X,
   Clock3,
 } from "lucide-react";
-import logo from "/undraw_mail-sent_dagx.svg";
 
-import { Link } from "react-router-dom";
+import logo from "/ChatGPT Image ۵ مهر ۱۴۰۵، ۰۹_۰۱_۱۵.png";
 
 export default function NavbarTop({
   mobileMenu,
@@ -20,11 +20,52 @@ export default function NavbarTop({
   searchOpen,
   setSearchOpen,
 }) {
+  const floatingSearchRef = useRef(null);
+
+  /* =========================
+     انیمیشن سرچ Navbar شناور
+  ========================= */
+
+  useLayoutEffect(() => {
+    if (!scrolled || !floatingSearchRef.current) return;
+
+    const searchBox = floatingSearchRef.current;
+
+    if (searchOpen) {
+      gsap.fromTo(
+        searchBox,
+        {
+          width: 40,
+          opacity: 0,
+          scaleX: 0.2,
+          transformOrigin: "right center",
+        },
+        {
+          width: 480,
+          opacity: 1,
+          scaleX: 1,
+          duration: 0.45,
+          ease: "power3.out",
+        }
+      );
+    } else {
+      gsap.to(searchBox, {
+        width: 40,
+        opacity: 0,
+        scaleX: 0.2,
+        duration: 0.3,
+        ease: "power2.in",
+        transformOrigin: "right center",
+      });
+    }
+  }, [searchOpen, scrolled]);
+
   return (
     <>
       {/* =========================
           Overlay سرچ
       ========================= */}
+
       {searchOpen && (
         <div
           className="
@@ -39,15 +80,18 @@ export default function NavbarTop({
       )}
 
       <div
-        className={`
+        className="
           relative
           z-[90]
           w-full
           transition-all
           duration-500
-          ${searchOpen ? "pointer-events-none" : ""}
-        `}
+        "
       >
+        {/* =========================
+            Navbar اصلی
+        ========================= */}
+
         <div
           className={`
             mx-auto
@@ -55,6 +99,7 @@ export default function NavbarTop({
             items-center
             transition-all
             duration-500
+
             ${
               scrolled
                 ? "h-[60px] px-4 sm:px-5"
@@ -65,6 +110,7 @@ export default function NavbarTop({
           {/* =========================
               منوی موبایل اصلی
           ========================= */}
+
           {!scrolled && (
             <button
               type="button"
@@ -101,39 +147,8 @@ export default function NavbarTop({
           {/* =========================
               لوگو
           ========================= */}
-          <div className="flex shrink-0 items-center">
-            {/* همبرگری فقط در Navbar شناور */}
-            {scrolled && (
-              <button
-                type="button"
-                onClick={() => setMobileMenu(!mobileMenu)}
-                aria-label={mobileMenu ? "بستن منو" : "باز کردن منو"}
-                className="
-                  ml-1
-                  flex
-                  h-9
-                  w-9
-                  shrink-0
-                  items-center
-                  justify-center
-                  rounded-full
-                  text-[#333]
-                  transition-all
-                  duration-200
-                  hover:bg-[#f7f4ef]
-                  hover:text-[#166534]
-                "
-              >
-                <i
-                  className={`
-                    bi
-                    ${mobileMenu ? "bi-x-lg" : "bi-list"}
-                    text-[20px]
-                  `}
-                />
-              </button>
-            )}
 
+          <div className="flex shrink-0 items-center">
             <a
               href="/"
               aria-label="قماش شیخ الاسلامی"
@@ -143,6 +158,7 @@ export default function NavbarTop({
                 items-center
                 transition-all
                 duration-500
+
                 ${
                   scrolled
                     ? "w-[100px] sm:w-[105px]"
@@ -159,6 +175,7 @@ export default function NavbarTop({
                   object-contain
                   transition-all
                   duration-500
+
                   ${
                     scrolled
                       ? "max-h-[36px]"
@@ -170,20 +187,18 @@ export default function NavbarTop({
           </div>
 
           {/* =========================
-              سرچ دسکتاپ
-              فقط در Navbar اصلی
+              سرچ دسکتاپ Navbar اصلی
           ========================= */}
+
           {!scrolled && (
             <div
               className="
                 hidden
                 lg:block
                 w-full
-                mr-6
-                max-w-[540px]
+                max-w-[480px]
                 transition-all
                 duration-500
-                xl:mr-10
               "
             >
               <SearchBox
@@ -194,12 +209,50 @@ export default function NavbarTop({
             </div>
           )}
 
-          {/* فضای خالی */}
+          {/* =========================
+              فضای خالی
+          ========================= */}
+
           <div className="hidden flex-1 lg:block" />
+
+          {/* =========================
+              سرچ شناور
+              فقط وقتی Navbar اسکرول شده
+          ========================= */}
+
+          {scrolled && searchOpen && (
+            <div
+              ref={floatingSearchRef}
+              className="
+                pointer-events-auto
+                absolute
+                right-[190px]
+                top-1/2
+                z-[250]
+                hidden
+                h-[42px]
+                w-[40px]
+                -translate-y-1/2
+                overflow-visible
+                lg:block
+              "
+              style={{
+                transformOrigin: "right center",
+              }}
+            >
+              <SearchBox
+                scrolled={true}
+                searchOpen={searchOpen}
+                setSearchOpen={setSearchOpen}
+                floatingMode={true}
+              />
+            </div>
+          )}
 
           {/* =========================
               اقدامات
           ========================= */}
+
           <NavbarActions
             scrolled={scrolled}
             searchOpen={searchOpen}
@@ -207,40 +260,65 @@ export default function NavbarTop({
           />
         </div>
 
-        {/* =========================
-            سرچ موبایل
-            فقط Navbar اصلی
-        ========================= */}
-        {!scrolled && (
-          <div className="px-4 pb-4 sm:px-6 lg:hidden">
-            <SearchBox
-              searchOpen={searchOpen}
-              setSearchOpen={setSearchOpen}
-            />
-          </div>
-        )}
+        {/* =====================================================
+            سرچ موبایل تمام صفحه
+        ===================================================== */}
 
-        {/* =========================
-            سرچ Navbar شناور
-            با کلیک روی ذره‌بین باز می‌شود
-        ========================= */}
-        {scrolled && searchOpen && (
+        {!scrolled && searchOpen && (
           <div
             className="
-              pointer-events-auto
-              absolute
-              left-1/2
-              top-[calc(100%+10px)]
-              z-[250]
-              w-[min(680px,calc(100vw-32px))]
-              -translate-x-1/2
+              fixed
+              inset-0
+              z-[300]
+              bg-white
+              lg:hidden
             "
+            dir="rtl"
           >
-            <SearchBox
-              scrolled={true}
-              searchOpen={searchOpen}
-              setSearchOpen={setSearchOpen}
-            />
+            {/* هدر سرچ موبایل */}
+
+            <div
+              className="
+                flex
+                h-[70px]
+                items-center
+                gap-3
+                border-b
+                border-[#eeeeee]
+                bg-white
+                px-4
+              "
+            >
+              <button
+                type="button"
+                onClick={() => setSearchOpen(false)}
+                aria-label="بستن جستجو"
+                className="
+                  flex
+                  h-10
+                  w-10
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-full
+                  text-[#333]
+                  transition
+                  hover:bg-[#f7f4ef]
+                  hover:text-[#166534]
+                "
+              >
+                <i className="bi bi-x-lg text-[18px]" />
+              </button>
+
+              <div className="min-w-0 flex-1">
+                <SearchBox
+                  scrolled={false}
+                  searchOpen={searchOpen}
+                  setSearchOpen={setSearchOpen}
+                  mobileMode={true}
+                />
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -252,7 +330,13 @@ export default function NavbarTop({
    Search Box
 ========================================================= */
 
-function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
+function SearchBox({
+  scrolled = false,
+  searchOpen,
+  setSearchOpen,
+  mobileMode = false,
+  floatingMode = false,
+}) {
   const wrapperRef = useRef(null);
   const inputRef = useRef(null);
   const searchPanelRef = useRef(null);
@@ -282,7 +366,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
   });
 
   /* =========================
-     وضعیت نتیجه جستجو
+     نتایج
   ========================= */
 
   const [searchResults, setSearchResults] = useState([]);
@@ -297,7 +381,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
     try {
       localStorage.setItem(
         "qomash-user-searches",
-        JSON.stringify(userSearches),
+        JSON.stringify(userSearches)
       );
     } catch (error) {
       console.error("خطا در ذخیره جستجوها:", error);
@@ -305,7 +389,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
   }, [userSearches]);
 
   /* =========================
-     انیمیشن GSAP
+     انیمیشن پنل سرچ
   ========================= */
 
   useLayoutEffect(() => {
@@ -328,7 +412,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
           scaleY: 1,
           duration: 0.28,
           ease: "power2.out",
-        },
+        }
       );
 
       gsap.fromTo(
@@ -344,7 +428,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
           delay: 0.08,
           stagger: 0.035,
           ease: "power2.out",
-        },
+        }
       );
     }, searchPanelRef);
 
@@ -352,12 +436,15 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
   }, [searchOpen]);
 
   /* =========================
-     بستن با کلیک بیرون
+     کلیک بیرون
   ========================= */
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target)
+      ) {
         setSearchOpen(false);
       }
     }
@@ -389,7 +476,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
   }, [setSearchOpen]);
 
   /* =========================
-     تغییر متن سرچ
+     تغییر متن
   ========================= */
 
   function handleSearchChange(event) {
@@ -410,7 +497,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
   }
 
   /* =========================
-     انتخاب جستجو
+     انتخاب سرچ قبلی
   ========================= */
 
   function handleSearchSelect(title) {
@@ -426,7 +513,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
   }
 
   /* =========================
-     ثبت جستجو
+     ذخیره سرچ
   ========================= */
 
   function saveSearch(search) {
@@ -442,7 +529,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
   }
 
   /* =========================
-     اجرای جستجو
+     اجرای سرچ
   ========================= */
 
   async function handleSubmitSearch() {
@@ -458,7 +545,9 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
     setSearchOpen(true);
 
     try {
-      const response = await fetch("https://fakestoreapi.com/products");
+      const response = await fetch(
+        "https://fakestoreapi.com/products"
+      );
 
       if (!response.ok) {
         throw new Error("خطا در دریافت محصولات");
@@ -490,11 +579,13 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
   }
 
   /* =========================
-     حذف یک جستجو
+     حذف سرچ
   ========================= */
 
   function removeSearch(search) {
-    setUserSearches((prev) => prev.filter((item) => item !== search));
+    setUserSearches((prev) =>
+      prev.filter((item) => item !== search)
+    );
   }
 
   /* =========================
@@ -525,6 +616,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
           type="text"
           value={searchValue}
           onFocus={() => setSearchOpen(true)}
+          onClick={() => setSearchOpen(true)}
           onChange={handleSearchChange}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
@@ -539,7 +631,11 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
             border-[#e8e8e8]
             bg-[#f7f7f7]
             px-5
-            pl-12
+            ${
+              floatingMode
+                ? "pr-12 pl-5"
+                : "pl-12"
+            }
             text-right
             text-[13px]
             text-[#333]
@@ -551,26 +647,32 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
             focus:border-[#bd9257]
             focus:bg-white
             focus:shadow-[0_4px_18px_rgba(189,146,87,0.08)]
+
             ${
               scrolled
-                ? "h-[42px] rounded-full bg-white/50"
+                ? "h-[42px] rounded-full bg-white/90"
                 : "h-[44px] rounded-full"
             }
           `}
         />
 
         <i
-          className="
+          className={`
             bi
             bi-search
             pointer-events-none
             absolute
-            left-4
             top-1/2
             -translate-y-1/2
             text-[16px]
             text-[#888]
-          "
+
+            ${
+              floatingMode
+                ? "right-4"
+                : "left-4"
+            }
+          `}
         />
       </div>
 
@@ -585,19 +687,41 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
             event.stopPropagation();
           }}
           className={`
-            absolute
-            right-0
-            top-[calc(100%+10px)]
-            z-[120]
-            max-h-[calc(100vh-110px)]
-            overflow-y-auto
-            overflow-x-hidden
-            rounded-[18px]
-            border
-            border-[#eeeeee]
-            bg-white
-            shadow-[0_20px_60px_rgba(0,0,0,0.14)]
-            ${scrolled ? "w-full" : "w-full"}
+            ${
+              mobileMode
+                ? `
+                  fixed
+                  inset-x-0
+                  top-[70px]
+                  bottom-0
+                  z-[310]
+                  max-h-none
+                  w-full
+                  overflow-y-auto
+                  overflow-x-hidden
+                  rounded-none
+                  border-0
+                  border-t
+                  border-[#eeeeee]
+                  bg-white
+                  shadow-none
+                `
+                : `
+                  absolute
+                  right-0
+                  top-[calc(100%+10px)]
+                  z-[120]
+                  max-h-[calc(100vh-110px)]
+                  w-full
+                  overflow-y-auto
+                  overflow-x-hidden
+                  rounded-[18px]
+                  border
+                  border-[#eeeeee]
+                  bg-white
+                  shadow-[0_20px_60px_rgba(0,0,0,0.14)]
+                `
+            }
           `}
         >
           {/* =========================
@@ -661,7 +785,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
           </div>
 
           {/* =========================
-              جستجوهای شما
+              جستجوهای اخیر
           ========================= */}
 
           <div className="search-panel-item px-5 py-5 sm:px-6">
@@ -805,7 +929,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
           </div>
 
           {/* =========================
-              نتیجه جستجو
+              نتایج جستجو
           ========================= */}
 
           {hasSearched && (
@@ -1081,6 +1205,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
                       "
                     >
                       مشاهده همه نتایج
+
                       <i className="bi bi-arrow-left text-[10px]" />
                     </button>
                   )}
@@ -1152,7 +1277,7 @@ function SearchBox({ scrolled = false, searchOpen, setSearchOpen }) {
           )}
 
           {/* =========================
-              پوستر پایین سرچ
+              پوستر پایین
           ========================= */}
 
           {!hasSearched && (
@@ -1222,15 +1347,11 @@ function NavbarActions({
 }) {
   const navigate = useNavigate();
 
-  /* =========================
-     وضعیت لاگین
-  ========================= */
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userIdentifier, setUserIdentifier] = useState("");
 
   /* =========================
-     بررسی وضعیت لاگین
+     وضعیت لاگین
   ========================= */
 
   useEffect(() => {
@@ -1298,11 +1419,16 @@ function NavbarActions({
         items-center
         transition-all
         duration-500
-        ${scrolled ? "gap-0.5" : "gap-1 sm:gap-2 lg:gap-3 xl:gap-4"}
+
+        ${
+          scrolled
+            ? "gap-0.5"
+            : "gap-1 sm:gap-2 lg:gap-3 xl:gap-4"
+        }
       `}
     >
       {/* =========================
-          ذره‌بین Navbar شناور
+          ذره‌بین فقط Navbar شناور
       ========================= */}
 
       {scrolled && (
@@ -1336,6 +1462,35 @@ function NavbarActions({
               group-hover:text-[#166534]
             "
           />
+        </button>
+      )}
+
+      {/* =========================
+          ذره‌بین موبایل
+      ========================= */}
+
+      {!scrolled && (
+        <button
+          type="button"
+          onClick={() => setSearchOpen(true)}
+          aria-label="جستجو"
+          className="
+            flex
+            h-10
+            w-10
+            shrink-0
+            items-center
+            justify-center
+            rounded-full
+            text-[#333]
+            transition-all
+            duration-200
+            hover:bg-[#f7f4ef]
+            hover:text-[#166534]
+            lg:hidden
+          "
+        >
+          <i className="bi bi-search text-[19px]" />
         </button>
       )}
 
@@ -1401,12 +1556,11 @@ function NavbarActions({
               shrink-0
               items-center
               justify-center
-              border
-              border-[#e5e5e5]
               transition-all
               duration-300
               hover:border-[#166534]
               hover:bg-[#fdfbf8]
+
               ${
                 scrolled
                   ? "h-9 w-9 rounded-full"
@@ -1418,8 +1572,7 @@ function NavbarActions({
               className="
                 bi
                 bi-person
-                text-[18px]
-                text-[#555]
+                text-[20px]
                 transition-colors
                 duration-200
                 group-hover:text-[#166534]
@@ -1428,39 +1581,13 @@ function NavbarActions({
 
             {!scrolled && (
               <>
-                <span
-                  className="
-                    hidden
-                    whitespace-nowrap
-                    text-[13px]
-                    font-medium
-                    text-[#333]
-                    sm:block
-                  "
-                >
-                  حساب کاربری
-                </span>
-
-                <i
-                  className="
-                    bi
-                    bi-chevron-down
-                    hidden
-                    text-[10px]
-                    text-[#999]
-                    transition-transform
-                    duration-200
-                    group-hover:rotate-180
-                    sm:block
-                  "
-                />
+           
+          
               </>
             )}
           </button>
 
-          {/* =========================
-              منوی حساب
-          ========================= */}
+          {/* منوی حساب */}
 
           <div
             className="
@@ -1633,6 +1760,7 @@ function NavbarActions({
             duration-300
             hover:border-[#166534]
             hover:bg-[#fdfbf8]
+
             ${
               scrolled
                 ? "h-9 w-9 rounded-full"
@@ -1689,12 +1817,11 @@ function NavbarActions({
           سبد خرید
       ========================= */}
 
-      <button
-        type="button"
+      <Link
+        to="/ShopppSbaddd"
         aria-label="سبد خرید"
         className="
           group
-          relative
           flex
           h-10
           w-10
@@ -1707,29 +1834,18 @@ function NavbarActions({
           hover:bg-[#f7f4ef]
         "
       >
-        <Link
-          to="/ShopppSbaddd"
+        <i
           className="
-            flex
-            h-full
-            w-full
-            items-center
-            justify-center
+            bi
+            bi-bag
+            text-[20px]
+            text-[#333]
+            transition-colors
+            duration-200
+            group-hover:text-[#166534]
           "
-        >
-          <i
-            className="
-              bi
-              bi-bag
-              text-[20px]
-              text-[#333]
-              transition-colors
-              duration-200
-              group-hover:text-[#166534]
-            "
-          />
-        </Link>
-      </button>
+        />
+      </Link>
     </div>
   );
 }

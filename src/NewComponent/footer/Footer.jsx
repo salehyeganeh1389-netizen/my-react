@@ -91,12 +91,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
-        {/* خط جداکننده */}
-        <div className="my-8 h-px bg-[#e8e5df]" />
-
-        {/* پایین فوتر */}
-        <div
+            <div
           className="
             flex
             flex-col
@@ -121,6 +116,11 @@ export default function Footer() {
             تمامی حقوق این وب‌سایت محفوظ است ©
           </p>
         </div>
+        {/* خط جداکننده */}
+        <div className="my-8 h-px bg-[#e8e5df]" />
+
+        {/* پایین فوتر */}
+        
       </div>
     </footer>
   );

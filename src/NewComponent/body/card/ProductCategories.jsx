@@ -1,7 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation } from "swiper/modules";
 
@@ -282,18 +283,7 @@ export default function ProductCategories() {
     return () => ctx.revert();
   }, [loading, products]);
 
-  if (error) {
-    return (
-      <section
-        dir="rtl"
-        className="mx-auto w-full max-w-[1650px] px-4 py-20 text-center"
-      >
-        <p className="text-sm text-red-500">
-          دریافت محصولات با خطا مواجه شد.
-        </p>
-      </section>
-    );
-  }
+
 
   return (
     <section
@@ -340,9 +330,9 @@ export default function ProductCategories() {
         </p>
       </div>
 
-      {loading ? (
-        <CategoriesSkeleton />
-      ) : (
+      {loading || error ? (
+  <CategoriesSkeleton />
+) : (
         <>
           {/* =========================================
               پارچه
@@ -1178,30 +1168,247 @@ function ShopBanner() {
 
 function CategoriesSkeleton() {
   return (
-    <div className="space-y-12">
-      {[1, 2].map((section) => (
-        <div key={section}>
-          <div className="mb-6">
-            <div className="h-5 w-24 animate-pulse rounded bg-gray-200" />
+    <div className="space-y-16 sm:space-y-20 lg:space-y-24">
 
-            <div className="mt-2 h-3 w-48 animate-pulse rounded bg-gray-100" />
-          </div>
+      {/* ===============================
+          پارچه
+      =============================== */}
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {[1, 2, 3, 4, 5].map((item) => (
-              <div
-                key={item}
-                className="
-                  aspect-square
-                  animate-pulse
-                  rounded-[14px]
-                  bg-gray-200
-                "
-              />
-            ))}
+      <section>
+        <div className="mb-5 sm:mb-6">
+          <Skeleton
+            width={80}
+            height={22}
+            borderRadius={6}
+          />
+
+          <div className="mt-2">
+            <Skeleton
+              width={180}
+              height={12}
+              borderRadius={5}
+            />
           </div>
         </div>
-      ))}
+
+        <div
+          className="
+            grid
+            grid-cols-2
+            gap-3
+            sm:grid-cols-3
+            sm:gap-4
+            lg:grid-cols-5
+            xl:grid-cols-6
+          "
+        >
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={`fabric-skeleton-${index}`}
+              className="
+                overflow-hidden
+                rounded-[14px]
+              "
+            >
+              <Skeleton
+                height={220}
+                width="100%"
+                borderRadius={14}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+
+      {/* ===============================
+          پوشاک
+      =============================== */}
+
+      <section>
+        <div className="mb-5 sm:mb-6">
+          <Skeleton
+            width={80}
+            height={22}
+            borderRadius={6}
+          />
+
+          <div className="mt-2">
+            <Skeleton
+              width={200}
+              height={12}
+              borderRadius={5}
+            />
+          </div>
+        </div>
+
+        <div
+          className="
+            grid
+            grid-cols-2
+            gap-3
+            sm:grid-cols-3
+            sm:gap-4
+            lg:grid-cols-5
+            xl:grid-cols-6
+          "
+        >
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={`clothing-skeleton-${index}`}
+              className="
+                overflow-hidden
+                rounded-[14px]
+              "
+            >
+              <Skeleton
+                height={220}
+                width="100%"
+                borderRadius={14}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
+
+
+      {/* ===============================
+          پرفروش‌ترین محصولات
+      =============================== */}
+
+      <section>
+        <div className="mb-6">
+          <Skeleton
+            width={190}
+            height={25}
+            borderRadius={6}
+          />
+
+          <div className="mt-2">
+            <Skeleton
+              width={280}
+              height={12}
+              borderRadius={5}
+            />
+          </div>
+        </div>
+
+        <div
+          className="
+            grid
+            grid-cols-2
+            gap-3
+            sm:grid-cols-3
+            sm:gap-4
+            lg:grid-cols-6
+          "
+        >
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={`best-skeleton-${index}`}
+              className="
+                overflow-hidden
+                rounded-[16px]
+                border
+                border-[#eeeeee]
+                bg-white
+              "
+            >
+              <Skeleton
+                height={190}
+                width="100%"
+                borderRadius={0}
+              />
+
+              <div className="p-3 sm:p-4">
+                <Skeleton
+                  count={2}
+                  height={10}
+                  borderRadius={5}
+                />
+
+                <div className="mt-3">
+                  <Skeleton
+                    width={65}
+                    height={12}
+                    borderRadius={5}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+
+      {/* ===============================
+          آخرین محصولات
+      =============================== */}
+
+      <section>
+        <div className="mb-6">
+          <Skeleton
+            width={150}
+            height={25}
+            borderRadius={6}
+          />
+
+          <div className="mt-2">
+            <Skeleton
+              width={300}
+              height={12}
+              borderRadius={5}
+            />
+          </div>
+        </div>
+
+        <div
+          className="
+            grid
+            grid-cols-2
+            gap-3
+            sm:grid-cols-3
+            sm:gap-4
+            lg:grid-cols-6
+          "
+        >
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={`latest-skeleton-${index}`}
+              className="
+                overflow-hidden
+                rounded-[16px]
+                border
+                border-[#eeeeee]
+                bg-white
+              "
+            >
+              <Skeleton
+                height={190}
+                width="100%"
+                borderRadius={0}
+              />
+
+              <div className="p-3 sm:p-4">
+                <Skeleton
+                  count={2}
+                  height={10}
+                  borderRadius={5}
+                />
+
+                <div className="mt-3">
+                  <Skeleton
+                    width={65}
+                    height={12}
+                    borderRadius={5}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
     </div>
   );
 }

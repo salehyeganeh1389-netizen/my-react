@@ -286,7 +286,7 @@ export default function Contact() {
               "
               style={{
                 backgroundImage:
-                  "url('file_00000000d58c820da9bfbc1b74d4fefb.png')",
+                  "url('ChatGPT Image ۵ مهر ۱۴۰۵، ۰۹_۰۱_۱۵.png')",
               }}
             />
 

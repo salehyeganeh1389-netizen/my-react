@@ -438,19 +438,19 @@ export default function About() {
     >
       <Feature
         number="01"
-        image="./undraw_mail-sent_dagx.svg"
+        image="./certified.png"
         title="ضمانت و اعتماد"
         text="تلاش می‌کنیم خرید شما با اطمینان، شفافیت و تجربه‌ای مطمئن همراه باشد."
       />
       <Feature
         number="02"
-        image="./undraw_mail-sent_dagx.svg"
+        image="./return.png"
         title="کیفیت و تنوع بالا"
         text="انتخاب محصولاتی متنوع با تمرکز بر کیفیت، ظاهر و ارزش واقعی خرید."
       />
       <Feature
         number="03"
-        image="./undraw_mail-sent_dagx.svg"
+        image="./supporting.png"
         title="پشتیبانی آنلاین"
         text="در مسیر انتخاب و خرید، ارتباط و پشتیبانی را بخشی از تجربه مشتری می‌دانیم."
       />

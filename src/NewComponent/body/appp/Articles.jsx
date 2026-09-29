@@ -2,6 +2,13 @@ import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "react-router-dom";
+import Select from "react-select";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,8 +21,7 @@ const articles = [
       "جنس، بافت، وزن، میزان تنفس‌پذیری و کاربرد لباس از مهم‌ترین عواملی هستند که قبل از خرید پارچه باید به آن‌ها توجه کنید.",
     date: "۲۸ شهریور ۱۴۰۵",
     time: "۵ دقیقه",
-    image:
-      "/file_00000000d58c820da9bfbc1b74d4fefb.png",
+    image: "/file_00000000d58c820da9bfbc1b74d4fefb.png",
   },
   {
     id: 2,
@@ -25,8 +31,7 @@ const articles = [
       "پنبه و لینن هر دو از الیاف طبیعی هستند، اما در لطافت، تنفس‌پذیری، بافت و کاربرد تفاوت‌هایی دارند.",
     date: "۲۴ شهریور ۱۴۰۵",
     time: "۴ دقیقه",
-    image:
-      "/file_00000000d58c820da9bfbc1b74d4fefb.png",
+    image: "/file_00000000d58c820da9bfbc1b74d4fefb.png",
   },
   {
     id: 3,
@@ -36,8 +41,7 @@ const articles = [
       "ممکن است دو پارچه از نظر ظاهری شبیه باشند، اما نوع بافت آن‌ها کیفیت و تجربه متفاوتی ایجاد کند.",
     date: "۲۰ شهریور ۱۴۰۵",
     time: "۳ دقیقه",
-    image:
-      "/file_00000000d58c820da9bfbc1b74d4fefb.png",
+    image: "/file_00000000d58c820da9bfbc1b74d4fefb.png",
   },
   {
     id: 4,
@@ -47,8 +51,7 @@ const articles = [
       "انتخاب درست جنس و رنگ پارچه می‌تواند روی ظاهر نهایی لباس و راحتی استفاده از آن تأثیر زیادی داشته باشد.",
     date: "۱۶ شهریور ۱۴۰۵",
     time: "۴ دقیقه",
-    image:
-      "/file_00000000d58c820da9bfbc1b74d4fefb.png",
+    image: "/file_00000000d58c820da9bfbc1b74d4fefb.png",
   },
   {
     id: 5,
@@ -58,8 +61,7 @@ const articles = [
       "شست‌وشو، خشک‌کردن و نگهداری صحیح می‌تواند روی ظاهر و طول عمر پارچه و لباس تأثیر زیادی داشته باشد.",
     date: "۱۲ شهریور ۱۴۰۵",
     time: "۳ دقیقه",
-    image:
-      "/file_00000000d58c820da9bfbc1b74d4fefb.png",
+    image: "/file_00000000d58c820da9bfbc1b74d4fefb.png",
   },
   {
     id: 6,
@@ -69,31 +71,7 @@ const articles = [
       "از لمس پارچه تا بررسی وزن، تراکم بافت و کاربرد نهایی؛ چند نکته ساده می‌تواند انتخاب شما را دقیق‌تر کند.",
     date: "۰۸ شهریور ۱۴۰۵",
     time: "۵ دقیقه",
-    image:
-      "/file_00000000d58c820da9bfbc1b74d4fefb.png",
-  },
-];
-
-const popularTopics = [
-  {
-    title: "انتخاب پارچه",
-    count: "۱۲ مقاله",
-    icon: "bi-scissors",
-  },
-  {
-    title: "شناخت پارچه‌ها",
-    count: "۹ مقاله",
-    icon: "bi-layers",
-  },
-  {
-    title: "راهنمای خرید",
-    count: "۸ مقاله",
-    icon: "bi-bag",
-  },
-  {
-    title: "نگهداری لباس",
-    count: "۶ مقاله",
-    icon: "bi-heart",
+    image: "/file_00000000d58c820da9bfbc1b74d4fefb.png",
   },
 ];
 
@@ -102,11 +80,57 @@ export default function Articles() {
 
   const [activeCategory, setActiveCategory] = useState("همه");
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("newest");
+
+  /*
+   * =========================================================
+   * CATEGORIES
+   * =========================================================
+   */
+
+  const categories = useMemo(() => {
+    return [
+      "همه",
+      ...new Set(articles.map((article) => article.category)),
+    ];
+  }, []);
+
+  /*
+   * =========================================================
+   * SELECT OPTIONS
+   * =========================================================
+   */
+
+  const categoryOptions = categories.map((category) => ({
+    value: category,
+    label: category,
+  }));
+
+  const sortOptions = [
+    {
+      value: "newest",
+      label: "جدیدترین مقالات",
+    },
+    {
+      value: "oldest",
+      label: "قدیمی‌ترین مقالات",
+    },
+    {
+      value: "reading",
+      label: "بیشترین زمان مطالعه",
+    },
+  ];
+
+  /*
+   * =========================================================
+   * FILTER + SORT
+   * =========================================================
+   */
 
   const filteredArticles = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
 
-    return articles.filter((article) => {
+    const result = articles.filter((article) => {
       const categoryMatch =
         activeCategory === "همه" ||
         article.category === activeCategory;
@@ -114,84 +138,208 @@ export default function Articles() {
       const searchMatch =
         normalizedSearch === "" ||
         article.title.toLowerCase().includes(normalizedSearch) ||
-        article.excerpt.toLowerCase().includes(normalizedSearch);
+        article.excerpt.toLowerCase().includes(normalizedSearch) ||
+        article.category.toLowerCase().includes(normalizedSearch);
 
       return categoryMatch && searchMatch;
     });
-  }, [activeCategory, search]);
+
+    if (sort === "oldest") {
+      return [...result].reverse();
+    }
+
+    if (sort === "reading") {
+      return [...result].sort(
+        (a, b) => parseInt(b.time) - parseInt(a.time)
+      );
+    }
+
+    return result;
+  }, [activeCategory, search, sort]);
+
+  /*
+   * =========================================================
+   * FEATURED ARTICLES
+   * فقط ۳ مقاله منتخب
+   * =========================================================
+   */
+
+  const featuredArticles = articles.slice(0, 3);
+
+  /*
+   * =========================================================
+   * SELECT STYLE
+   * =========================================================
+   */
+
+  const selectStyles = {
+    control: (base, state) => ({
+      ...base,
+      minHeight: "44px",
+      height: "44px",
+      borderRadius: "10px",
+      borderColor: state.isFocused ? "#17633f" : "#e3e0d9",
+      backgroundColor: "#faf9f6",
+      boxShadow: state.isFocused
+        ? "0 0 0 3px rgba(23,99,63,0.08)"
+        : "none",
+      cursor: "pointer",
+      transition: "all 0.25s ease",
+
+      "&:hover": {
+        borderColor: "#17633f",
+      },
+    }),
+
+    valueContainer: (base) => ({
+      ...base,
+      padding: "0 12px",
+    }),
+
+    singleValue: (base) => ({
+      ...base,
+      color: "#444",
+      fontSize: "10px",
+      fontWeight: 500,
+    }),
+
+    placeholder: (base) => ({
+      ...base,
+      color: "#999",
+      fontSize: "10px",
+    }),
+
+    menu: (base) => ({
+      ...base,
+      marginTop: "6px",
+      borderRadius: "12px",
+      overflow: "hidden",
+      border: "1px solid #e5e2db",
+      boxShadow: "0 18px 45px rgba(20,30,25,0.10)",
+      zIndex: 100,
+    }),
+
+    menuList: (base) => ({
+      ...base,
+      padding: "6px",
+    }),
+
+    option: (base, state) => ({
+      ...base,
+      borderRadius: "8px",
+      padding: "10px 12px",
+      marginBottom: "2px",
+      fontSize: "10px",
+      cursor: "pointer",
+
+      backgroundColor: state.isSelected
+        ? "#17633f"
+        : state.isFocused
+        ? "#f2f6f3"
+        : "white",
+
+      color: state.isSelected ? "white" : "#555",
+
+      transition: "all 0.2s ease",
+    }),
+
+    indicatorSeparator: () => ({
+      display: "none",
+    }),
+
+    dropdownIndicator: (base) => ({
+      ...base,
+      color: "#999",
+      paddingLeft: "10px",
+    }),
+  };
+
+  /*
+   * =========================================================
+   * GSAP
+   * =========================================================
+   */
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      const heroTimeline = gsap.timeline();
+      /*
+       * HERO IMAGE
+       */
 
-      heroTimeline
-        .fromTo(
-          ".articles-hero-badge",
-          {
-            opacity: 0,
-            y: 15,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power3.out",
-          }
-        )
-        .fromTo(
-          ".articles-hero-title",
-          {
-            opacity: 0,
-            y: 35,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: "power4.out",
-          },
-          "-=0.25"
-        )
-        .fromTo(
-          ".articles-hero-text",
-          {
-            opacity: 0,
-            y: 20,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power3.out",
-          },
-          "-=0.4"
-        )
-        .fromTo(
-          ".articles-search",
-          {
-            opacity: 0,
-            y: 15,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: "power3.out",
-          },
-          "-=0.3"
-        );
+      gsap.fromTo(
+        ".blog-hero-image",
+        {
+          opacity: 0,
+          scale: 1.04,
+        },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1.2,
+          ease: "power3.out",
+        }
+      );
 
-      gsap.utils.toArray(".premium-reveal").forEach((element) => {
+      /*
+       * HERO SEARCH
+       */
+
+      gsap.fromTo(
+        ".blog-search",
+        {
+          opacity: 0,
+          y: 20,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          delay: 0.25,
+          ease: "power3.out",
+        }
+      );
+
+      /*
+       * GENERAL REVEAL
+       */
+
+      gsap.utils.toArray(".blog-reveal").forEach((element) => {
         gsap.fromTo(
           element,
           {
             opacity: 0,
-            y: 35,
+            y: 25,
           },
           {
             opacity: 1,
             y: 0,
-            duration: 0.75,
+            duration: 0.65,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: element,
+              start: "top 90%",
+              once: true,
+            },
+          }
+        );
+      });
+
+      /*
+       * ARTICLE CARDS
+       */
+
+      gsap.utils.toArray(".article-card").forEach((element, index) => {
+        gsap.fromTo(
+          element,
+          {
+            opacity: 0,
+            y: 25,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            delay: index * 0.04,
             ease: "power3.out",
             scrollTrigger: {
               trigger: element,
@@ -201,429 +349,340 @@ export default function Articles() {
           }
         );
       });
-
-      const topicCards = gsap.utils.toArray(".topic-card");
-
-      if (topicCards.length) {
-        gsap.fromTo(
-          topicCards,
-          {
-            opacity: 0,
-            y: 25,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            stagger: 0.08,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: ".topics-grid",
-              start: "top 88%",
-              once: true,
-            },
-          }
-        );
-      }
-
-      const articleCards = gsap.utils.toArray(".article-card");
-
-      if (articleCards.length) {
-        gsap.fromTo(
-          articleCards,
-          {
-            opacity: 0,
-            y: 30,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.65,
-            stagger: 0.08,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: ".articles-grid",
-              start: "top 88%",
-              once: true,
-            },
-          }
-        );
-      }
     }, pageRef);
 
-    return () => {
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, []);
+
+  /*
+   * =========================================================
+   * RESET
+   * =========================================================
+   */
+
+  const resetFilters = () => {
+    setSearch("");
+    setActiveCategory("همه");
+    setSort("newest");
+  };
+
+  /*
+   * =========================================================
+   * RENDER
+   * =========================================================
+   */
 
   return (
     <main
       ref={pageRef}
       dir="rtl"
-      className="min-h-screen overflow-hidden bg-[#f7f6f2] text-[#20221f]"
+      className="min-h-screen bg-[#f7f6f2] text-[#20221f]"
     >
       {/* =====================================================
-          HERO
+          HERO IMAGE
+          فقط تصویر - بدون لایه سبز
       ===================================================== */}
+<section className="relative h-[430px] overflow-hidden sm:h-[500px] lg:h-[560px]">
+  <img
+    src="/file_00000000d58c820da9bfbc1b74d4fefb.png"
+    alt="مجله قماش شیخ الاسلامی"
+    className="
+      blog-hero-image
+      absolute
+      inset-0
+      h-full
+      w-full
+      object-cover
+    "
+  />
 
-      <section className="relative overflow-hidden">
-        <img
-          src="/file_00000000d58c820da9bfbc1b74d4fefb.png"
-          alt=""
+  {/* لایه خیلی ملایم برای خوانایی متن */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+
+  <div className="relative z-10 flex h-full items-end">
+    <div className="mx-auto w-full max-w-[1280px] px-5 pb-10 sm:px-8 sm:pb-14 lg:px-12 lg:pb-16">
+      <div className="max-w-[760px] text-right">
+
+        <span className="text-[9px] font-medium text-white/80">
+          مجله قماش شیخ الاسلامی
+        </span>
+
+        <h1
           className="
-            absolute
-            inset-0
-            h-full
-            w-full
-            object-cover
-            object-center
-          "
-        />
-
-        <div className="absolute inset-0 bg-black/45" />
-
-        <div
-          className="
-            relative
-            mx-auto
-            max-w-[1400px]
-            px-5
-            py-20
-            sm:px-8
-            sm:py-24
-            lg:px-16
-            lg:py-28
+            mt-3
+            text-[26px]
+            font-bold
+            leading-[1.7]
+            tracking-[-0.5px]
+            text-white
+            sm:text-[34px]
+            lg:text-[40px]
           "
         >
-          <div className="max-w-[720px]">
-            <div
-              className="
-                articles-hero-badge
-                inline-flex
-                items-center
-                gap-2
-                rounded-full
-                border
-                border-white/20
-                bg-black/20
-                px-4
-                py-2
-                text-[9px]
-                text-white/85
-                backdrop-blur-md
-              "
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-white" />
-              مجله قماش شیخ الاسلامی
-            </div>
+          مجله قماش شیخ الاسلامی
+        </h1>
 
-            <h1
-              className="
-                articles-hero-title
-                mt-7
-                text-[32px]
-                font-bold
-                leading-[1.6]
-                tracking-[-1px]
-                text-white
-                sm:text-[44px]
-                lg:text-[54px]
-              "
-            >
-              راهنمای انتخاب،
-              <br />
-              شناخت و خرید بهتر پارچه
-            </h1>
+        <p
+          className="
+            mt-3
+            max-w-[620px]
+            text-[10px]
+            leading-8
+            text-white/85
+            sm:text-[11px]
+          "
+        >
+          راهنمای انتخاب، شناخت و خرید پارچه؛ مطالب کاربردی
+          برای انتخاب بهتر و آگاهانه‌تر.
+        </p>
 
-            <p
-              className="
-                articles-hero-text
-                mt-5
-                max-w-[600px]
-                text-[12px]
-                leading-8
-                text-white/80
-                sm:text-[13px]
-              "
-            >
-              مطالب کاربردی درباره انواع پارچه، روش تشخیص کیفیت،
-              انتخاب مناسب برای لباس و نکاتی که قبل از خرید باید بدانید.
-            </p>
+        {/* SEARCH */}
 
-            <div className="articles-search mt-9 max-w-[560px]">
-              <div
-                className="
-                  flex
-                  h-[58px]
-                  items-center
-                  rounded-2xl
-                  border
-                  border-white/10
-                  bg-white
-                  p-1.5
-                  shadow-[0_20px_50px_rgba(0,0,0,0.2)]
-                "
-              >
-                <div className="flex flex-1 items-center gap-3 px-4">
-                  <i className="bi bi-search text-[14px] text-[#17633f]" />
-
-                  <input
-                    type="text"
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    placeholder="جستجو در مقالات..."
-                    className="
-                      w-full
-                      bg-transparent
-                      text-[11px]
-                      text-[#333]
-                      outline-none
-                      placeholder:text-[#aaa]
-                    "
-                  />
-                </div>
-
-                {search && (
-                  <button
-                    type="button"
-                    onClick={() => setSearch("")}
-                    className="
-                      flex
-                      h-10
-                      w-10
-                      shrink-0
-                      items-center
-                      justify-center
-                      rounded-xl
-                      text-[#999]
-                      transition-colors
-                      hover:bg-[#f3f3f0]
-                      hover:text-[#17633f]
-                    "
-                  >
-                    <i className="bi bi-x-lg text-[11px]" />
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          POPULAR TOPICS
-      ===================================================== */}
-
-      <section className="border-y border-[#e4e1da] bg-white">
-        <div className="mx-auto max-w-[1400px] px-5 py-12 sm:px-8 lg:px-16 lg:py-16">
-          <div className="premium-reveal mb-7">
-            <span className="text-[9px] font-medium text-[#17633f]">
-              موضوعات پرطرفدار
-            </span>
-
-            <h2 className="mt-2 text-[22px] font-bold">
-              از کجا شروع کنیم؟
-            </h2>
-          </div>
-
-          <div className="topics-grid grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {popularTopics.map((topic) => (
-              <button
-                key={topic.title}
-                type="button"
-                onClick={() => {
-                  const categoryMap = {
-                    "انتخاب پارچه": "راهنمای انتخاب",
-                    "شناخت پارچه‌ها": "شناخت پارچه",
-                    "راهنمای خرید": "راهنمای خرید",
-                    "نگهداری لباس": "نگهداری",
-                  };
-
-                  const category = categoryMap[topic.title];
-
-                  if (category) {
-                    setActiveCategory(category);
-                  }
-
-                  window.scrollTo({
-                    top:
-                      document.querySelector(".articles-grid")?.offsetTop -
-                        100 || 0,
-                    behavior: "smooth",
-                  });
-                }}
-                className="topic-card group flex items-center justify-between rounded-xl border border-[#e5e2db] bg-[#faf9f6] p-5 text-right transition-all duration-300 hover:-translate-y-1 hover:border-[#17633f]/30 hover:bg-white hover:shadow-[0_12px_35px_rgba(20,30,25,0.07)]"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#eaf2ed] text-[#17633f] transition-all duration-300 group-hover:bg-[#17633f] group-hover:text-white">
-                    <i className={`bi ${topic.icon}`} />
-                  </div>
-
-                  <div>
-                    <h3 className="text-[11px] font-bold">
-                      {topic.title}
-                    </h3>
-
-                    <p className="mt-1 text-[8px] text-[#aaa]">
-                      {topic.count}
-                    </p>
-                  </div>
-                </div>
-
-                <i className="bi bi-arrow-left text-[12px] text-[#17633f] transition-transform duration-300 group-hover:-translate-x-1" />
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* =====================================================
-          FEATURED ARTICLE
-      ===================================================== */}
-
-      <section className="mx-auto max-w-[1400px] px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
-        <div className="premium-reveal mb-8 flex items-end justify-between">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#17633f]" />
-
-              <span className="text-[9px] font-medium text-[#17633f]">
-                پیشنهاد مطالعه
-              </span>
-            </div>
-
-            <h2 className="mt-3 text-[24px] font-bold tracking-[-0.5px] sm:text-[29px]">
-              مقاله منتخب
-            </h2>
-          </div>
-
-          <div className="hidden items-center gap-3 text-[9px] text-[#aaa] sm:flex">
-            <span>جدیدترین مطلب</span>
-
-            <span className="h-px w-8 bg-[#d9d6cf]" />
-          </div>
-        </div>
-
-        <article className="premium-reveal group grid overflow-hidden rounded-[22px] border border-[#dfdcd5] bg-white shadow-[0_15px_60px_rgba(25,35,30,0.06)] lg:grid-cols-[1.08fr_0.92fr]">
-          {/* Image */}
-
-          <Link
-            to={`/articles/${articles[0].id}`}
-            className="relative block min-h-[320px] overflow-hidden sm:min-h-[430px] lg:min-h-[480px]"
+        <div className="blog-search mt-6 max-w-[540px]">
+          <div
+            className="
+              flex
+              h-[52px]
+              items-center
+              rounded-xl
+              border
+              border-white/20
+              bg-white/95
+              px-4
+              shadow-[0_10px_30px_rgba(0,0,0,0.12)]
+              transition-all
+              duration-300
+              focus-within:border-white
+              focus-within:bg-white
+            "
           >
-            <img
-              src={articles[0].image}
-              alt={articles[0].title}
-              className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.045]"
+            <i className="bi bi-search text-[14px] text-[#17633f]" />
+
+            <input
+              type="text"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="جستجوی مقاله..."
+              className="
+                mr-3
+                w-full
+                bg-transparent
+                text-[11px]
+                text-[#333]
+                outline-none
+                placeholder:text-[#aaa]
+              "
             />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/5" />
-
-            <div className="absolute right-6 top-6">
-              <span className="rounded-lg bg-white/95 px-3 py-2 text-[9px] font-medium text-[#17633f] shadow-lg">
-                {articles[0].category}
-              </span>
-            </div>
-
-            <div className="absolute bottom-6 right-6 left-6 flex items-end justify-between">
-              <div>
-                <span className="text-[8px] text-white/70">
-                  آخرین بروزرسانی
-                </span>
-
-                <p className="mt-1 text-[10px] text-white">
-                  {articles[0].date}
-                </p>
-              </div>
-
-              <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-[#17633f] shadow-xl transition-transform duration-500 group-hover:-translate-x-1">
-                <i className="bi bi-arrow-left" />
-              </div>
-            </div>
-          </Link>
-
-          {/* Content */}
-
-          <div className="flex flex-col justify-between p-7 sm:p-10 lg:p-12">
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="text-[9px] text-[#aaa]">
-                  مقاله منتخب
-                </span>
-
-                <span className="text-[9px] text-[#aaa]">
-                  {articles[0].time} مطالعه
-                </span>
-              </div>
-
-              <h3 className="mt-6 text-[24px] font-bold leading-[1.8] tracking-[-0.7px] sm:text-[31px]">
-                {articles[0].title}
-              </h3>
-
-              <p className="mt-5 text-[12px] leading-8 text-[#777] sm:text-[13px]">
-                {articles[0].excerpt}
-              </p>
-
-              <div className="mt-7 h-px bg-[#ece9e2]" />
-
-              <div className="mt-6 grid grid-cols-3 gap-3">
-                <div className="rounded-xl bg-[#f7f7f4] p-4">
-                  <i className="bi bi-search text-[#17633f]" />
-
-                  <p className="mt-2 text-[8px] text-[#888]">
-                    راهنمای انتخاب
-                  </p>
-                </div>
-
-                <div className="rounded-xl bg-[#f7f7f4] p-4">
-                  <i className="bi bi-layers text-[#17633f]" />
-
-                  <p className="mt-2 text-[8px] text-[#888]">
-                    شناخت پارچه
-                  </p>
-                </div>
-
-                <div className="rounded-xl bg-[#f7f7f4] p-4">
-                  <i className="bi bi-check2-circle text-[#17633f]" />
-
-                  <p className="mt-2 text-[8px] text-[#888]">
-                    انتخاب بهتر
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <Link
-              to={`/articles/${articles[0].id}`}
-              className="mt-8 flex items-center gap-2 text-[9px] font-medium text-[#17633f]"
-            >
-              مطالعه مقاله
-
-              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#dedbd4] transition-all duration-300 group-hover:border-[#17633f] group-hover:bg-[#17633f] group-hover:text-white">
-                <i className="bi bi-arrow-left text-[8px]" />
-              </span>
-            </Link>
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                aria-label="پاک کردن جستجو"
+                className="
+                  flex
+                  h-8
+                  w-8
+                  shrink-0
+                  items-center
+                  justify-center
+                  rounded-lg
+                  text-[#aaa]
+                  transition-colors
+                  hover:bg-[#efeee9]
+                  hover:text-[#17633f]
+                "
+              >
+                <i className="bi bi-x-lg text-[10px]" />
+              </button>
+            )}
           </div>
-        </article>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+
+      {/* =====================================================
+          FEATURED ARTICLES
+          یک کارت کوچک + یک اسلایدر داخل آن
+      ===================================================== */}
+
+      <section className="bg-[#f7f6f2]">
+        <div className="mx-auto max-w-[1280px] px-5 py-12 sm:px-8 sm:py-14 lg:px-12">
+          {/* TITLE */}
+
+          <div className="blog-reveal mb-6 text-center">
+            <span className="text-[9px] font-medium text-[#17633f]">
+              انتخاب سردبیر
+            </span>
+
+            <h2 className="mt-2 text-[22px] font-bold sm:text-[25px]">
+              مقالات منتخب
+            </h2>
+          </div>
+
+          {/* SMALL FEATURED CARD */}
+
+          <div
+            className="
+              blog-reveal
+              mx-auto
+              w-full
+              max-w-[430px]
+              overflow-hidden
+              rounded-[18px]
+              border
+              border-[#e2dfd8]
+              bg-white
+              shadow-[0_18px_50px_rgba(20,30,25,0.07)]
+            "
+          >
+            <Swiper
+              modules={[Autoplay, Pagination]}
+              slidesPerView={1}
+              loop={true}
+              speed={800}
+              autoplay={{
+                delay: 4000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }}
+              pagination={{
+                clickable: true,
+                el: ".featured-pagination",
+              }}
+              className="featured-swiper"
+            >
+              {featuredArticles.map((article) => (
+                <SwiperSlide key={article.id}>
+                  <article className="group bg-white">
+                    {/* IMAGE */}
+
+                    <Link
+                      to={`/articles/${article.id}`}
+                      className="
+                        relative
+                        block
+                        h-[215px]
+                        overflow-hidden
+                        bg-[#eee]
+                      "
+                    >
+                      <img
+                        src={article.image}
+                        alt={article.title}
+                        className="
+                          h-full
+                          w-full
+                          object-cover
+                          transition-transform
+                          duration-[1000ms]
+                          ease-out
+                          group-hover:scale-[1.05]
+                        "
+                      />
+
+                      {/* فقط یک گرادیان بسیار ملایم برای خوانایی متن */}
+
+                      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/30 to-transparent" />
+
+                      <span
+                        className="
+                          absolute
+                          right-4
+                          top-4
+                          rounded-lg
+                          bg-white/95
+                          px-3
+                          py-2
+                          text-[8px]
+                          font-medium
+                          text-[#17633f]
+                          shadow-md
+                        "
+                      >
+                        {article.category}
+                      </span>
+                    </Link>
+
+                    {/* CONTENT */}
+
+                    <div className="p-5">
+                      <Link to={`/articles/${article.id}`}>
+                        <h3
+                          className="
+                            text-[16px]
+                            font-bold
+                            leading-[1.9]
+                            text-[#252725]
+                            transition-colors
+                            duration-300
+                            group-hover:text-[#17633f]
+                          "
+                        >
+                          {article.title}
+                        </h3>
+                      </Link>
+
+                      <p className="mt-2.5 line-clamp-2 text-[10px] leading-7 text-[#85857f]">
+                        {article.excerpt}
+                      </p>
+
+                      <div
+                        className="
+                          mt-4
+                          flex
+                          items-center
+                          justify-between
+                          border-t
+                          border-[#eeeae3]
+                          pt-4
+                        "
+                      >
+                        <div className="flex items-center gap-2 text-[8px] text-[#aaa]">
+                          <i className="bi bi-clock text-[#17633f]" />
+
+                          <span>
+                            زمان مطالعه: {article.time}
+                          </span>
+                        </div>
+
+                        <span className="text-[8px] text-[#aaa]">
+                          {article.date}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+
+            {/* SWIPER DOTS */}
+
+            <div className="featured-pagination flex min-h-[34px] items-center justify-center gap-1.5 pb-3 pt-1" />
+          </div>
+        </div>
       </section>
 
       {/* =====================================================
-          ARTICLES
+          MAIN ARTICLES
       ===================================================== */}
 
-      <section className="mx-auto max-w-[1400px] px-5 py-14 sm:px-8 sm:py-20 lg:px-16 lg:py-24">
-        <div className="premium-reveal mb-9 flex items-end justify-between">
+      <section className="mx-auto max-w-[1280px] px-5 py-12 sm:px-8 sm:py-16 lg:px-12">
+        {/* TITLE */}
+
+        <div className="blog-reveal flex items-end justify-between">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#17633f]" />
+            <span className="text-[9px] font-medium text-[#17633f]">
+              مجله قماش
+            </span>
 
-              <span className="text-[9px] font-medium text-[#17633f]">
-                مجله قماش
-              </span>
-            </div>
-
-            <h2 className="mt-3 text-[25px] font-bold sm:text-[30px]">
-              آخرین مقالات
+            <h2 className="mt-2 text-[23px] font-bold sm:text-[28px]">
+              مقالات
             </h2>
           </div>
 
@@ -632,46 +691,294 @@ export default function Articles() {
           </span>
         </div>
 
+        {/* =================================================
+            FILTER
+        ================================================= */}
+
+        <div
+          className="
+            blog-reveal
+            mt-7
+            rounded-2xl
+            border
+            border-[#e2dfd8]
+            bg-white
+            p-4
+            shadow-[0_10px_35px_rgba(20,30,25,0.035)]
+            sm:p-5
+          "
+        >
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end">
+            {/* SEARCH */}
+
+            <div className="flex-1">
+              <div className="mb-2.5 flex items-center gap-2">
+                <i className="bi bi-search text-[10px] text-[#17633f]" />
+
+                <span className="text-[9px] font-medium text-[#666]">
+                  جستجوی مقاله
+                </span>
+              </div>
+
+              <div
+                className="
+                  flex
+                  h-[44px]
+                  items-center
+                  rounded-[10px]
+                  border
+                  border-[#e3e0d9]
+                  bg-[#faf9f6]
+                  px-3
+                  transition-all
+                  duration-300
+                  focus-within:border-[#17633f]
+                  focus-within:bg-white
+                  focus-within:shadow-[0_0_0_3px_rgba(23,99,63,0.06)]
+                "
+              >
+                <i className="bi bi-search text-[11px] text-[#17633f]" />
+
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="عنوان، دسته‌بندی یا متن مقاله..."
+                  className="
+                    mr-2.5
+                    w-full
+                    bg-transparent
+                    text-[10px]
+                    text-[#444]
+                    outline-none
+                    placeholder:text-[#aaa]
+                  "
+                />
+
+                {search && (
+                  <button
+                    type="button"
+                    onClick={() => setSearch("")}
+                    className="text-[#aaa] transition-colors hover:text-[#17633f]"
+                  >
+                    <i className="bi bi-x-circle text-[11px]" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* CATEGORY */}
+
+            <div className="w-full lg:w-[245px]">
+              <div className="mb-2.5 flex items-center gap-2">
+                <i className="bi bi-grid text-[10px] text-[#17633f]" />
+
+                <span className="text-[9px] font-medium text-[#666]">
+                  دسته‌بندی
+                </span>
+              </div>
+
+              <Select
+                value={categoryOptions.find(
+                  (option) => option.value === activeCategory
+                )}
+                onChange={(option) =>
+                  setActiveCategory(option?.value || "همه")
+                }
+                options={categoryOptions}
+                styles={selectStyles}
+                isSearchable={false}
+                isRtl
+                placeholder="انتخاب دسته‌بندی"
+              />
+            </div>
+
+            {/* SORT */}
+
+            <div className="w-full lg:w-[245px]">
+              <div className="mb-2.5 flex items-center gap-2">
+                <i className="bi bi-sort-down text-[10px] text-[#17633f]" />
+
+                <span className="text-[9px] font-medium text-[#666]">
+                  مرتب‌سازی
+                </span>
+              </div>
+
+              <Select
+                value={sortOptions.find(
+                  (option) => option.value === sort
+                )}
+                onChange={(option) =>
+                  setSort(option?.value || "newest")
+                }
+                options={sortOptions}
+                styles={selectStyles}
+                isSearchable={false}
+                isRtl
+                placeholder="مرتب‌سازی"
+              />
+            </div>
+          </div>
+
+          {/* FILTER FOOTER */}
+
+          <div className="mt-5 flex flex-col gap-3 border-t border-[#eeeae3] pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 text-[9px] text-[#999]">
+              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-[#f1f5f2] text-[#17633f]">
+                <i className="bi bi-file-text text-[9px]" />
+              </span>
+
+              <span>
+                {filteredArticles.length} مقاله نمایش داده می‌شود
+              </span>
+
+              {search && (
+                <span className="text-[#17633f]">
+                  برای «{search}»
+                </span>
+              )}
+            </div>
+
+            {(search ||
+              activeCategory !== "همه" ||
+              sort !== "newest") && (
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="
+                  inline-flex
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-lg
+                  border
+                  border-[#e3e0d9]
+                  bg-[#faf9f6]
+                  px-3
+                  py-2
+                  text-[9px]
+                  font-medium
+                  text-[#777]
+                  transition-all
+                  duration-300
+                  hover:border-[#17633f]/30
+                  hover:bg-[#f2f6f3]
+                  hover:text-[#17633f]
+                "
+              >
+                <i className="bi bi-arrow-counterclockwise text-[9px]" />
+
+                پاک کردن فیلترها
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* =================================================
+            ARTICLE GRID
+        ================================================= */}
+
         {filteredArticles.length > 0 ? (
-          <div className="articles-grid grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="articles-grid mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {filteredArticles.map((article) => (
               <article
                 key={article.id}
-                className="article-card group overflow-hidden rounded-[18px] border border-[#e2dfd8] bg-white transition-all duration-500 hover:-translate-y-1.5 hover:shadow-[0_20px_55px_rgba(20,30,25,0.09)]"
+                className="
+                  article-card
+                  group
+                  overflow-hidden
+                  rounded-[18px]
+                  border
+                  border-[#e2dfd8]
+                  bg-white
+                  transition-all
+                  duration-500
+                  hover:-translate-y-1.5
+                  hover:shadow-[0_20px_55px_rgba(20,30,25,0.09)]
+                "
               >
-                {/* Image */}
+                {/* IMAGE */}
 
                 <Link
                   to={`/articles/${article.id}`}
-                  className="relative block h-[245px] overflow-hidden bg-[#eee]"
+                  className="
+                    relative
+                    block
+                    h-[245px]
+                    overflow-hidden
+                    bg-[#eee]
+                  "
                 >
                   <img
                     src={article.image}
                     alt={article.title}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.06]"
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                      transition-transform
+                      duration-[900ms]
+                      ease-out
+                      group-hover:scale-[1.06]
+                    "
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
 
-                  <span className="absolute right-4 top-4 rounded-lg bg-white/95 px-3 py-2 text-[8px] font-medium text-[#17633f] shadow-md">
+                  <span
+                    className="
+                      absolute
+                      right-4
+                      top-4
+                      rounded-lg
+                      bg-white/95
+                      px-3
+                      py-2
+                      text-[8px]
+                      font-medium
+                      text-[#17633f]
+                      shadow-md
+                    "
+                  >
                     {article.category}
                   </span>
 
-                  <div className="absolute bottom-4 right-4 left-4 flex items-center justify-between text-[8px] text-white/80">
+                  <div
+                    className="
+                      absolute
+                      bottom-4
+                      right-4
+                      left-4
+                      flex
+                      items-center
+                      justify-between
+                      text-[8px]
+                      text-white/85
+                    "
+                  >
                     <span>{article.date}</span>
 
-                    <span className="rounded-full bg-black/20 px-2.5 py-1.5 backdrop-blur-md">
-                      {article.time}
+                    <span className="rounded-full bg-black/25 px-2.5 py-1.5 backdrop-blur-md">
+                      زمان مطالعه: {article.time}
                     </span>
                   </div>
                 </Link>
 
-                {/* Content */}
+                {/* CONTENT */}
 
                 <div className="p-6">
                   <Link to={`/articles/${article.id}`}>
-                    <h3 className="text-[17px] font-bold leading-[1.9] transition-colors duration-300 group-hover:text-[#17633f]">
+                    <h3
+                      className="
+                        text-[17px]
+                        font-bold
+                        leading-[1.9]
+                        transition-colors
+                        duration-300
+                        group-hover:text-[#17633f]
+                      "
+                    >
                       {article.title}
                     </h3>
                   </Link>
@@ -680,87 +987,91 @@ export default function Articles() {
                     {article.excerpt}
                   </p>
 
-                  <div className="mt-6 flex items-center justify-between border-t border-[#eeeae3] pt-5">
-                    <span className="text-[8px] text-[#aaa]">
-                      قماش شیخ الاسلامی
-                    </span>
+                  <div className="mt-6 border-t border-[#eeeae3] pt-5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-[8px] text-[#aaa]">
+                        <i className="bi bi-clock text-[#17633f]" />
 
-                    <Link
-                      to={`/articles/${article.id}`}
-                      className="flex items-center gap-2 text-[9px] font-medium text-[#17633f]"
-                    >
-                      مطالعه مقاله
+                        <span>
+                          زمان مطالعه: {article.time}
+                        </span>
+                      </div>
 
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#dedbd4] transition-all duration-300 group-hover:border-[#17633f] group-hover:bg-[#17633f] group-hover:text-white">
-                        <i className="bi bi-arrow-left text-[8px]" />
-                      </span>
-                    </Link>
+                      <Link
+                        to={`/articles/${article.id}`}
+                        className="
+                          flex
+                          items-center
+                          gap-2
+                          text-[9px]
+                          font-medium
+                          text-[#17633f]
+                        "
+                      >
+                        مشاهده بیشتر
+
+                        <span
+                          className="
+                            flex
+                            h-7
+                            w-7
+                            items-center
+                            justify-center
+                            rounded-full
+                            border
+                            border-[#dedbd4]
+                            transition-all
+                            duration-300
+                            group-hover:border-[#17633f]
+                            group-hover:bg-[#17633f]
+                            group-hover:text-white
+                          "
+                        >
+                          <i className="bi bi-arrow-left text-[8px]" />
+                        </span>
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </article>
             ))}
           </div>
         ) : (
-          <div className="premium-reveal rounded-2xl border border-dashed border-[#d8d4cc] bg-white py-24 text-center">
+          <div className="blog-reveal mt-7 rounded-2xl border border-dashed border-[#d8d4cc] bg-white py-24 text-center">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#f2f3ef] text-[#17633f]">
               <i className="bi bi-search text-lg" />
             </div>
 
-            <p className="mt-4 text-[12px] text-[#888]">
-              مقاله‌ای مطابق جستجوی شما پیدا نشد.
+            <h3 className="mt-4 text-[13px] font-bold text-[#444]">
+              مقاله‌ای پیدا نشد
+            </h3>
+
+            <p className="mt-2 text-[10px] text-[#999]">
+              جستجو یا فیلتر انتخاب‌شده نتیجه‌ای نداشت.
             </p>
 
             <button
               type="button"
-              onClick={() => {
-                setSearch("");
-                setActiveCategory("همه");
-              }}
-              className="mt-4 text-[10px] font-medium text-[#17633f]"
+              onClick={resetFilters}
+              className="
+                mt-5
+                rounded-lg
+                bg-[#17633f]
+                px-5
+                py-2.5
+                text-[9px]
+                font-medium
+                text-white
+                transition-all
+                duration-300
+                hover:-translate-y-0.5
+                hover:shadow-lg
+              "
             >
               پاک کردن فیلترها
             </button>
           </div>
         )}
-      </section>
-
-      {/* =====================================================
-          BOTTOM CTA
-      ===================================================== */}
-
-      <section className="px-5 pb-16 sm:px-8 lg:px-16 lg:pb-24">
-        <div className="premium-reveal mx-auto max-w-[1400px] overflow-hidden rounded-[24px] bg-[#17633f]">
-          <div className="relative px-7 py-12 text-center sm:px-12 sm:py-16">
-            <div className="absolute -left-20 -top-20 h-52 w-52 rounded-full bg-white/5 blur-3xl" />
-
-            <div className="absolute -bottom-24 -right-16 h-60 w-60 rounded-full bg-black/10 blur-3xl" />
-
-            <div className="relative">
-              <span className="text-[9px] font-medium text-white/60">
-                قماش شیخ الاسلامی
-              </span>
-
-              <h2 className="mt-4 text-[23px] font-bold text-white sm:text-[30px]">
-                حالا که بیشتر می‌دانید،
-                <br className="sm:hidden" /> انتخاب کنید
-              </h2>
-
-              <p className="mx-auto mt-4 max-w-[500px] text-[11px] leading-7 text-white/65">
-                مجموعه پارچه و پوشاک قماش شیخ الاسلامی را مشاهده کنید
-                و محصول مناسب خود را پیدا کنید.
-              </p>
-
-              <Link
-                to="/products"
-                className="mt-7 inline-flex items-center gap-3 rounded-xl bg-white px-6 py-3.5 text-[10px] font-medium text-[#17633f] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
-              >
-                مشاهده محصولات
-
-                <i className="bi bi-arrow-left" />
-              </Link>
-            </div>
-          </div>
-        </div>
       </section>
     </main>
   );

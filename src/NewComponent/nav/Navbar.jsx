@@ -1,13 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
-
+import MobileBottomNav from "./MobileBottomNav";
 import NavbarTop from "./NavbarTop";
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
 
 export default function Navbar() {
   const [mobileMenu, setMobileMenu] = useState(false);
+
   const [scrolled, setScrolled] = useState(false);
+
+  /* سرچ Navbar اصلی */
+  const [mainSearchOpen, setMainSearchOpen] = useState(false);
+
+  /* سرچ Navbar شناور */
   const [floatingSearchOpen, setFloatingSearchOpen] = useState(false);
 
   const floatingNavRef = useRef(null);
@@ -47,6 +53,28 @@ export default function Navbar() {
       setFloatingSearchOpen(false);
     }
   }, [scrolled]);
+
+  /* =========================
+     قفل کردن اسکرول
+     
+     اگر هر کدام از دو سرچ باز باشد
+     اسکرول صفحه متوقف می‌شود
+  ========================= */
+
+  useEffect(() => {
+    const searchIsOpen =
+      mainSearchOpen || floatingSearchOpen;
+
+    if (searchIsOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mainSearchOpen, floatingSearchOpen]);
 
   /* =========================
      انیمیشن Navbar شناور
@@ -141,11 +169,12 @@ export default function Navbar() {
           mobileMenu={mobileMenu}
           setMobileMenu={setMobileMenu}
           scrolled={false}
-          searchOpen={false}
-          setSearchOpen={() => {}}
+          searchOpen={mainSearchOpen}
+          setSearchOpen={setMainSearchOpen}
         />
 
-        <DesktopMenu />
+        {/* فقط وقتی در بالای صفحه هستیم منوی دسکتاپ نمایش داده شود */}
+        {!scrolled && <DesktopMenu />}
 
         <MobileMenu
           mobileMenu={mobileMenu}
@@ -166,23 +195,17 @@ export default function Navbar() {
           top-0
           z-[200]
           hidden
-
           w-[calc(100%-24px)]
           max-w-none
-
           rounded-full
           border
           border-white/60
-          bg-white/55
-          shadow-[0_15px_45px_rgba(0,0,0,0.10)]
-          backdrop-blur-[15px]
-
+          bg-white
+          shadow-[0_30px_50px_rgba(0,0,0,0.20)]
           sm:w-[calc(100%-40px)]
           sm:max-w-[700px]
-
           md:w-[80vw]
           md:max-w-[850px]
-
           lg:w-[66.666vw]
           lg:max-w-[1100px]
         "
@@ -198,6 +221,8 @@ export default function Navbar() {
           setSearchOpen={setFloatingSearchOpen}
         />
       </header>
+
+      <MobileBottomNav scrolled={scrolled} />
     </>
   );
 }
