@@ -546,7 +546,7 @@ function SearchBox({
 
     try {
       const response = await fetch(
-        "https://fakestoreapi.com/products"
+        "http://localhost:5000/api/products"
       );
 
       if (!response.ok) {

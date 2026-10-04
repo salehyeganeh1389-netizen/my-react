@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const branch = {
   title: "شعبه مرکزی",
-  address: "قم، خیابان ۱۹ دی، مجتمع تجاری حجت، طبقه ۳، پلاک ۱۴۴",
+  address: "مشهد، خیابان سناباد، سناباد 19، پلاک 225",
   hours: "۱۰ الی ۱۴ - ۱۶ الی ۲۲",
   phone: "۰۲۵-۳۷۷۲۳۱۴۵",
   phoneLink: "02537723145",
@@ -247,140 +247,106 @@ export default function Contact() {
           HERO
       ================================================== */}
 
-      <section
+     <section
+  className="
+    relative
+    min-h-[350px]
+    overflow-hidden
+    lg:min-h-[400px]
+  "
+>
+  <div
+    className="
+      absolute
+      inset-0
+      bg-cover
+      bg-center
+    "
+    style={{
+      backgroundImage: "url('/چیدمان پارچه و نوار اندازه_گیری.png')",
+    }}
+  />
+
+  <div
+    className="
+      absolute
+      inset-0
+      bg-gradient-to-l
+      from-[#f1eee7]/95
+      via-[#f1eee7]/45
+      to-transparent
+    "
+  />
+
+  <div
+    className="
+      relative
+      z-10
+      mx-auto
+      flex
+      min-h-[350px]
+      max-w-[1500px]
+      items-center
+      px-6
+      sm:px-10
+      lg:min-h-[400px]
+      lg:px-14
+      xl:px-20
+    "
+  >
+    <div className="w-full lg:max-w-[560px]">
+      <div
         className="
-          relative
-          overflow-hidden
-          bg-[#f1eee7]
+          contact-breadcrumb
+          mb-4
+          flex
+          items-center
+          gap-2
+          text-[11px]
+          text-[#999]
         "
       >
-        <div
-          className="
-            mx-auto
-            grid
-            min-h-[350px]
-            max-w-[1500px]
-            grid-cols-1
-            lg:min-h-[400px]
-            lg:grid-cols-2
-          "
-        >
-          {/* IMAGE */}
+        <span>خانه</span>
 
-          <div
-            className="
-              contact-hero-image
-              order-1
-              h-[250px]
-              overflow-hidden
-              lg:order-1
-              lg:h-auto
-            "
-          >
-            <div
-              className="
-                h-full
-                w-full
-                bg-cover
-                bg-center
-              "
-              style={{
-                backgroundImage:
-                  "url('ChatGPT Image ۵ مهر ۱۴۰۵، ۰۹_۰۱_۱۵.png')",
-              }}
-            />
+        <i className="bi bi-chevron-left text-[7px]" />
 
-            <div
-              className="
-                absolute
-                inset-y-0
-                left-0
-                hidden
-                w-36
-                bg-gradient-to-r
-                from-[#f1eee7]
-                to-transparent
-                lg:block
-              "
-            />
-          </div>
+        <span className="font-medium text-[#166534]">
+          تماس با ما
+        </span>
+      </div>
 
-          {/* TEXT */}
+      <h1
+        className="
+          contact-title
+          text-[38px]
+          font-bold
+          tracking-tight
+          text-[#173a2c]
+          sm:text-[44px]
+          lg:text-[50px]
+          xl:text-[56px]
+        "
+      >
+        تماس با ما
+      </h1>
 
-          <div
-            className="
-              order-2
-              flex
-              items-center
-              px-6
-              py-10
-              sm:px-10
-              lg:order-2
-              lg:px-14
-              xl:px-20
-            "
-          >
-            <div className="w-full">
-              {/* Breadcrumb */}
-
-              <div
-                className="
-                  contact-breadcrumb
-                  mb-4
-                  flex
-                  items-center
-                  gap-2
-                  text-[11px]
-                  text-[#999]
-                "
-              >
-                <span>خانه</span>
-
-                <i className="bi bi-chevron-left text-[7px]" />
-
-                <span className="font-medium text-[#166534]">
-                  تماس با ما
-                </span>
-              </div>
-
-              {/* Title */}
-
-              <h1
-                className="
-                  contact-title
-                  text-[38px]
-                  font-bold
-                  tracking-tight
-                  text-[#173a2c]
-                  sm:text-[44px]
-                  lg:text-[50px]
-                  xl:text-[56px]
-                "
-              >
-                تماس با ما
-              </h1>
-
-              {/* Description */}
-
-              <p
-                className="
-                  contact-description
-                  mt-4
-                  max-w-[560px]
-                  text-[13px]
-                  leading-8
-                  text-[#555]
-                  sm:text-[14px]
-                "
-              >
-                برای خرید، پیگیری سفارش، دریافت اطلاعات محصولات و راهنمایی
-                بیشتر، از طریق راه‌های ارتباطی زیر با ما در تماس باشید.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      <p
+        className="
+          contact-description
+          mt-4
+          max-w-[560px]
+          text-[13px]
+          leading-8
+          text-[#555]
+          sm:text-[14px]
+        "
+      >
+        برای خرید، پیگیری سفارش، دریافت اطلاعات محصولات و راهنمایی
+        بیشتر، از طریق راه‌های ارتباطی زیر با ما در تماس باشید.
+      </p>
+    </div>
+  </div>
+</section>
       {/* ==================================================
           CONTENT
       ================================================== */}
@@ -584,18 +550,14 @@ export default function Contact() {
           >
             <div className="relative h-[320px] sm:h-[370px] lg:h-full lg:min-h-[390px]">
               <iframe
-                title="موقعیت شعبه مرکزی قماش شیخ الاسلامی"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3283.2960065879697!2d50.863823275589176!3d34.621959287433945!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f93bd7f8b853ef7%3A0x21ca229e9223aa01!2z2YLZhdin2LQg2LHZiNit2KfZhtuM!5e0!3m2!1sen!2s!4v1787574388144!5m2!1sen!2s"
-                className="
-                  block
-                  h-full
-                  w-full
-                  rounded-[10px]
-                  border-0
-                "
+                src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d200.97321290521816!2d59.59246024489402!3d36.29844797843857!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzbCsDE3JzU0LjQiTiA1OcKwMzUnMzMuNCJF!5e0!3m2!1sen!2s!4v1790842330297!5m2!1sen!2s"
+                width="600"
+                height="450"
+                style={{ border: 0 }}
+                allowFullScreen
                 loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
+                referrerPolicy="strict-origin-when-cross-origin"
+              ></iframe>
 
               <div
                 className="
@@ -617,9 +579,7 @@ export default function Contact() {
                   قماش شیخ الاسلامی
                 </p>
 
-                <p className="mt-1 text-[8px] text-[#999]">
-                  مجتمع تجاری حجت
-                </p>
+                <p className="mt-1 text-[8px] text-[#999]">مجتمع تجاری حجت</p>
               </div>
             </div>
           </article>
@@ -814,10 +774,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="space-y-3.5"
-            >
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-3.5">
               {/* Name + Phone */}
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -901,9 +858,7 @@ export default function Contact() {
                   menuPlacement="bottom"
                   menuPosition="fixed"
                   menuPortalTarget={
-                    typeof document !== "undefined"
-                      ? document.body
-                      : null
+                    typeof document !== "undefined" ? document.body : null
                   }
                   options={[
                     {
@@ -941,12 +896,8 @@ export default function Contact() {
                       minHeight: "41px",
                       height: "41px",
                       borderRadius: "8px",
-                      borderColor: state.isFocused
-                        ? "#91ae9f"
-                        : "#e6e4df",
-                      backgroundColor: state.isFocused
-                        ? "#ffffff"
-                        : "#fafaf9",
+                      borderColor: state.isFocused ? "#91ae9f" : "#e6e4df",
+                      backgroundColor: state.isFocused ? "#ffffff" : "#fafaf9",
                       boxShadow: state.isFocused
                         ? "0 0 0 3px rgba(0,107,79,0.05)"
                         : "none",
@@ -1104,7 +1055,6 @@ export default function Contact() {
                 "
               >
                 ارسال پیام
-
                 <i
                   className="
                     bi bi-send
@@ -1170,9 +1120,7 @@ function SocialCard({ title, username, href, icon }) {
         <i className={`bi ${icon} text-[15px]`} />
       </div>
 
-      <p className="mt-2.5 text-[10px] font-semibold text-[#444]">
-        {title}
-      </p>
+      <p className="mt-2.5 text-[10px] font-semibold text-[#444]">{title}</p>
 
       <p dir="ltr" className="mt-1 text-[8px] text-[#999]">
         {username}

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-const API_URL = "https://fakestoreapi.com/products";
+const API_URL = "http://localhost:5000/api/products";
 
 export default function ProductsPage() {
   const { type } = useParams();
@@ -30,23 +30,22 @@ export default function ProductsPage() {
 
         const data = await response.json();
 
-        /*
-          FakeStore = 20 محصول
-
-          محصولات 1 تا 10 → پارچه
-          محصولات 11 تا 20 → پوشاک
-        */
-
-        const half = Math.ceil(data.length / 2);
-
-        let result = [];
+        let result = data;
 
         if (type === "fabric") {
-          result = data.slice(0, half);
+          result = data.filter(
+            (product) => product.group === "fabric"
+          );
         }
 
         if (type === "clothing") {
-          result = data.slice(half);
+          result = data.filter(
+            (product) => product.group === "clothing"
+          );
+        }
+
+        if (!type) {
+          result = data;
         }
 
         setProducts(result);
@@ -66,7 +65,13 @@ export default function ProductsPage() {
   */
 
   const categories = useMemo(() => {
-    return [...new Set(products.map((item) => item.category))];
+    return [
+      ...new Set(
+        products
+          .map((item) => item.category)
+          .filter(Boolean)
+      ),
+    ];
   }, [products]);
 
   /*
@@ -109,7 +114,8 @@ export default function ProductsPage() {
     // امتیاز
     if (rating !== "all") {
       result = result.filter(
-        (product) => product.rating.rate >= Number(rating)
+        (product) =>
+          (product.rating?.rate || 0) >= Number(rating)
       );
     }
 
@@ -124,7 +130,9 @@ export default function ProductsPage() {
 
     if (sort === "rating") {
       result.sort(
-        (a, b) => b.rating.rate - a.rating.rate
+        (a, b) =>
+          (b.rating?.rate || 0) -
+          (a.rating?.rate || 0)
       );
     }
 
@@ -173,7 +181,11 @@ export default function ProductsPage() {
     اگر آدرس اشتباه باشد
   */
 
-  if (type !== "fabric" && type !== "clothing") {
+  if (
+    type !== undefined &&
+    type !== "fabric" &&
+    type !== "clothing"
+  ) {
     return (
       <main
         dir="rtl"
@@ -469,7 +481,6 @@ export default function ProductsPage() {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  type={type}
                 />
               ))}
             </div>
@@ -484,10 +495,10 @@ export default function ProductsPage() {
    PRODUCT CARD
 ===================================================== */
 
-function ProductCard({ product, type }) {
+function ProductCard({ product }) {
   return (
     <Link
-      to={`/products/${type}/${product.id}`}
+      to={`/product/${product.id}`}
       className="
         group
         overflow-hidden
@@ -529,7 +540,7 @@ function ProductCard({ product, type }) {
             shadow-sm
           "
         >
-          ★ {product.rating.rate}
+          ★ {product.rating?.rate || 0}
         </span>
       </div>
 
@@ -549,7 +560,7 @@ function ProductCard({ product, type }) {
 
         <div className="mt-4 flex items-center justify-between">
           <span className="text-sm font-bold text-[#173a2c]">
-            ${product.price}
+            تومان{product.price}
           </span>
 
           <span className="text-[10px] text-[#999]">

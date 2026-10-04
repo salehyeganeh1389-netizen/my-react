@@ -2,18 +2,37 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, ShoppingBag, Star } from "lucide-react";
 
-const API_URL = "https://fakestoreapi.com/products";
+const API_URL = "http://localhost:5000/api/products";
 
 const categoryNames = {
-  1: "پارچه کتان",
-  2: "پارچه لینن",
-  3: "پارچه رسمی",
-  4: "پارچه کلاسیک",
+  chadori: "چادری",
+  shanton: "شانتون",
+  satin: "ساتن",
+  kodari: "کودری",
+  crepe: "کرپ",
+  "shirt-fabric": "پارچه پیراهنی",
+  fustian: "فاستونی",
+  bedsheet: "ملحفه",
+  "hotel-sheet": "ملحفه هتلی",
+  curtain: "پرده",
+  "sofa-shawl": "شال مبل",
+  bazmak: "بازمک",
+  "thin-bedding": "لحاف نازک",
+  "quilt-bedding": "لحاف",
 
-  11: "تی‌شرت",
-  12: "شلوار",
-  13: "جوراب",
-  14: "پیراهن",
+  tshirt: "تی‌شرت",
+  "polo-shirt": "پولوشرت",
+  blouse: "بلوز",
+  knitwear: "بافت",
+  pants: "شلوار",
+  shorts: "شلوارک",
+  undershirt: "زیرپوش",
+  bathrobe: "حوله تن‌پوش",
+  "bath-towel": "حوله حمام",
+  "pool-towel": "حوله استخری",
+  "hand-towel": "حوله دستی",
+  "kids-towel": "حوله کودک",
+  "towel-set": "ست حوله",
 };
 
 export default function CategoryProductsPage() {
@@ -35,32 +54,38 @@ export default function CategoryProductsPage() {
 
         const data = await response.json();
 
-        const half = Math.ceil(data.length / 2);
-
-        const typeProducts =
-          type === "fabric"
-            ? data.slice(0, half)
-            : type === "clothing"
-            ? data.slice(half)
-            : [];
+        let filteredProducts = data;
 
         /*
-          فعلاً برای FakeStore:
-          محصولات را بین دسته‌ها تقسیم می‌کنیم.
+          اگر صفحه پارچه باشد:
+          فقط محصولات گروه پارچه نمایش داده می‌شوند.
+
+          اگر صفحه پوشاک باشد:
+          فقط محصولات گروه پوشاک نمایش داده می‌شوند.
         */
 
-        const categoryNumber = Number(categoryId);
+        if (type === "fabric") {
+          filteredProducts = data.filter(
+            (product) => product.group === "fabric"
+          );
+        } else if (type === "clothing") {
+          filteredProducts = data.filter(
+            (product) => product.group === "clothing"
+          );
+        }
 
-        const categoryIndex =
-          type === "fabric"
-            ? categoryNumber - 1
-            : categoryNumber - 11;
+        /*
+          اگر categoryId وجود داشته باشد،
+          فقط محصولات همان دسته نمایش داده می‌شوند.
+        */
 
-        const categoryProducts = typeProducts.filter(
-          (_, index) => index % 4 === categoryIndex
-        );
+        if (categoryId) {
+          filteredProducts = filteredProducts.filter(
+            (product) => product.category === categoryId
+          );
+        }
 
-        setProducts(categoryProducts);
+        setProducts(filteredProducts);
       } catch (error) {
         console.error(error);
         setProducts([]);
@@ -72,8 +97,13 @@ export default function CategoryProductsPage() {
     getProducts();
   }, [type, categoryId]);
 
-  const categoryTitle =
-    categoryNames[categoryId] || "محصولات";
+  const categoryTitle = categoryId
+    ? categoryNames[categoryId] || "محصولات"
+    : type === "fabric"
+    ? "پارچه"
+    : type === "clothing"
+    ? "پوشاک"
+    : "محصولات";
 
   if (loading) {
     return (
@@ -115,7 +145,11 @@ export default function CategoryProductsPage() {
 
       <div className="mb-10">
         <Link
-          to={`/products/${type}`}
+          to={
+            categoryId
+              ? `/products/${type}`
+              : "/products"
+          }
           className="
             mb-6
             inline-flex
@@ -128,7 +162,9 @@ export default function CategoryProductsPage() {
           "
         >
           <ArrowRight size={16} />
-          بازگشت به {type === "fabric" ? "پارچه" : "پوشاک"}
+          {categoryId
+            ? `بازگشت به ${type === "fabric" ? "پارچه" : "پوشاک"}`
+            : "بازگشت به همه محصولات"}
         </Link>
 
         <p className="mb-2 text-xs text-[#999]">

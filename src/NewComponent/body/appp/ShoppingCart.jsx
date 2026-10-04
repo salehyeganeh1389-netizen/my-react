@@ -1,4 +1,3 @@
-
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -17,7 +16,7 @@ const benefits = [
     description: "خریدی مطمئن و بدون دغدغه",
   },
   {
-    icon: "bi-shield-lock",
+    icon: "bi-shield-check",
     title: "پرداخت امن",
     description: "پرداخت کاملاً امن و مطمئن",
   },
@@ -38,83 +37,65 @@ export default function ShoppingCart() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      const cards = gsap.utils.toArray(".benefit-card");
+      const items = gsap.utils.toArray(".benefit-item");
       const icons = gsap.utils.toArray(".benefit-icon");
       const texts = gsap.utils.toArray(".benefit-text");
 
-      // -----------------------------
-      // کارت‌ها
-      // -----------------------------
-
       gsap.fromTo(
-        cards,
+        items,
         {
           opacity: 0,
-          y: 45,
+          y: 25,
         },
         {
           opacity: 1,
           y: 0,
-          duration: 0.9,
-          stagger: 0.12,
+          duration: 0.8,
+          stagger: 0.1,
           ease: "power3.out",
-
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 85%",
+            start: "top 88%",
             toggleActions: "play none none none",
           },
         }
       );
-
-      // -----------------------------
-      // آیکون‌ها
-      // -----------------------------
 
       gsap.fromTo(
         icons,
         {
           opacity: 0,
-          scale: 0.7,
-          y: 15,
+          scale: 0.75,
         },
         {
           opacity: 1,
           scale: 1,
-          y: 0,
-          duration: 0.7,
-          stagger: 0.12,
-          ease: "power3.out",
-
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "back.out(1.4)",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 83%",
+            start: "top 88%",
             toggleActions: "play none none none",
           },
         }
       );
 
-      // -----------------------------
-      // متن
-      // -----------------------------
-
       gsap.fromTo(
         texts,
         {
           opacity: 0,
-          y: 12,
+          y: 10,
         },
         {
           opacity: 1,
           y: 0,
-          duration: 0.65,
-          stagger: 0.12,
-          delay: 0.15,
+          duration: 0.6,
+          stagger: 0.1,
           ease: "power2.out",
-
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 82%",
+            start: "top 87%",
             toggleActions: "play none none none",
           },
         }
@@ -129,137 +110,121 @@ export default function ShoppingCart() {
       ref={sectionRef}
       dir="rtl"
       className="
-        mx-auto
         w-full
-        max-w-[1500px]
-        px-3
-        py-6
-        sm:px-5
-        sm:py-8
-        lg:px-6
-        lg:py-10
+        px-4
+        py-8
+        sm:px-6
+        sm:py-10
+        lg:px-8
+        lg:py-14
       "
     >
       <div
         className="
-          relative
-          overflow-hidden
-          rounded-[20px]
-          border
-          border-[#e9eee9]
-          bg-[#f8faf9]
-          sm:rounded-[24px]
+          mx-auto
+          w-full
+          max-w-[1450px]
+          border-y
+          border-[#dedfd9]
         "
       >
-        {/* Background decoration */}
-
         <div
           className="
-            pointer-events-none
-            absolute
-            -left-20
-            -top-20
-            h-40
-            w-40
-            rounded-full
-            bg-[#173a2c]/[0.035]
-            blur-3xl
-            sm:h-48
-            sm:w-48
-          "
-        />
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            -bottom-20
-            -right-20
-            h-44
-            w-44
-            rounded-full
-            bg-[#bd9257]/[0.045]
-            blur-3xl
-            sm:h-52
-            sm:w-52
-          "
-        />
-
-        <div
-          className="
-            relative
             grid
-            grid-cols-1
-            divide-y
-            divide-[#e2e8e3]
-
-            sm:grid-cols-2
+            grid-cols-2
 
             lg:grid-cols-5
-            lg:divide-x
-            lg:divide-y-0
-            lg:divide-x-reverse
           "
         >
-          {benefits.map((item) => (
+          {benefits.map((item, index) => (
             <div
               key={item.title}
-              className="
-                benefit-card
+              className={`
+                benefit-item
                 group
+                relative
                 flex
-                min-h-[92px]
+                min-h-[145px]
+                flex-col
                 items-center
-                gap-4
-                px-5
-                py-5
+                justify-center
+                px-4
+                py-7
+                text-center
+
                 transition-colors
                 duration-500
-                hover:bg-white/70
 
-                sm:min-h-[105px]
+                hover:bg-white/50
+
+                ${
+                  index < 4
+                    ? "lg:border-l lg:border-[#dedfd9]"
+                    : ""
+                }
+
+                ${
+                  index < 2
+                    ? "border-b border-[#dedfd9] lg:border-b-0"
+                    : ""
+                }
+
+                ${
+                  index === 0 || index === 2
+                    ? "border-l border-[#dedfd9] lg:border-l"
+                    : ""
+                }
+
+                sm:min-h-[160px]
                 sm:px-5
-                sm:py-6
 
-                lg:min-h-[130px]
-                lg:flex-col
-                lg:items-center
-                lg:justify-center
-                lg:gap-3
-                lg:px-4
-                lg:py-6
-              "
+                lg:min-h-[175px]
+                lg:px-6
+                lg:py-8
+              `}
             >
+              {/* Hover indicator */}
+
+              <span
+                className="
+                  absolute
+                  bottom-0
+                  left-1/2
+                  h-[2px]
+                  w-0
+                  -translate-x-1/2
+                  bg-[#bd9257]
+                  transition-all
+                  duration-500
+                  group-hover:w-8
+                "
+              />
+
               {/* Icon */}
 
               <div
                 className="
                   benefit-icon
-                  relative
                   flex
-                  h-[46px]
-                  w-[46px]
-                  shrink-0
+                  h-[48px]
+                  w-[48px]
                   items-center
                   justify-center
-                  rounded-[14px]
+                  rounded-full
                   border
-                  border-[#dfe8e1]
-                  bg-white
+                  border-[#dfe1db]
+                  bg-[#faf9f5]
                   text-[#173a2c]
-                  shadow-[0_5px_20px_rgba(23,58,44,0.06)]
+
                   transition-all
                   duration-500
 
-                  group-hover:-translate-y-1
-                  group-hover:border-[#173a2c]/20
-                  group-hover:shadow-[0_12px_30px_rgba(23,58,44,0.11)]
+                  group-hover:border-[#bd9257]/50
+                  group-hover:bg-[#fffdf8]
+                  group-hover:text-[#bd9257]
 
-                  sm:h-[48px]
-                  sm:w-[48px]
-
-                  lg:h-[50px]
-                  lg:w-[50px]
+                  sm:h-[52px]
+                  sm:w-[52px]
                 "
               >
                 <i
@@ -273,22 +238,6 @@ export default function ShoppingCart() {
                     sm:text-[20px]
                   `}
                 />
-
-                <span
-                  className="
-                    absolute
-                    -right-1
-                    -top-1
-                    h-2
-                    w-2
-                    rounded-full
-                    bg-[#bd9257]
-                    opacity-0
-                    transition-opacity
-                    duration-500
-                    group-hover:opacity-100
-                  "
-                />
               </div>
 
               {/* Text */}
@@ -296,37 +245,38 @@ export default function ShoppingCart() {
               <div
                 className="
                   benefit-text
-                  min-w-0
-                  flex-1
-                  lg:flex-none
-                  lg:text-center
+                  mt-4
+                  flex
+                  flex-col
                 "
               >
-                <h3
+                <label
                   className="
-                    text-[12px]
+                    text-[11px]
                     font-bold
                     leading-6
                     text-[#173a2c]
-                    sm:text-[13px]
+
+                    sm:text-[12px]
+                    lg:text-[13px]
                   "
                 >
                   {item.title}
-                </h3>
+                </label>
 
-                <p
+                <label
                   className="
-                    mt-0.5
+                    mt-1
                     text-[9px]
                     leading-5
-                    text-[#8b938e]
-                    sm:mt-1
+                    text-[#858983]
+
                     sm:text-[10px]
-                    lg:max-w-[160px]
+                    lg:text-[10px]
                   "
                 >
                   {item.description}
-                </p>
+                </label>
               </div>
             </div>
           ))}

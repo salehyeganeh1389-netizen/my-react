@@ -1,32 +1,221 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Navigation } from "swiper/modules";
+import { FreeMode } from "swiper/modules";
 
 import { Link } from "react-router-dom";
 
 import "swiper/css";
-import "swiper/css/navigation";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const API_URL = "https://fakestoreapi.com/products";
+const API_URL = "http://localhost:5000/api/products";
+
+/* =====================================================
+   PRODUCT CATEGORIES
+===================================================== */
+
+const productCategories = [
+  // =========================
+  // پارچه
+  // =========================
+
+  {
+    id: "chadori",
+    title: "پارچه چادری",
+    subtitle: "مشکی و رنگی",
+    type: "fabric",
+  },
+  {
+    id: "shanton",
+    title: "پارچه شانتون",
+    subtitle: "ساده و طرح‌دار زنانه",
+    type: "fabric",
+  },
+  {
+    id: "satin",
+    title: "پارچه ساتن",
+    subtitle: "ساتن زنانه",
+    type: "fabric",
+  },
+  {
+    id: "kodari",
+    title: "پارچه کودری",
+    subtitle: "نخی و مناسب چادر نماز",
+    type: "fabric",
+  },
+  {
+    id: "crepe",
+    title: "کرپ",
+    subtitle: "مشکی و رنگی",
+    type: "fabric",
+  },
+  {
+    id: "shirt-fabric",
+    title: "پارچه پیراهنی",
+    subtitle: "نخی و طرح‌دار",
+    type: "fabric",
+  },
+  {
+    id: "fustian",
+    title: "فاستونی",
+    subtitle: "مردانه و کارخانه‌ای",
+    type: "fabric",
+  },
+  {
+    id: "bedsheet",
+    title: "ملحفه",
+    subtitle: "کتان و نخی",
+    type: "fabric",
+  },
+  {
+    id: "hotel-sheet",
+    title: "ملافه هتلی",
+    subtitle: "نخ پنبه و ایرانی",
+    type: "fabric",
+  },
+  {
+    id: "curtain",
+    title: "پرده",
+    subtitle: "حریر و پشت‌پرده‌ای",
+    type: "fabric",
+  },
+  {
+    id: "sofa-shawl",
+    title: "شال مبل",
+    subtitle: "بافتنی و یک‌نفره",
+    type: "fabric",
+  },
+  {
+    id: "bazmak",
+    title: "بزمک",
+    subtitle: "۱۰۰٪ پنبه و آبگیر",
+    type: "fabric",
+  },
+  {
+    id: "thin-bedding",
+    title: "روتختی نازک",
+    subtitle: "یک‌نفره و دونفره",
+    type: "fabric",
+  },
+  {
+    id: "quilt-bedding",
+    title: "روتختی و لحاف",
+    subtitle: "یک‌نفره و دونفره",
+    type: "fabric",
+  },
+
+  // =========================
+  // پوشاک
+  // =========================
+
+  {
+    id: "tshirt",
+    title: "تیشرت",
+    subtitle: "یقه گرد مردانه",
+    type: "clothing",
+  },
+  {
+    id: "polo-shirt",
+    title: "پولوشرت",
+    subtitle: "جودون و پنبه‌ای",
+    type: "clothing",
+  },
+  {
+    id: "blouse",
+    title: "بلوز",
+    subtitle: "آستین بلند مردانه",
+    type: "clothing",
+  },
+  {
+    id: "knitwear",
+    title: "بافت",
+    subtitle: "مردانه و زنانه",
+    type: "clothing",
+  },
+  {
+    id: "pants",
+    title: "شلوار",
+    subtitle: "راحتی و ورزشی",
+    type: "clothing",
+  },
+  {
+    id: "shorts",
+    title: "شورت",
+    subtitle: "پادار و اسلیپ",
+    type: "clothing",
+  },
+  {
+    id: "undershirt",
+    title: "زیرپوش",
+    subtitle: "آستین‌دار و رکابی",
+    type: "clothing",
+  },
+  {
+    id: "bathrobe",
+    title: "حوله لباسی",
+    subtitle: "یزدی و تبریزی",
+    type: "clothing",
+  },
+  {
+    id: "bath-towel",
+    title: "حمام",
+    subtitle: "حوله حمامی بزرگ",
+    type: "clothing",
+  },
+  {
+    id: "pool-towel",
+    title: "استخری",
+    subtitle: "دو رو نخ تبریزی",
+    type: "clothing",
+  },
+  {
+    id: "hand-towel",
+    title: "دستی",
+    subtitle: "تبریزی و مخملی",
+    type: "clothing",
+  },
+  {
+    id: "kids-towel",
+    title: "کودک",
+    subtitle: "سایز ۸۰ تا ۱۱۰",
+    type: "clothing",
+  },
+  {
+    id: "towel-set",
+    title: "سرویس حوله",
+    subtitle: "سرویس عروس و داماد",
+    type: "clothing",
+  },
+];
+
+/* =====================================================
+   MAIN COMPONENT
+===================================================== */
 
 export default function ProductCategories() {
   const sectionRef = useRef(null);
 
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [apiProducts, setApiProducts] = useState([]);
+
+  const fabricCategories = productCategories.filter(
+    (category) => category.type === "fabric"
+  );
+
+  const clothingCategories = productCategories.filter(
+    (category) => category.type === "clothing"
+  );
+
+  /* =====================================================
+     GET PRODUCTS
+  ===================================================== */
 
   useEffect(() => {
+    let isMounted = true;
+
     async function getProducts() {
       try {
-        setLoading(true);
-
         const response = await fetch(API_URL);
 
         if (!response.ok) {
@@ -35,76 +224,124 @@ export default function ProductCategories() {
 
         const data = await response.json();
 
-        setProducts(data);
+        if (isMounted && Array.isArray(data)) {
+          setApiProducts(data);
+        }
       } catch (error) {
-        console.error(error);
-        setError(true);
-      } finally {
-        setLoading(false);
+        console.error("Product API Error:", error);
+
+        if (isMounted) {
+          setApiProducts([]);
+        }
       }
     }
 
     getProducts();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  /*
-    Fake Store API = 20 محصول
+  /* =====================================================
+     NORMALIZE CATEGORY
+  ===================================================== */
 
-    نصف اول = پارچه
-    نصف دوم = پوشاک
-  */
+  const normalizeCategory = (value) => {
+    if (value === undefined || value === null) {
+      return "";
+    }
 
-  const fabricProducts = products.slice(
-    0,
-    Math.ceil(products.length / 2)
+    return String(value)
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-");
+  };
+
+  /* =====================================================
+     GET CATEGORY IMAGE
+  ===================================================== */
+
+  const getCategoryImage = (categoryId) => {
+    const normalizedId = normalizeCategory(categoryId);
+
+    const product = apiProducts.find((item) => {
+      const productCategory = normalizeCategory(item.category);
+
+      return (
+        productCategory === normalizedId ||
+        productCategory.includes(normalizedId) ||
+        normalizedId.includes(productCategory)
+      );
+    });
+
+    return product?.image || "";
+  };
+
+  /* =====================================================
+     CATEGORY DATA + IMAGE
+  ===================================================== */
+
+  const fabricCategoriesWithImages = fabricCategories.map(
+    (category) => ({
+      ...category,
+      image: getCategoryImage(category.id),
+    })
   );
 
-  const clothingProducts = products.slice(
-    Math.ceil(products.length / 2)
+  const clothingCategoriesWithImages = clothingCategories.map(
+    (category) => ({
+      ...category,
+      image: getCategoryImage(category.id),
+    })
   );
 
-  /*
-    ۶ محصول پرفروش
-    فعلاً بر اساس امتیاز مرتب می‌کنیم.
-  */
+  /* =====================================================
+     BEST SELLING PRODUCTS
+  ===================================================== */
 
-  const bestSellingProducts = [...products]
+  const bestSellingProducts = [...apiProducts]
     .sort(
       (a, b) =>
-        (b.rating?.rate || 0) -
-        (a.rating?.rate || 0)
+        (Number(b.rating?.rate) || 0) -
+        (Number(a.rating?.rate) || 0)
     )
     .slice(0, 6);
 
-  /*
-    ۶ محصول آخر
-    فعلاً ۶ محصول آخر API
-  */
+  /* =====================================================
+     LATEST PRODUCTS
+  ===================================================== */
 
-  const latestProducts = [...products]
-    .reverse()
+  const latestProducts = [...apiProducts]
+    .sort(
+      (a, b) =>
+        Number(b.id || 0) - Number(a.id || 0)
+    )
     .slice(0, 6);
 
-  useLayoutEffect(() => {
-    if (loading || !products.length) return;
+  /* =====================================================
+     GSAP SCROLL ANIMATIONS
+  ===================================================== */
 
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       /* =========================================
-         عنوان اصلی
+         MAIN TITLE
       ========================================= */
 
       gsap.fromTo(
         ".categories-main-title",
         {
           opacity: 0,
+          y: 30,
           clipPath: "inset(0 100% 0 0)",
         },
         {
           opacity: 1,
+          y: 0,
           clipPath: "inset(0 0% 0 0)",
-          duration: 0.8,
+          duration: 0.85,
           ease: "power3.inOut",
-
           scrollTrigger: {
             trigger: ".categories-main-title",
             start: "top 88%",
@@ -114,7 +351,7 @@ export default function ProductCategories() {
       );
 
       /* =========================================
-         سکشن‌های دسته‌بندی
+         CATEGORY SECTIONS
       ========================================= */
 
       gsap.utils
@@ -131,69 +368,74 @@ export default function ProductCategories() {
               ".category-card-image"
             );
 
-          gsap.fromTo(
-            header,
-            {
-              opacity: 0,
-              clipPath: "inset(0 100% 0 0)",
-            },
-            {
-              opacity: 1,
-              clipPath: "inset(0 0% 0 0)",
-              duration: 0.65,
-              ease: "power3.inOut",
-
-              scrollTrigger: {
-                trigger: section,
-                start: "top 88%",
-                once: true,
+          if (header) {
+            gsap.fromTo(
+              header,
+              {
+                opacity: 0,
+                x: 25,
               },
-            }
-          );
+              {
+                opacity: 1,
+                x: 0,
+                duration: 0.7,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: section,
+                  start: "top 88%",
+                  once: true,
+                },
+              }
+            );
+          }
 
-          gsap.fromTo(
-            cards,
-            {
-              opacity: 0,
-              clipPath: "inset(0 0 100% 0)",
-            },
-            {
-              opacity: 1,
-              clipPath: "inset(0 0 0% 0)",
-              duration: 0.75,
-              stagger: 0.09,
-              ease: "power3.inOut",
-
-              scrollTrigger: {
-                trigger: section,
-                start: "top 82%",
-                once: true,
+          if (cards.length) {
+            gsap.fromTo(
+              cards,
+              {
+                opacity: 0,
+                y: 35,
+                scale: 0.96,
               },
-            }
-          );
+              {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.75,
+                stagger: 0.06,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: section,
+                  start: "top 82%",
+                  once: true,
+                },
+              }
+            );
+          }
 
-          gsap.fromTo(
-            images,
-            {
-              scale: 1.12,
-            },
-            {
-              scale: 1,
-              duration: 1.1,
-              stagger: 0.09,
-              ease: "power3.out",
-
-              scrollTrigger: {
-                trigger: section,
-                start: "top 82%",
-                once: true,
+          if (images.length) {
+            gsap.fromTo(
+              images,
+              {
+                scale: 1.12,
               },
-            }
-          );
+              {
+                scale: 1,
+                duration: 1.1,
+                stagger: 0.06,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: section,
+                  start: "top 82%",
+                  once: true,
+                },
+              }
+            );
+          }
         });
 
       /* =========================================
-         سکشن پرفروش‌ترین
+         PRODUCT SHOWCASE
       ========================================= */
 
       gsap.utils
@@ -209,50 +451,54 @@ export default function ProductCategories() {
               ".showcase-product-card"
             );
 
-          gsap.fromTo(
-            header,
-            {
-              opacity: 0,
-              y: 25,
-            },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.7,
-              ease: "power3.out",
-
-              scrollTrigger: {
-                trigger: section,
-                start: "top 85%",
-                once: true,
+          if (header) {
+            gsap.fromTo(
+              header,
+              {
+                opacity: 0,
+                y: 25,
               },
-            }
-          );
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.7,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: section,
+                  start: "top 85%",
+                  once: true,
+                },
+              }
+            );
+          }
 
-          gsap.fromTo(
-            cards,
-            {
-              opacity: 0,
-              y: 35,
-            },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.7,
-              stagger: 0.08,
-              ease: "power3.out",
-
-              scrollTrigger: {
-                trigger: section,
-                start: "top 80%",
-                once: true,
+          if (cards.length) {
+            gsap.fromTo(
+              cards,
+              {
+                opacity: 0,
+                y: 35,
+                scale: 0.97,
               },
-            }
-          );
+              {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.7,
+                stagger: 0.07,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: section,
+                  start: "top 80%",
+                  once: true,
+                },
+              }
+            );
+          }
         });
 
       /* =========================================
-         سکشن میانی
+         BANNERS
       ========================================= */
 
       gsap.utils
@@ -269,7 +515,6 @@ export default function ProductCategories() {
               y: 0,
               duration: 0.8,
               ease: "power3.out",
-
               scrollTrigger: {
                 trigger: banner,
                 start: "top 85%",
@@ -278,12 +523,16 @@ export default function ProductCategories() {
             }
           );
         });
+
+      ScrollTrigger.refresh();
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [loading, products]);
+  }, [apiProducts]);
 
-
+  /* =====================================================
+     RENDER
+  ===================================================== */
 
   return (
     <section
@@ -293,21 +542,24 @@ export default function ProductCategories() {
         mx-auto
         w-full
         max-w-[1650px]
-        px-4
-        py-12
-        sm:px-6
+        overflow-hidden
+        px-3
+        py-10
+        sm:px-5
         sm:py-14
+        md:px-6
         lg:py-20
+        xl:px-8
       "
     >
       {/* =========================================
-          عنوان اصلی
+          MAIN TITLE
       ========================================= */}
 
       <div className="categories-main-title mb-8 sm:mb-10 lg:mb-12">
         <h2
           className="
-            text-[22px]
+            text-[21px]
             font-bold
             text-[#173a2c]
             sm:text-[27px]
@@ -320,7 +572,7 @@ export default function ProductCategories() {
         <p
           className="
             mt-2
-            text-[11px]
+            text-[10px]
             text-[#999]
             sm:text-[12px]
             lg:text-[13px]
@@ -330,73 +582,67 @@ export default function ProductCategories() {
         </p>
       </div>
 
-      {loading || error ? (
-  <CategoriesSkeleton />
-) : (
-        <>
-          {/* =========================================
-              پارچه
-          ========================================= */}
+      {/* =========================================
+          FABRIC
+      ========================================= */}
 
-          <div className="category-section">
-            <CategorySection
-              title="پارچه"
-              subtitle="انتخابی از محصولات پارچه"
-              items={fabricProducts}
-              type="fabric"
-            />
-          </div>
+      <div className="category-section">
+        <CategorySection
+          title="پارچه"
+          subtitle="انواع پارچه برای کاربردهای مختلف"
+          items={fabricCategoriesWithImages}
+          type="fabric"
+        />
+      </div>
 
-          {/* =========================================
-              سکشن میانی
-          ========================================= */}
+      {/* =========================================
+          CLOTHING
+      ========================================= */}
 
-          <MiddleBanner />
+      <div className="category-section mt-14 sm:mt-20 lg:mt-24">
+        <CategorySection
+          title="پوشاک"
+          subtitle="انواع پوشاک و محصولات حوله‌ای"
+          items={clothingCategoriesWithImages}
+          type="clothing"
+        />
+      </div>
 
-          {/* =========================================
-              پوشاک
-          ========================================= */}
+      {/* =========================================
+          MIDDLE BANNER
+      ========================================= */}
 
-          <div className="category-section mt-14 sm:mt-16 lg:mt-20">
-            <CategorySection
-              title="پوشاک"
-              subtitle="مجموعه‌ای از پوشاک فروشگاه"
-              items={clothingProducts}
-              type="clothing"
-            />
-          </div>
+      <MiddleBanner />
 
-          {/* =========================================
-              پرفروش‌ترین محصولات
-          ========================================= */}
+      {/* =========================================
+          BEST SELLING
+      ========================================= */}
 
-          <ProductShowcase
-            title="پرفروش‌ترین محصولات"
-            subtitle="محصولاتی که بیشتر مورد توجه قرار گرفته‌اند"
-            products={bestSellingProducts}
-            linkText="مشاهده همه محصولات"
-            link="/products/fabric"
-          />
+      <ProductShowcase
+        title="پرفروش‌ترین محصولات"
+        subtitle="محصولاتی که بیشتر مورد توجه قرار گرفته‌اند"
+        products={bestSellingProducts}
+        linkText="مشاهده همه محصولات"
+        link="/products"
+      />
 
-          {/* =========================================
-              سکشن میانی دوم
-          ========================================= */}
+      {/* =========================================
+          SHOP BANNER
+      ========================================= */}
 
-          <ShopBanner />
+      <ShopBanner />
 
-          {/* =========================================
-              آخرین محصولات
-          ========================================= */}
+      {/* =========================================
+          LATEST
+      ========================================= */}
 
-          <ProductShowcase
-            title="آخرین محصولات"
-            subtitle="تازه‌ترین محصولاتی که به مجموعه فروشگاه اضافه شده‌اند"
-            products={latestProducts}
-            linkText="مشاهده محصولات"
-            link="/products/clothing"
-          />
-        </>
-      )}
+      <ProductShowcase
+        title="آخرین محصولات"
+        subtitle="تازه‌ترین محصولاتی که به مجموعه فروشگاه اضافه شده‌اند"
+        products={latestProducts}
+        linkText="مشاهده محصولات"
+        link="/products"
+      />
     </section>
   );
 }
@@ -411,10 +657,167 @@ function CategorySection({
   items,
   type,
 }) {
+  const swiperRef = useRef(null);
+  const prevButtonRef = useRef(null);
+  const nextButtonRef = useRef(null);
+
+  /* =====================================================
+     UPDATE BUTTONS
+  ===================================================== */
+
+  const updateNavigation = (swiper) => {
+    if (!swiper) return;
+
+    const prevButton = prevButtonRef.current;
+    const nextButton = nextButtonRef.current;
+
+    if (prevButton) {
+      prevButton.disabled = swiper.isBeginning;
+
+      gsap.to(prevButton, {
+        opacity: swiper.isBeginning ? 0.35 : 1,
+        duration: 0.2,
+      });
+    }
+
+    if (nextButton) {
+      nextButton.disabled = swiper.isEnd;
+
+      gsap.to(nextButton, {
+        opacity: swiper.isEnd ? 0.35 : 1,
+        duration: 0.2,
+      });
+    }
+  };
+
+  /* =====================================================
+     GSAP SLIDE ANIMATION
+  ===================================================== */
+
+  const animateSlide = (swiper, direction = 1) => {
+    if (!swiper) return;
+
+    const activeIndex = swiper.activeIndex;
+
+    const currentSlide =
+      swiper.slides?.[activeIndex];
+
+    if (!currentSlide) return;
+
+    const card =
+      currentSlide.querySelector(".category-card");
+
+    const image =
+      currentSlide.querySelector(
+        ".category-card-image"
+      );
+
+    if (!card) return;
+
+    gsap.killTweensOf([card, image]);
+
+    const fromX = direction > 0 ? 35 : -35;
+
+    gsap.fromTo(
+      card,
+      {
+        opacity: 0.65,
+        x: fromX,
+        scale: 0.97,
+      },
+      {
+        opacity: 1,
+        x: 0,
+        scale: 1,
+        duration: 0.55,
+        ease: "power3.out",
+      }
+    );
+
+    if (image) {
+      gsap.fromTo(
+        image,
+        {
+          scale: 1.08,
+        },
+        {
+          scale: 1,
+          duration: 0.8,
+          ease: "power3.out",
+        }
+      );
+    }
+  };
+
+  /* =====================================================
+     SWIPER READY
+  ===================================================== */
+
+  const handleSwiper = (swiper) => {
+    swiperRef.current = swiper;
+
+    requestAnimationFrame(() => {
+      updateNavigation(swiper);
+    });
+  };
+
+  /* =====================================================
+     PREV
+  ===================================================== */
+
+  const handlePrev = () => {
+    const swiper = swiperRef.current;
+
+    if (!swiper || swiper.destroyed) return;
+
+    if (swiper.isBeginning) return;
+
+    animateSlide(
+      {
+        ...swiper,
+        activeIndex: Math.max(
+          swiper.activeIndex - 1,
+          0
+        ),
+        slides: swiper.slides,
+      },
+      -1
+    );
+
+    swiper.slidePrev(650);
+  };
+
+  /* =====================================================
+     NEXT
+  ===================================================== */
+
+  const handleNext = () => {
+    const swiper = swiperRef.current;
+
+    if (!swiper || swiper.destroyed) return;
+
+    if (swiper.isEnd) return;
+
+    swiper.slideNext(650);
+  };
+
   return (
     <div>
-      <div className="category-header mb-5 flex items-end sm:mb-6">
-        <div>
+      {/* =========================================
+          HEADER
+      ========================================= */}
+
+      <div
+        className="
+          category-header
+          mb-5
+          flex
+          items-end
+          gap-3
+          sm:mb-6
+        "
+      >
+        <div className="min-w-0">
           <h3
             className="
               text-[17px]
@@ -475,131 +878,142 @@ function CategorySection({
         </Link>
       </div>
 
-      {/* موبایل */}
+      {/* =========================================
+          SLIDER
+      ========================================= */}
 
-      <div className="block sm:hidden">
+      <div className="relative px-1 sm:px-0">
         <Swiper
           modules={[FreeMode]}
-          freeMode={{
-            enabled: true,
-            momentum: true,
-            momentumRatio: 0.8,
+          onSwiper={handleSwiper}
+          onSlideChange={(swiper) => {
+            updateNavigation(swiper);
+            animateSlide(swiper, 1);
+          }}
+          onTransitionEnd={(swiper) => {
+            updateNavigation(swiper);
+          }}
+          onResize={(swiper) => {
+            updateNavigation(swiper);
           }}
           slidesPerView="auto"
           spaceBetween={12}
-          grabCursor
-          resistance
-          resistanceRatio={0.7}
-          className="!overflow-visible"
+          speed={650}
+          grabCursor={true}
+          resistance={true}
+          resistanceRatio={0.65}
+          watchOverflow={false}
+          freeMode={false}
+          className="
+            !overflow-visible
+            !pb-3
+          "
         >
           {items.map((item, index) => (
             <SwiperSlide
-              key={`${item.id}-mobile`}
-              className="!w-[190px]"
+              key={item.id}
+              className="
+                !w-[210px]
+                min-[400px]:!w-[225px]
+                sm:!w-[245px]
+                md:!w-[255px]
+                lg:!w-[265px]
+                xl:!w-[270px]
+                2xl:!w-[275px]
+              "
             >
               <CategoryCard
                 item={item}
                 index={index}
-                type={type}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </div>
-
-      {/* دسکتاپ */}
-
-      <div className="relative hidden sm:block">
-        <Swiper
-          modules={[Navigation]}
-          navigation={{
-            nextEl: `.next-${type}`,
-            prevEl: `.prev-${type}`,
-          }}
-          slidesPerView={3}
-          spaceBetween={16}
-          breakpoints={{
-            640: {
-              slidesPerView: 3,
-            },
-            1024: {
-              slidesPerView: 4,
-            },
-            1280: {
-              slidesPerView: 5,
-            },
-            1536: {
-              slidesPerView: 6,
-            },
-          }}
-        >
-          {items.map((item, index) => (
-            <SwiperSlide key={item.id}>
-              <CategoryCard
-                item={item}
-                index={index}
-                type={type}
               />
             </SwiperSlide>
           ))}
         </Swiper>
 
-        {/* قبلی */}
+        {/* =========================================
+            PREVIOUS BUTTON
+        ========================================= */}
 
         <button
-          className={`
-            prev-${type}
+          ref={prevButtonRef}
+          type="button"
+          onClick={handlePrev}
+          aria-label="دسته قبلی"
+          className="
             absolute
-            -right-5
+            right-0
             top-1/2
-            z-20
+            z-40
             flex
-            h-10
-            w-10
+            h-9
+            w-9
             -translate-y-1/2
             items-center
             justify-center
             rounded-full
             border
-            border-[#e5e5e5]
+            border-[#e5e0d7]
             bg-white
-            text-[#333]
-            shadow-sm
-            transition
+            text-[#173a2c]
+            shadow-[0_6px_20px_rgba(0,0,0,0.12)]
+            transition-all
+            duration-300
+            hover:scale-110
             hover:bg-[#173a2c]
             hover:text-white
-          `}
+            disabled:cursor-not-allowed
+            sm:-right-2
+            sm:h-10
+            sm:w-10
+            md:-right-3
+            lg:-right-4
+            xl:-right-5
+          "
         >
-          <i className="bi bi-arrow-right" />
+          <i className="bi bi-arrow-right text-[13px] sm:text-[14px]" />
         </button>
 
-        {/* بعدی */}
+        {/* =========================================
+            NEXT BUTTON
+        ========================================= */}
 
         <button
-          className={`
-            next-${type}
+          ref={nextButtonRef}
+          type="button"
+          onClick={handleNext}
+          aria-label="دسته بعدی"
+          className="
             absolute
-            -left-5
+            left-0
             top-1/2
-            z-20
+            z-40
             flex
-            h-10
-            w-10
+            h-9
+            w-9
             -translate-y-1/2
             items-center
             justify-center
             rounded-full
             border
-            border-[#e5e5e5]
+            border-[#e5e0d7]
             bg-white
-            text-[#333]
-            shadow-sm
-            transition
+            text-[#173a2c]
+            shadow-[0_6px_20px_rgba(0,0,0,0.12)]
+            transition-all
+            duration-300
+            hover:scale-110
             hover:bg-[#173a2c]
             hover:text-white
-          `}
+            disabled:cursor-not-allowed
+            sm:-left-2
+            sm:h-10
+            sm:w-10
+            md:-left-3
+            lg:-left-4
+            xl:-left-5
+          "
         >
-          <i className="bi bi-arrow-left" />
+          <i className="bi bi-arrow-left text-[13px] sm:text-[14px]" />
         </button>
       </div>
     </div>
@@ -613,17 +1027,10 @@ function CategorySection({
 function CategoryCard({
   item,
   index,
-  type,
 }) {
-  /*
-    فعلاً همان ID محصولات FakeStore استفاده می‌شود.
-    برای دسته‌های واقعی بعداً می‌توانیم ID ثابت مثل
-    cotton / linen / tshirt و ... قرار بدهیم.
-  */
-
   return (
     <Link
-      to={`/products/${type}/${item.id}`}
+      to={`/products/${item.type}/${item.id}`}
       className="
         category-card
         group
@@ -631,44 +1038,75 @@ function CategoryCard({
         block
         w-full
         overflow-hidden
-        rounded-[12px]
+        rounded-[14px]
         bg-[#eee]
-        sm:rounded-[14px]
+        shadow-sm
+        transition-all
+        duration-500
+        hover:-translate-y-1
+        hover:shadow-xl
+        sm:rounded-[16px]
       "
     >
-      <div className="relative aspect-square overflow-hidden">
-        <img
-          src={item.image}
-          alt={item.title}
-          loading="lazy"
-          className="
-            category-card-image
-            absolute
-            inset-0
-            h-full
-            w-full
-            object-cover
-            transition-transform
-            duration-700
-            ease-out
-            group-hover:scale-[1.06]
-          "
-        />
+      <div
+        className="
+          relative
+          aspect-[0.92]
+          w-full
+          overflow-hidden
+          sm:aspect-square
+        "
+      >
+        {/* IMAGE */}
 
-        {/* گرادیانت */}
+        {item.image ? (
+          <img
+            src={item.image}
+            alt={item.title}
+            loading="lazy"
+            className="
+              category-card-image
+              absolute
+              inset-0
+              h-full
+              w-full
+              object-cover
+              transition-transform
+              duration-700
+              ease-out
+              group-hover:scale-[1.06]
+            "
+          />
+        ) : (
+          <div
+            className="
+              category-card-image
+              absolute
+              inset-0
+              h-full
+              w-full
+              bg-gradient-to-br
+              from-[#e9e5dc]
+              via-[#f3f0e9]
+              to-[#ddd8ce]
+            "
+          />
+        )}
+
+        {/* GRADIENT */}
 
         <div
           className="
             absolute
             inset-0
             bg-gradient-to-t
-            from-black/80
-            via-black/10
+            from-black/85
+            via-black/20
             to-transparent
           "
         />
 
-        {/* شماره */}
+        {/* NUMBER */}
 
         <span
           className="
@@ -678,7 +1116,7 @@ function CategoryCard({
             text-[8px]
             font-medium
             tracking-[0.15em]
-            text-white/70
+            text-white/75
             sm:right-4
             sm:top-4
             sm:text-[9px]
@@ -687,7 +1125,7 @@ function CategoryCard({
           {String(index + 1).padStart(2, "0")}
         </span>
 
-        {/* محتوا */}
+        {/* CONTENT */}
 
         <div
           className="
@@ -717,13 +1155,16 @@ function CategoryCard({
           <p
             className="
               mt-1
+              line-clamp-1
               text-[9px]
               text-white/70
               sm:text-[10px]
             "
           >
-            {formatPrice(item.price)}
+            {item.subtitle}
           </p>
+
+          {/* DESKTOP HOVER */}
 
           <div
             className="
@@ -767,7 +1208,6 @@ function CategoryCard({
 
 /* =====================================================
    PRODUCT SHOWCASE
-   برای پرفروش‌ترین و آخرین محصولات
 ===================================================== */
 
 function ProductShowcase({
@@ -777,31 +1217,157 @@ function ProductShowcase({
   linkText,
   link,
 }) {
+  const swiperRef = useRef(null);
+  const prevButtonRef = useRef(null);
+  const nextButtonRef = useRef(null);
+
+  /* =====================================================
+     UPDATE NAVIGATION
+  ===================================================== */
+
+  const updateNavigation = (swiper) => {
+    if (!swiper) return;
+
+    if (prevButtonRef.current) {
+      prevButtonRef.current.disabled =
+        swiper.isBeginning;
+
+      gsap.to(prevButtonRef.current, {
+        opacity: swiper.isBeginning ? 0.35 : 1,
+        duration: 0.2,
+      });
+    }
+
+    if (nextButtonRef.current) {
+      nextButtonRef.current.disabled =
+        swiper.isEnd;
+
+      gsap.to(nextButtonRef.current, {
+        opacity: swiper.isEnd ? 0.35 : 1,
+        duration: 0.2,
+      });
+    }
+  };
+
+  /* =====================================================
+     PRODUCT ANIMATION
+  ===================================================== */
+
+  const animateProduct = (
+    swiper,
+    direction = 1
+  ) => {
+    if (!swiper) return;
+
+    const slide =
+      swiper.slides?.[swiper.activeIndex];
+
+    if (!slide) return;
+
+    const card =
+      slide.querySelector(
+        ".showcase-product-card"
+      );
+
+    const image =
+      slide.querySelector(
+        ".showcase-product-image"
+      );
+
+    if (!card) return;
+
+    const fromX = direction > 0 ? 30 : -30;
+
+    gsap.killTweensOf([card, image]);
+
+    gsap.fromTo(
+      card,
+      {
+        opacity: 0.65,
+        x: fromX,
+        y: 8,
+        scale: 0.97,
+      },
+      {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        scale: 1,
+        duration: 0.55,
+        ease: "power3.out",
+      }
+    );
+
+    if (image) {
+      gsap.fromTo(
+        image,
+        {
+          scale: 1.06,
+        },
+        {
+          scale: 1,
+          duration: 0.7,
+          ease: "power3.out",
+        }
+      );
+    }
+  };
+
+  /* =====================================================
+     PREV
+  ===================================================== */
+
+  const handlePrev = () => {
+    const swiper = swiperRef.current;
+
+    if (!swiper || swiper.destroyed) return;
+
+    if (swiper.isBeginning) return;
+
+    swiper.slidePrev(650);
+  };
+
+  /* =====================================================
+     NEXT
+  ===================================================== */
+
+  const handleNext = () => {
+    const swiper = swiperRef.current;
+
+    if (!swiper || swiper.destroyed) return;
+
+    if (swiper.isEnd) return;
+
+    swiper.slideNext(650);
+  };
+
   return (
     <section
       className="
         product-showcase-section
-        mt-20
+        mt-16
         sm:mt-24
         lg:mt-28
       "
     >
-      {/* Header */}
+      {/* =========================================
+          HEADER
+      ========================================= */}
 
       <div
         className="
           product-showcase-header
-          mb-6
+          mb-5
           flex
           items-end
-          gap-4
+          gap-3
           sm:mb-7
         "
       >
-        <div>
+        <div className="min-w-0">
           <h3
             className="
-              text-[19px]
+              text-[18px]
               font-bold
               text-[#173a2c]
               sm:text-[23px]
@@ -814,7 +1380,9 @@ function ProductShowcase({
           <p
             className="
               mt-1.5
+              line-clamp-2
               text-[10px]
+              leading-5
               text-[#999]
               sm:text-[12px]
             "
@@ -831,7 +1399,7 @@ function ProductShowcase({
             shrink-0
             items-center
             gap-1.5
-            text-[10px]
+            text-[9px]
             font-medium
             text-[#555]
             transition
@@ -839,30 +1407,160 @@ function ProductShowcase({
             sm:text-[12px]
           "
         >
-          {linkText}
+          <span className="hidden sm:inline">
+            {linkText}
+          </span>
+
+          <span className="sm:hidden">
+            مشاهده همه
+          </span>
 
           <i className="bi bi-arrow-left" />
         </Link>
       </div>
 
-      {/* محصولات */}
+      {/* =========================================
+          PRODUCT SLIDER
+      ========================================= */}
 
-      <div
-        className="
-          grid
-          grid-cols-2
-          gap-3
-          sm:grid-cols-3
-          sm:gap-4
-          lg:grid-cols-6
-        "
-      >
-        {products.map((product) => (
-          <ShowcaseProductCard
-            key={product.id}
-            product={product}
-          />
-        ))}
+      <div className="relative px-1 sm:px-0">
+        <Swiper
+          modules={[FreeMode]}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+
+            requestAnimationFrame(() => {
+              updateNavigation(swiper);
+            });
+          }}
+          onSlideChange={(swiper) => {
+            updateNavigation(swiper);
+            animateProduct(swiper, 1);
+          }}
+          onTransitionEnd={(swiper) => {
+            updateNavigation(swiper);
+          }}
+          onResize={(swiper) => {
+            updateNavigation(swiper);
+          }}
+          slidesPerView="auto"
+          spaceBetween={10}
+          speed={650}
+          grabCursor={true}
+          resistance={true}
+          resistanceRatio={0.65}
+          watchOverflow={false}
+          freeMode={false}
+          className="
+            !overflow-visible
+            !pb-3
+          "
+        >
+          {products.map((product) => (
+            <SwiperSlide
+              key={product.id}
+              className="
+                !w-[185px]
+                min-[400px]:!w-[200px]
+                sm:!w-[220px]
+                md:!w-[235px]
+                lg:!w-[245px]
+                xl:!w-[250px]
+                2xl:!w-[255px]
+              "
+            >
+              <ShowcaseProductCard
+                product={product}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        {/* =========================================
+            PREV
+        ========================================= */}
+
+        <button
+          ref={prevButtonRef}
+          type="button"
+          onClick={handlePrev}
+          aria-label="محصول قبلی"
+          className="
+            absolute
+            right-0
+            top-1/2
+            z-40
+            flex
+            h-9
+            w-9
+            -translate-y-1/2
+            items-center
+            justify-center
+            rounded-full
+            border
+            border-[#e5e0d7]
+            bg-white
+            text-[#173a2c]
+            shadow-[0_6px_20px_rgba(0,0,0,0.12)]
+            transition-all
+            duration-300
+            hover:scale-110
+            hover:bg-[#173a2c]
+            hover:text-white
+            disabled:cursor-not-allowed
+            sm:-right-2
+            sm:h-10
+            sm:w-10
+            md:-right-3
+            lg:-right-4
+            xl:-right-5
+          "
+        >
+          <i className="bi bi-arrow-right text-[13px]" />
+        </button>
+
+        {/* =========================================
+            NEXT
+        ========================================= */}
+
+        <button
+          ref={nextButtonRef}
+          type="button"
+          onClick={handleNext}
+          aria-label="محصول بعدی"
+          className="
+            absolute
+            left-0
+            top-1/2
+            z-40
+            flex
+            h-9
+            w-9
+            -translate-y-1/2
+            items-center
+            justify-center
+            rounded-full
+            border
+            border-[#e5e0d7]
+            bg-white
+            text-[#173a2c]
+            shadow-[0_6px_20px_rgba(0,0,0,0.12)]
+            transition-all
+            duration-300
+            hover:scale-110
+            hover:bg-[#173a2c]
+            hover:text-white
+            disabled:cursor-not-allowed
+            sm:-left-2
+            sm:h-10
+            sm:w-10
+            md:-left-3
+            lg:-left-4
+            xl:-left-5
+          "
+        >
+          <i className="bi bi-arrow-left text-[13px]" />
+        </button>
       </div>
     </section>
   );
@@ -872,7 +1570,9 @@ function ProductShowcase({
    SHOWCASE PRODUCT CARD
 ===================================================== */
 
-function ShowcaseProductCard({ product }) {
+function ShowcaseProductCard({
+  product,
+}) {
   return (
     <Link
       to={`/product/${product.id}`}
@@ -880,15 +1580,18 @@ function ShowcaseProductCard({ product }) {
         showcase-product-card
         group
         block
+        w-full
         overflow-hidden
-        rounded-[16px]
+        rounded-[14px]
         border
         border-[#eeeeee]
         bg-white
+        shadow-sm
         transition-all
         duration-500
         hover:-translate-y-1
         hover:shadow-xl
+        sm:rounded-[16px]
       "
     >
       {/* IMAGE */}
@@ -897,6 +1600,7 @@ function ShowcaseProductCard({ product }) {
         className="
           relative
           aspect-square
+          w-full
           overflow-hidden
           bg-[#f7f7f7]
         "
@@ -906,59 +1610,87 @@ function ShowcaseProductCard({ product }) {
           alt={product.title}
           loading="lazy"
           className="
+            showcase-product-image
             h-full
             w-full
             object-contain
-            p-5
+            p-4
             transition-transform
             duration-700
             group-hover:scale-105
+            sm:p-5
           "
         />
 
-        {/* امتیاز */}
+        {/* RATING */}
 
         <span
           className="
             absolute
-            right-2.5
-            top-2.5
+            right-2
+            top-2
             rounded-full
             bg-white
             px-2
             py-1
-            text-[8px]
+            text-[7px]
             text-[#777]
             shadow-sm
+            sm:right-2.5
+            sm:top-2.5
+            sm:text-[8px]
           "
         >
-          ★ {product.rating?.rate}
+          ★ {product.rating?.rate || "—"}
         </span>
       </div>
 
       {/* INFO */}
 
-      <div className="p-3 sm:p-4">
+      <div className="p-2.5 sm:p-4">
         <h4
           className="
             line-clamp-2
-            min-h-[38px]
-            text-[10px]
+            min-h-[36px]
+            text-[9px]
             font-bold
             leading-5
             text-[#222]
+            sm:min-h-[38px]
             sm:text-[11px]
           "
         >
           {product.title}
         </h4>
 
-        <div className="mt-3 flex items-center justify-between gap-2">
-          <span className="text-[11px] font-bold text-[#173a2c] sm:text-xs">
+        <div
+          className="
+            mt-2.5
+            flex
+            items-center
+            justify-between
+            gap-2
+            sm:mt-3
+          "
+        >
+          <span
+            className="
+              text-[10px]
+              font-bold
+              text-[#173a2c]
+              sm:text-xs
+            "
+          >
             ${product.price}
           </span>
 
-          <span className="text-[9px] text-[#999]">
+          <span
+            className="
+              text-[8px]
+              text-[#999]
+              sm:text-[9px]
+            "
+          >
             مشاهده
           </span>
         </div>
@@ -977,15 +1709,16 @@ function MiddleBanner() {
       className="
         categories-middle-banner
         relative
-        mt-16
+        mt-14
         overflow-hidden
-        rounded-[22px]
+        rounded-[20px]
         bg-[url('/file_00000000d58c820da9bfbc1b74d4fefb.png')]
         bg-cover
         bg-center
-        px-6
-        py-10
+        px-5
+        py-9
         sm:mt-20
+        sm:rounded-[22px]
         sm:px-10
         sm:py-12
         lg:mt-24
@@ -994,10 +1727,11 @@ function MiddleBanner() {
       "
       dir="rtl"
     >
-      {/* لایه روی عکس برای خوانایی متن */}
+      {/* OVERLAY */}
+
       <div className="absolute inset-0 bg-black/35" />
 
-      {/* دکور */}
+      {/* DECORATION */}
 
       <div
         className="
@@ -1023,10 +1757,12 @@ function MiddleBanner() {
         "
       />
 
+      {/* CONTENT */}
+
       <div className="relative z-10 max-w-2xl">
         <span
           className="
-            text-[9px]
+            text-[8px]
             font-medium
             tracking-[0.2em]
             text-white/50
@@ -1039,7 +1775,7 @@ function MiddleBanner() {
         <h3
           className="
             mt-3
-            text-xl
+            text-[19px]
             font-bold
             leading-8
             text-white
@@ -1056,7 +1792,7 @@ function MiddleBanner() {
           className="
             mt-3
             max-w-xl
-            text-[10px]
+            text-[9px]
             leading-6
             text-white/60
             sm:text-xs
@@ -1070,7 +1806,7 @@ function MiddleBanner() {
         <Link
           to="/products/fabric"
           className="
-            mt-6
+            mt-5
             inline-flex
             items-center
             gap-2
@@ -1078,11 +1814,12 @@ function MiddleBanner() {
             bg-white
             px-5
             py-3
-            text-[10px]
+            text-[9px]
             font-bold
             text-[#173a2c]
             transition
             hover:bg-[#f3f1ec]
+            sm:mt-6
             sm:text-xs
           "
         >
@@ -1104,14 +1841,15 @@ function ShopBanner() {
     <section
       className="
         categories-middle-banner
-        mt-16
-        rounded-[22px]
+        mt-14
+        rounded-[20px]
         border
         border-[#e8e4dc]
         bg-[#f7f5f0]
-        px-6
-        py-9
+        px-5
+        py-8
         sm:mt-20
+        sm:rounded-[22px]
         sm:px-10
         sm:py-11
         lg:mt-24
@@ -1119,23 +1857,33 @@ function ShopBanner() {
       "
       dir="rtl"
     >
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <div
+        className="
+          flex
+          flex-col
+          gap-5
+          sm:flex-row
+          sm:items-center
+          sm:justify-between
+          sm:gap-6
+        "
+      >
         <div>
-          <p className="text-[9px] font-bold text-[#999] sm:text-[10px]">
+          <p className="text-[8px] font-bold text-[#999] sm:text-[10px]">
             مجموعه قماش شیخ الاسلامی
           </p>
 
-          <h3 className="mt-2 text-lg font-bold text-[#173a2c] sm:text-xl">
+          <h3 className="mt-2 text-[17px] font-bold text-[#173a2c] sm:text-xl">
             محصولات جدید را از دست ندهید
           </h3>
 
-          <p className="mt-2 text-[10px] leading-6 text-[#999] sm:text-xs">
+          <p className="mt-2 text-[9px] leading-6 text-[#999] sm:text-xs">
             تازه‌ترین انتخاب‌های فروشگاه را ببینید.
           </p>
         </div>
 
         <Link
-          to="/products/clothing"
+          to="/products"
           className="
             inline-flex
             w-fit
@@ -1145,7 +1893,7 @@ function ShopBanner() {
             bg-[#173a2c]
             px-5
             py-3
-            text-[10px]
+            text-[9px]
             font-bold
             text-white
             transition
@@ -1160,263 +1908,4 @@ function ShopBanner() {
       </div>
     </section>
   );
-}
-
-/* =====================================================
-   LOADING
-===================================================== */
-
-function CategoriesSkeleton() {
-  return (
-    <div className="space-y-16 sm:space-y-20 lg:space-y-24">
-
-      {/* ===============================
-          پارچه
-      =============================== */}
-
-      <section>
-        <div className="mb-5 sm:mb-6">
-          <Skeleton
-            width={80}
-            height={22}
-            borderRadius={6}
-          />
-
-          <div className="mt-2">
-            <Skeleton
-              width={180}
-              height={12}
-              borderRadius={5}
-            />
-          </div>
-        </div>
-
-        <div
-          className="
-            grid
-            grid-cols-2
-            gap-3
-            sm:grid-cols-3
-            sm:gap-4
-            lg:grid-cols-5
-            xl:grid-cols-6
-          "
-        >
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={`fabric-skeleton-${index}`}
-              className="
-                overflow-hidden
-                rounded-[14px]
-              "
-            >
-              <Skeleton
-                height={220}
-                width="100%"
-                borderRadius={14}
-              />
-            </div>
-          ))}
-        </div>
-      </section>
-
-
-      {/* ===============================
-          پوشاک
-      =============================== */}
-
-      <section>
-        <div className="mb-5 sm:mb-6">
-          <Skeleton
-            width={80}
-            height={22}
-            borderRadius={6}
-          />
-
-          <div className="mt-2">
-            <Skeleton
-              width={200}
-              height={12}
-              borderRadius={5}
-            />
-          </div>
-        </div>
-
-        <div
-          className="
-            grid
-            grid-cols-2
-            gap-3
-            sm:grid-cols-3
-            sm:gap-4
-            lg:grid-cols-5
-            xl:grid-cols-6
-          "
-        >
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={`clothing-skeleton-${index}`}
-              className="
-                overflow-hidden
-                rounded-[14px]
-              "
-            >
-              <Skeleton
-                height={220}
-                width="100%"
-                borderRadius={14}
-              />
-            </div>
-          ))}
-        </div>
-      </section>
-
-
-      {/* ===============================
-          پرفروش‌ترین محصولات
-      =============================== */}
-
-      <section>
-        <div className="mb-6">
-          <Skeleton
-            width={190}
-            height={25}
-            borderRadius={6}
-          />
-
-          <div className="mt-2">
-            <Skeleton
-              width={280}
-              height={12}
-              borderRadius={5}
-            />
-          </div>
-        </div>
-
-        <div
-          className="
-            grid
-            grid-cols-2
-            gap-3
-            sm:grid-cols-3
-            sm:gap-4
-            lg:grid-cols-6
-          "
-        >
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={`best-skeleton-${index}`}
-              className="
-                overflow-hidden
-                rounded-[16px]
-                border
-                border-[#eeeeee]
-                bg-white
-              "
-            >
-              <Skeleton
-                height={190}
-                width="100%"
-                borderRadius={0}
-              />
-
-              <div className="p-3 sm:p-4">
-                <Skeleton
-                  count={2}
-                  height={10}
-                  borderRadius={5}
-                />
-
-                <div className="mt-3">
-                  <Skeleton
-                    width={65}
-                    height={12}
-                    borderRadius={5}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-
-      {/* ===============================
-          آخرین محصولات
-      =============================== */}
-
-      <section>
-        <div className="mb-6">
-          <Skeleton
-            width={150}
-            height={25}
-            borderRadius={6}
-          />
-
-          <div className="mt-2">
-            <Skeleton
-              width={300}
-              height={12}
-              borderRadius={5}
-            />
-          </div>
-        </div>
-
-        <div
-          className="
-            grid
-            grid-cols-2
-            gap-3
-            sm:grid-cols-3
-            sm:gap-4
-            lg:grid-cols-6
-          "
-        >
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div
-              key={`latest-skeleton-${index}`}
-              className="
-                overflow-hidden
-                rounded-[16px]
-                border
-                border-[#eeeeee]
-                bg-white
-              "
-            >
-              <Skeleton
-                height={190}
-                width="100%"
-                borderRadius={0}
-              />
-
-              <div className="p-3 sm:p-4">
-                <Skeleton
-                  count={2}
-                  height={10}
-                  borderRadius={5}
-                />
-
-                <div className="mt-3">
-                  <Skeleton
-                    width={65}
-                    height={12}
-                    borderRadius={5}
-                  />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-    </div>
-  );
-}
-
-/* =====================================================
-   PRICE
-===================================================== */
-
-function formatPrice(price) {
-  return `$${Number(price).toLocaleString("en-US")}`;
 }

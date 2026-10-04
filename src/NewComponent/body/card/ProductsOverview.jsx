@@ -1,1144 +1,1038 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
-  Search,
-  SlidersHorizontal,
-  RotateCcw,
-  ChevronDown,
-  Star,
+  Minus,
+  Plus,
   ShoppingBag,
-  X,
-  ArrowDownAZ,
-  ArrowUpDown,
-  TrendingUp,
+  Star,
+  Heart,
+  Share2,
+  ShieldCheck,
+  Truck,
+  RotateCcw,
+  Check,
+  ChevronDown,
+  MessageCircle,
+  HelpCircle,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
-const API_URL = "https://fakestoreapi.com/products";
+/* =========================================================
+   API
+========================================================= */
 
-// ========================================
-// دسته‌بندی‌ها
-// ========================================
+const API_URL = "http://localhost:5000/api/products";
 
-const categoryGroups = {
-  fabric: {
-    title: "پارچه",
-    categories: [
-      { id: "cotton", title: "پارچه کتان" },
-      { id: "linen", title: "پارچه لینن" },
-      { id: "formal", title: "پارچه رسمی" },
-      { id: "casual", title: "پارچه کژوال" },
-      { id: "classic", title: "پارچه کلاسیک" },
-      { id: "special", title: "پارچه ویژه" },
-    ],
+/* =========================================================
+   SERVICES
+========================================================= */
+
+const services = [
+  {
+    icon: ShieldCheck,
+    title: "ضمانت اصالت و سلامت کالا",
+    text: "اطمینان از سلامت محصول هنگام تحویل",
   },
-
-  clothing: {
-    title: "پوشاک",
-    categories: [
-      { id: "tshirt", title: "تی‌شرت" },
-      { id: "pants", title: "شلوار" },
-      { id: "socks", title: "جوراب" },
-      { id: "towel", title: "حوله" },
-      { id: "shirt", title: "پیراهن" },
-      { id: "homewear", title: "لباس راحتی" },
-    ],
+  {
+    icon: Truck,
+    title: "ارسال سریع",
+    text: "ارسال سفارش در کوتاه‌ترین زمان",
   },
-};
+  {
+    icon: RotateCcw,
+    title: "۷ روز ضمانت بازگشت",
+    text: "طبق شرایط و قوانین فروشگاه",
+  },
+];
 
-// ========================================
-// ساخت دسته‌بندی نمایشی برای محصولات
-// ========================================
+/* =========================================================
+   COLORS
+========================================================= */
 
-function getProductCategory(product, index) {
-  if (index < 10) {
-    const categories = [
-      "cotton",
-      "linen",
-      "formal",
-      "casual",
-      "classic",
-      "special",
-    ];
+const colors = [
+  {
+    name: "مشکی",
+    value: "#151515",
+  },
+  {
+    name: "سفید",
+    value: "#f5f5f5",
+  },
+  {
+    name: "کرم",
+    value: "#d8c7a5",
+  },
+];
 
-    return {
-      type: "fabric",
-      category: categories[index % categories.length],
-    };
-  }
+/* =========================================================
+   PRODUCT DETAIL
+========================================================= */
 
-  const categories = [
-    "tshirt",
-    "pants",
-    "socks",
-    "towel",
-    "shirt",
-    "homewear",
-  ];
+export default function ProductDetail() {
+  const { id } = useParams();
 
-  return {
-    type: "clothing",
-    category: categories[(index - 10) % categories.length],
-  };
-}
-
-// ========================================
-// قیمت
-// ========================================
-
-function formatPrice(price) {
-  return `$${Number(price).toLocaleString("en-US")}`;
-}
-
-// ========================================
-// Product Card
-// ========================================
-
-function ProductCard({ product }) {
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.35 }}
-    >
-      <Link
-        to={`/product/${product.id}`}
-        className="
-          group
-          block
-          overflow-hidden
-          rounded-2xl
-          border
-          border-[#eeeeee]
-          bg-white
-          transition-all
-          duration-500
-          hover:-translate-y-1
-          hover:shadow-[0_15px_45px_rgba(0,0,0,0.08)]
-        "
-      >
-        {/* تصویر */}
-        <div
-          className="
-            relative
-            aspect-square
-            overflow-hidden
-            bg-[#f7f7f5]
-          "
-        >
-          <img
-            src={product.image}
-            alt={product.title}
-            className="
-              h-full
-              w-full
-              object-contain
-              p-7
-              transition-transform
-              duration-700
-              group-hover:scale-105
-            "
-          />
-
-          {/* امتیاز */}
-          <div
-            className="
-              absolute
-              right-3
-              top-3
-              flex
-              items-center
-              gap-1
-              rounded-full
-              bg-white
-              px-2.5
-              py-1.5
-              text-[10px]
-              text-[#555]
-              shadow-sm
-            "
-          >
-            <Star
-              size={11}
-              fill="currentColor"
-              className="text-[#d6a928]"
-            />
-            {product.rating?.rate || 0}
-          </div>
-
-          {/* نوع محصول */}
-          <div
-            className="
-              absolute
-              left-3
-              top-3
-              rounded-full
-              bg-[#173a2c]
-              px-2.5
-              py-1.5
-              text-[9px]
-              text-white
-            "
-          >
-            {product.type === "fabric" ? "پارچه" : "پوشاک"}
-          </div>
-        </div>
-
-        {/* اطلاعات */}
-        <div className="p-4">
-          <div className="mb-2 text-[9px] text-[#999]">
-            {product.categoryTitle}
-          </div>
-
-          <h2
-            className="
-              line-clamp-2
-              min-h-[40px]
-              text-xs
-              font-bold
-              leading-5
-              text-[#222]
-            "
-          >
-            {product.title}
-          </h2>
-
-          <div className="mt-5 flex items-center justify-between">
-            <span className="text-sm font-bold text-[#173a2c]">
-              {formatPrice(product.price)}
-            </span>
-
-            <span className="flex items-center gap-1 text-[10px] text-[#999]">
-              <Star size={11} fill="currentColor" />
-              {product.rating?.rate}
-            </span>
-          </div>
-
-          <div
-            className="
-              mt-4
-              flex
-              items-center
-              justify-center
-              gap-2
-              rounded-xl
-              bg-[#173a2c]
-              py-3
-              text-[10px]
-              text-white
-              transition
-              duration-300
-              group-hover:bg-[#166534]
-            "
-          >
-            <ShoppingBag size={14} />
-            مشاهده محصول
-          </div>
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
-
-// ========================================
-// Sort Dropdown
-// ========================================
-
-function SortDropdown({ value, onChange }) {
-  const [open, setOpen] = useState(false);
-
-  const options = [
-    {
-      value: "default",
-      label: "مرتب‌سازی پیش‌فرض",
-      icon: ArrowUpDown,
-    },
-    {
-      value: "newest",
-      label: "جدیدترین",
-      icon: TrendingUp,
-    },
-    {
-      value: "price-low",
-      label: "ارزان‌ترین",
-      icon: ArrowDownAZ,
-    },
-    {
-      value: "price-high",
-      label: "گران‌ترین",
-      icon: ArrowDownAZ,
-    },
-    {
-      value: "rating",
-      label: "بیشترین امتیاز",
-      icon: Star,
-    },
-  ];
-
-  const selected =
-    options.find((item) => item.value === value) || options[0];
-
-  return (
-    <div className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((prev) => !prev)}
-        className="
-          flex
-          h-11
-          min-w-[190px]
-          items-center
-          justify-between
-          gap-3
-          rounded-xl
-          border
-          border-[#e8e8e8]
-          bg-white
-          px-4
-          text-xs
-          text-[#444]
-          transition
-          hover:border-[#173a2c]
-        "
-      >
-        <span className="flex items-center gap-2">
-          <selected.icon size={15} />
-          {selected.label}
-        </span>
-
-        <ChevronDown
-          size={15}
-          className={`transition-transform ${
-            open ? "rotate-180" : ""
-          }`}
-        />
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            className="
-              absolute
-              left-0
-              right-0
-              top-full
-              z-50
-              mt-2
-              overflow-hidden
-              rounded-xl
-              border
-              border-[#eeeeee]
-              bg-white
-              p-1.5
-              shadow-xl
-            "
-          >
-            {options.map((option) => {
-              const Icon = option.icon;
-
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => {
-                    onChange(option.value);
-                    setOpen(false);
-                  }}
-                  className={`
-                    flex
-                    w-full
-                    items-center
-                    gap-2
-                    rounded-lg
-                    px-3
-                    py-2.5
-                    text-right
-                    text-xs
-                    transition
-                    ${
-                      value === option.value
-                        ? "bg-[#edf5f0] text-[#166534]"
-                        : "text-[#555] hover:bg-[#f7f7f7]"
-                    }
-                  `}
-                >
-                  <Icon size={14} />
-                  {option.label}
-                </button>
-              );
-            })}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-// ========================================
-// Products Overview
-// ========================================
-
-export default function ProductsOverview() {
-  const [products, setProducts] = useState([]);
+  const [product, setProduct] = useState(null);
+  const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [search, setSearch] = useState("");
-  const [type, setType] = useState("all");
-  const [category, setCategory] = useState("all");
+  const [quantity, setQuantity] = useState(1);
+  const [selectedColor, setSelectedColor] = useState(
+    colors[0]
+  );
+  const [selectedSize, setSelectedSize] = useState("M");
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [activeTab, setActiveTab] = useState("specs");
+  const [activeImage, setActiveImage] = useState("");
 
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-
-  const [rating, setRating] = useState("all");
-  const [sort, setSort] = useState("default");
-
-  const [mobileFilters, setMobileFilters] = useState(false);
-
-  // ========================================
-  // Fetch Products
-  // ========================================
+  /* =========================================================
+     GET PRODUCT
+  ========================================================= */
 
   useEffect(() => {
-    async function fetchProducts() {
+    async function getProduct() {
       try {
         setLoading(true);
 
-        const response = await fetch(API_URL);
+        const [productResponse, allProductsResponse] =
+          await Promise.all([
+            fetch(`${API_URL}/${id}`),
+            fetch(API_URL),
+          ]);
 
-        if (!response.ok) {
+        if (!productResponse.ok) {
+          throw new Error("Product not found");
+        }
+
+        if (!allProductsResponse.ok) {
           throw new Error("Products not found");
         }
 
-        const data = await response.json();
+        const productData = await productResponse.json();
+        const allProductsData = await allProductsResponse.json();
 
-        const preparedProducts = data.map((product, index) => {
-          const categoryData = getProductCategory(
-            product,
-            index
-          );
-
-          const categoryTitle =
-            categoryGroups[categoryData.type]?.categories.find(
-              (item) => item.id === categoryData.category
-            )?.title || "محصول";
-
-          return {
-            ...product,
-            type: categoryData.type,
-            customCategory: categoryData.category,
-            categoryTitle,
-          };
-        });
-
-        setProducts(preparedProducts);
+        setProduct(productData);
+        setAllProducts(allProductsData);
+        setActiveImage(productData.image || "");
       } catch (error) {
         console.error(error);
-        setProducts([]);
+        setProduct(null);
+        setAllProducts([]);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchProducts();
-  }, []);
+    getProduct();
+  }, [id]);
 
-  // ========================================
-  // Filter + Sort
-  // ========================================
+  /* =========================================================
+     RELATED PRODUCTS
+  ========================================================= */
 
-  const filteredProducts = useMemo(() => {
-    let result = [...products];
+  const relatedProducts = useMemo(() => {
+    if (!product) return [];
 
-    // جستجو
-    if (search.trim()) {
-      const searchValue = search.toLowerCase();
+    return allProducts
+      .filter(
+        (item) =>
+          item.id !== product.id &&
+          item.category === product.category &&
+          item.group === product.group
+      )
+      .slice(0, 4);
+  }, [product, allProducts]);
 
-      result = result.filter((product) =>
-        `${product.title} ${product.categoryTitle}`
-          .toLowerCase()
-          .includes(searchValue)
-      );
-    }
+  /* =========================================================
+     PRODUCT FEATURES
+  ========================================================= */
 
-    // نوع محصول
-    if (type !== "all") {
-      result = result.filter(
-        (product) => product.type === type
-      );
-    }
+  const features = useMemo(() => {
+    if (!product) return [];
 
-    // دسته‌بندی
-    if (category !== "all") {
-      result = result.filter(
-        (product) => product.customCategory === category
-      );
-    }
+    return [
+      ["جنس", product.details || "کیفیت عالی"],
+      ["نوع محصول", product.unit || "محصول فروشگاهی"],
+      ["دسته‌بندی", product.category || "نامشخص"],
+      ["گروه محصول", product.group || "نامشخص"],
+      ["کیفیت", "درجه یک"],
+      ["قیمت", `${product.price?.toLocaleString("fa-IR")} تومان`],
+    ];
+  }, [product]);
 
-    // حداقل قیمت
-    if (minPrice !== "") {
-      result = result.filter(
-        (product) =>
-          Number(product.price) >= Number(minPrice)
-      );
-    }
+  /* =========================================================
+     PRICE
+  ========================================================= */
 
-    // حداکثر قیمت
-    if (maxPrice !== "") {
-      result = result.filter(
-        (product) =>
-          Number(product.price) <= Number(maxPrice)
-      );
-    }
+  const originalPrice = product
+    ? Math.round(product.price * 1.12)
+    : 0;
 
-    // امتیاز
-    if (rating !== "all") {
-      result = result.filter(
-        (product) =>
-          Number(product.rating?.rate || 0) >= Number(rating)
-      );
-    }
+  const discountPercent = 10;
 
-    // مرتب‌سازی
-    if (sort === "price-low") {
-      result.sort((a, b) => a.price - b.price);
-    }
+  /* =========================================================
+     QUANTITY
+  ========================================================= */
 
-    if (sort === "price-high") {
-      result.sort((a, b) => b.price - a.price);
-    }
+  const increase = () => {
+    setQuantity((prev) => prev + 1);
+  };
 
-    if (sort === "rating") {
-      result.sort(
-        (a, b) =>
-          Number(b.rating?.rate || 0) -
-          Number(a.rating?.rate || 0)
-      );
-    }
-
-    if (sort === "newest") {
-      result.sort((a, b) => b.id - a.id);
-    }
-
-    return result;
-  }, [
-    products,
-    search,
-    type,
-    category,
-    minPrice,
-    maxPrice,
-    rating,
-    sort,
-  ]);
-
-  // ========================================
-  // Reset Filters
-  // ========================================
-
-  function resetFilters() {
-    setSearch("");
-    setType("all");
-    setCategory("all");
-    setMinPrice("");
-    setMaxPrice("");
-    setRating("all");
-    setSort("default");
-  }
-
-  // ========================================
-  // تغییر نوع
-  // ========================================
-
-  function handleTypeChange(value) {
-    setType(value);
-    setCategory("all");
-  }
-
-  // ========================================
-  // Filter Sidebar
-  // ========================================
-
-  function FilterContent() {
-    return (
-      <div dir="rtl">
-        {/* عنوان */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <SlidersHorizontal
-              size={17}
-              className="text-[#173a2c]"
-            />
-
-            <h2 className="text-sm font-bold text-[#222]">
-              فیلتر محصولات
-            </h2>
-          </div>
-
-          <button
-            type="button"
-            onClick={resetFilters}
-            className="
-              flex
-              items-center
-              gap-1
-              text-[10px]
-              text-[#999]
-              transition
-              hover:text-[#173a2c]
-            "
-          >
-            <RotateCcw size={12} />
-            حذف فیلترها
-          </button>
-        </div>
-
-        {/* نوع محصول */}
-        <div className="border-b border-[#eeeeee] pb-5">
-          <h3 className="mb-3 text-xs font-bold text-[#333]">
-            نوع محصول
-          </h3>
-
-          <div className="space-y-2">
-            <FilterRadio
-              label="همه محصولات"
-              checked={type === "all"}
-              onClick={() => handleTypeChange("all")}
-            />
-
-            <FilterRadio
-              label="پارچه"
-              checked={type === "fabric"}
-              onClick={() => handleTypeChange("fabric")}
-            />
-
-            <FilterRadio
-              label="پوشاک"
-              checked={type === "clothing"}
-              onClick={() => handleTypeChange("clothing")}
-            />
-          </div>
-        </div>
-
-        {/* دسته‌بندی */}
-        <div className="border-b border-[#eeeeee] py-5">
-          <h3 className="mb-3 text-xs font-bold text-[#333]">
-            دسته‌بندی
-          </h3>
-
-          <div className="max-h-[270px] space-y-2 overflow-y-auto pl-1">
-            {type !== "clothing" &&
-              categoryGroups.fabric.categories.map((item) => (
-                <FilterRadio
-                  key={item.id}
-                  label={item.title}
-                  checked={category === item.id}
-                  onClick={() => {
-                    setCategory(item.id);
-                    setType("fabric");
-                  }}
-                />
-              ))}
-
-            {type !== "fabric" &&
-              categoryGroups.clothing.categories.map((item) => (
-                <FilterRadio
-                  key={item.id}
-                  label={item.title}
-                  checked={category === item.id}
-                  onClick={() => {
-                    setCategory(item.id);
-                    setType("clothing");
-                  }}
-                />
-              ))}
-          </div>
-        </div>
-
-        {/* قیمت */}
-        <div className="border-b border-[#eeeeee] py-5">
-          <h3 className="mb-3 text-xs font-bold text-[#333]">
-            محدوده قیمت
-          </h3>
-
-          <div className="grid grid-cols-2 gap-2">
-            <input
-              type="number"
-              value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
-              placeholder="حداقل"
-              className="
-                h-10
-                w-full
-                rounded-lg
-                border
-                border-[#e8e8e8]
-                px-3
-                text-xs
-                outline-none
-                transition
-                focus:border-[#173a2c]
-              "
-            />
-
-            <input
-              type="number"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              placeholder="حداکثر"
-              className="
-                h-10
-                w-full
-                rounded-lg
-                border
-                border-[#e8e8e8]
-                px-3
-                text-xs
-                outline-none
-                transition
-                focus:border-[#173a2c]
-              "
-            />
-          </div>
-        </div>
-
-        {/* امتیاز */}
-        <div className="pt-5">
-          <h3 className="mb-3 text-xs font-bold text-[#333]">
-            امتیاز محصول
-          </h3>
-
-          <div className="space-y-2">
-            <FilterRadio
-              label="همه امتیازها"
-              checked={rating === "all"}
-              onClick={() => setRating("all")}
-            />
-
-            {[4, 3, 2].map((value) => (
-              <FilterRadio
-                key={value}
-                label={`${value} ستاره و بیشتر`}
-                checked={rating === String(value)}
-                onClick={() => setRating(String(value))}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+  const decrease = () => {
+    setQuantity((prev) =>
+      prev > 1 ? prev - 1 : 1
     );
-  }
+  };
 
-  // ========================================
-  // Loading
-  // ========================================
+  /* =========================================================
+     ADD TO CART
+  ========================================================= */
+
+  const addToCart = () => {
+    if (!product) return;
+
+    const cartItem = {
+      ...product,
+      quantity,
+      selectedColor,
+      selectedSize,
+    };
+
+    console.log("Cart:", cartItem);
+
+    alert(
+      `${quantity} عدد از محصول «${product.title}» به سبد خرید اضافه شد`
+    );
+  };
+
+  /* =========================================================
+     SHARE
+  ========================================================= */
+
+  const shareProduct = async () => {
+    if (!product) return;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: product.title,
+          text: "مشاهده این محصول در قماش شیخ الاسلامی",
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(
+          window.location.href
+        );
+
+        alert("لینک محصول کپی شد");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  /* =========================================================
+     LOADING
+  ========================================================= */
 
   if (loading) {
+    return null;
+  }
+
+  /* =========================================================
+     NOT FOUND
+  ========================================================= */
+
+  if (!product) {
     return (
       <main
         dir="rtl"
-        className="
-          mx-auto
-          w-full
-          max-w-[1500px]
-          px-4
-          py-12
-          sm:px-6
-          lg:py-16
-        "
+        className="flex min-h-screen items-center justify-center bg-[#f5f5f5] px-4"
       >
-        <div className="mb-10">
-          <div className="h-8 w-40 animate-pulse rounded-lg bg-[#eee]" />
-          <div className="mt-3 h-4 w-64 animate-pulse rounded bg-[#eee]" />
-        </div>
+        <div className="w-full max-w-md bg-white p-10 text-center">
+          <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#f5f5f5]">
+            <ShoppingBag size={30} className="text-[#424750]" />
+          </div>
 
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <div
-              key={index}
-              className="
-                aspect-[4/5]
-                animate-pulse
-                rounded-2xl
-                bg-[#eee]
-              "
-            />
-          ))}
+          <h1 className="text-xl font-bold text-[#23262a]">
+            محصول پیدا نشد
+          </h1>
+
+          <p className="mt-3 text-sm leading-7 text-[#81858b]">
+            محصول مورد نظر در فروشگاه موجود نیست.
+          </p>
+
+          <Link
+            to="/products"
+            className="mt-7 inline-flex rounded-lg bg-[#ef394e] px-8 py-3 text-sm font-bold text-white transition hover:bg-[#d92f42]"
+          >
+            مشاهده محصولات
+          </Link>
         </div>
       </main>
     );
   }
 
-  // ========================================
-  // Page
-  // ========================================
+  const finalPrice = product.price;
 
   return (
     <main
       dir="rtl"
-      className="
-        mx-auto
-        w-full
-        max-w-[1500px]
-        px-4
-        py-10
-        sm:px-6
-        lg:py-16
-      "
+      className="min-h-screen bg-[#fff]"
     >
-      {/* Header */}
-      <div className="mb-8">
-        <p className="mb-2 text-xs text-[#999]">
-          قماش شیخ الاسلامی / فروشگاه
-        </p>
+      {/* ================= BREADCRUMB ================= */}
+      <div className="mx-auto w-full max-w-[1400px] px-4 pt-5 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap text-[11px] text-[#81858b]">
+          <Link
+            to="/"
+            className="shrink-0 transition hover:text-[#ef394e]"
+          >
+            خانه
+          </Link>
 
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-[#173a2c] sm:text-3xl">
-              فروشگاه محصولات
-            </h1>
+          <ChevronDown
+            size={13}
+            className="-rotate-90 shrink-0"
+          />
 
-            <p className="mt-2 text-xs text-[#888]">
-              مجموعه کامل محصولات قماش شیخ الاسلامی
-            </p>
-          </div>
+          <Link
+            to="/products"
+            className="shrink-0 transition hover:text-[#ef394e]"
+          >
+            محصولات
+          </Link>
 
-          {/* Search */}
-          <div className="relative w-full lg:w-[330px]">
-            <Search
-              size={17}
-              className="
-                absolute
-                right-4
-                top-1/2
-                -translate-y-1/2
-                text-[#999]
-              "
-            />
+          <ChevronDown
+            size={13}
+            className="-rotate-90 shrink-0"
+          />
 
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="جستجوی محصول..."
-              className="
-                h-12
-                w-full
-                rounded-xl
-                border
-                border-[#e8e8e8]
-                bg-white
-                pr-11
-                pl-10
-                text-xs
-                outline-none
-                transition
-                focus:border-[#173a2c]
-              "
-            />
-
-            {search && (
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className="
-                  absolute
-                  left-3
-                  top-1/2
-                  -translate-y-1/2
-                  text-[#999]
-                  hover:text-[#333]
-                "
-              >
-                <X size={15} />
-              </button>
-            )}
-          </div>
+          <span className="truncate text-[#62666d]">
+            {product.title}
+          </span>
         </div>
       </div>
 
-      {/* Mobile Filter Button */}
-      <button
-        type="button"
-        onClick={() => setMobileFilters(true)}
-        className="
-          mb-5
-          flex
-          h-11
-          w-full
-          items-center
-          justify-center
-          gap-2
-          rounded-xl
-          border
-          border-[#e8e8e8]
-          bg-white
-          text-xs
-          text-[#333]
-          lg:hidden
-        "
-      >
-        <SlidersHorizontal size={16} />
-        فیلتر محصولات
-      </button>
+      {/* ================= MAIN PRODUCT ================= */}
+      <section className="mx-auto mt-5 w-full max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1.05fr_1.4fr]">
 
-      <div className="flex items-start gap-7">
-        {/* Desktop Filters */}
-        <aside
-          className="
-            hidden
-            w-[250px]
-            shrink-0
-            rounded-2xl
-            border
-            border-[#eeeeee]
-            bg-white
-            p-5
-            lg:block
-          "
-        >
-          <FilterContent />
-        </aside>
+          {/* =====================================================
+              RIGHT SIDE - GALLERY
+          ====================================================== */}
+          <div className="min-w-0 border border-[#e0e0e2] bg-white">
+            <div className="flex min-h-[620px] flex-col p-5 sm:p-7">
 
-        {/* Products */}
-        <section className="min-w-0 flex-1">
-          {/* Toolbar */}
-          <div
-            className="
-              mb-6
-              flex
-              flex-col
-              gap-4
-              rounded-2xl
-              border
-              border-[#eeeeee]
-              bg-white
-              p-4
-              sm:flex-row
-              sm:items-center
-              sm:justify-between
-            "
-          >
-            <div>
-              <span className="text-xs text-[#888]">
-                نمایش{" "}
-                <strong className="text-[#173a2c]">
-                  {filteredProducts.length}
-                </strong>{" "}
-                محصول
-              </span>
-            </div>
+              {/* TOP ACTIONS */}
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-[#81858b]">
+                  اشتراک‌گذاری محصول
+                </span>
 
-            <SortDropdown
-              value={sort}
-              onChange={setSort}
-            />
-          </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={shareProduct}
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-[#81858b] transition hover:bg-[#f5f5f5] hover:text-[#19bfd3]"
+                  >
+                    <Share2 size={19} />
+                  </button>
 
-          {/* Product Grid */}
-          {filteredProducts.length > 0 ? (
-            <motion.div
-              layout
-              className="
-                grid
-                grid-cols-2
-                gap-4
-                md:grid-cols-3
-                xl:grid-cols-4
-              "
-            >
-              <AnimatePresence mode="popLayout">
-                {filteredProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                  />
-                ))}
-              </AnimatePresence>
-            </motion.div>
-          ) : (
-            <div
-              className="
-                rounded-2xl
-                border
-                border-[#eeeeee]
-                bg-white
-                px-5
-                py-24
-                text-center
-              "
-            >
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#edf5f0]">
-                <Search
-                  size={22}
-                  className="text-[#173a2c]"
-                />
+                  <button
+                    onClick={() =>
+                      setIsFavorite((prev) => !prev)
+                    }
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-[#81858b] transition hover:bg-[#f5f5f5] hover:text-[#ef394e]"
+                  >
+                    <Heart
+                      size={20}
+                      fill={
+                        isFavorite
+                          ? "#ef394e"
+                          : "transparent"
+                      }
+                      className={
+                        isFavorite
+                          ? "text-[#ef394e]"
+                          : ""
+                      }
+                    />
+                  </button>
+                </div>
               </div>
 
-              <h2 className="text-sm font-bold text-[#333]">
-                محصولی پیدا نشد
+              {/* GALLERY AREA */}
+              <div className="mt-5 flex flex-1 flex-col-reverse gap-5 sm:flex-row sm:items-center sm:justify-center">
+
+                {/* THUMBNAILS */}
+                <div className="flex shrink-0 flex-row justify-center gap-3 sm:flex-col">
+                  {[1, 2, 3].map((item) => (
+                    <button
+                      key={item}
+                      onClick={() =>
+                        setActiveImage(product.image)
+                      }
+                      className={`
+                        flex h-[72px] w-[72px]
+                        items-center justify-center
+                        overflow-hidden
+                        rounded-lg
+                        border
+                        bg-white
+                        p-2
+                        transition
+                        ${
+                          activeImage === product.image &&
+                          item === 1
+                            ? "border-[#19bfd3]"
+                            : "border-[#e0e0e2]"
+                        }
+                      `}
+                    >
+                      <img
+                        src={product.image}
+                        alt=""
+                        className="h-full w-full object-contain"
+                      />
+                    </button>
+                  ))}
+                </div>
+
+                {/* MAIN IMAGE */}
+                <div className="flex min-h-[400px] flex-1 items-center justify-center">
+                  <img
+                    src={activeImage}
+                    alt={product.title}
+                    className="max-h-[480px] max-w-full object-contain"
+                  />
+                </div>
+              </div>
+
+              {/* GALLERY FOOT */}
+              <div className="mt-5 flex items-center justify-center gap-2 border-t border-[#f1f2f4] pt-5 text-[11px] text-[#81858b]">
+                <Check
+                  size={15}
+                  className="text-[#19bfd3]"
+                />
+                تصاویر محصول
+              </div>
+            </div>
+          </div>
+
+          {/* =====================================================
+              LEFT SIDE - PRODUCT INFORMATION
+          ====================================================== */}
+          <div className="min-w-0">
+
+            {/* PRODUCT INFO */}
+            <div className="border border-[#e0e0e2] bg-white p-5 sm:p-7">
+
+              {/* BRAND */}
+              <div className="mb-4 flex items-center gap-2 text-[11px] text-[#81858b]">
+                <span>قماش شیخ الاسلامی</span>
+                <span className="text-[#e0e0e2]">|</span>
+                <span>فروشگاه آنلاین</span>
+              </div>
+
+              {/* TITLE */}
+              <h1 className="text-[19px] font-bold leading-8 text-[#23262a] sm:text-[22px]">
+                {product.title}
+              </h1>
+
+              {/* RATING / COMMENTS */}
+              <div className="mt-4 flex flex-wrap items-center gap-4 text-[11px]">
+
+                <div className="flex items-center gap-1 text-[#f9a825]">
+                  <Star
+                    size={15}
+                    fill="currentColor"
+                  />
+
+                  <span className="font-bold">
+                    {product.rating?.rate || 0}
+                  </span>
+                </div>
+
+                <span className="text-[#19bfd3]">
+                  {product.rating?.count || 0} دیدگاه
+                </span>
+
+                <span className="text-[#81858b]">
+                  ۱۰۰+ پرسش و پاسخ
+                </span>
+              </div>
+
+              {/* SHORT DESCRIPTION */}
+              <div className="mt-6 border-t border-[#f1f2f4] pt-6">
+                <h2 className="mb-3 text-sm font-bold text-[#23262a]">
+                  درباره محصول
+                </h2>
+
+                <p className="text-[13px] leading-8 text-[#62666d]">
+                  {product.description}
+                </p>
+              </div>
+
+              {/* FEATURES */}
+              <div className="mt-6">
+                <h2 className="mb-4 text-sm font-bold text-[#23262a]">
+                  ویژگی‌های محصول
+                </h2>
+
+                <div className="grid grid-cols-1 gap-y-3 sm:grid-cols-2">
+                  {features.slice(0, 4).map(([label, value]) => (
+                    <div
+                      key={label}
+                      className="flex items-center gap-2 text-[12px]"
+                    >
+                      <span className="h-1.5 w-1.5 rounded-full bg-[#19bfd3]" />
+
+                      <span className="text-[#81858b]">
+                        {label}:
+                      </span>
+
+                      <span className="font-medium text-[#424750]">
+                        {value}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* COLOR */}
+              <div className="mt-7 border-t border-[#f1f2f4] pt-6">
+                <div className="mb-3 flex items-center gap-2">
+                  <span className="text-sm font-bold text-[#23262a]">
+                    رنگ:
+                  </span>
+
+                  <span className="text-xs text-[#62666d]">
+                    {selectedColor.name}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {colors.map((color) => (
+                    <button
+                      key={color.name}
+                      onClick={() =>
+                        setSelectedColor(color)
+                      }
+                      className={`
+                        flex items-center gap-2
+                        rounded-lg
+                        border
+                        px-3 py-2
+                        text-xs
+                        ${
+                          selectedColor.name === color.name
+                            ? "border-[#19bfd3]"
+                            : "border-[#e0e0e2]"
+                        }
+                      `}
+                    >
+                      <span
+                        className="h-5 w-5 rounded-full border border-[#d7d7d7]"
+                        style={{
+                          backgroundColor: color.value,
+                        }}
+                      />
+
+                      {color.name}
+
+                      {selectedColor.name === color.name && (
+                        <Check
+                          size={13}
+                          className="text-[#19bfd3]"
+                        />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* SIZE */}
+              <div className="mt-6">
+                <div className="mb-3 flex items-center justify-between">
+                  <span className="text-sm font-bold text-[#23262a]">
+                    سایز:
+                  </span>
+
+                  <button className="text-[11px] text-[#19bfd3]">
+                    راهنمای انتخاب سایز
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {["S", "M", "L", "XL", "2XL"].map((size) => (
+                    <button
+                      key={size}
+                      onClick={() =>
+                        setSelectedSize(size)
+                      }
+                      className={`
+                        min-w-[55px]
+                        rounded-lg
+                        border
+                        px-4 py-2.5
+                        text-xs
+                        ${
+                          selectedSize === size
+                            ? "border-[#19bfd3] bg-[#19bfd3] text-white"
+                            : "border-[#e0e0e2] bg-white text-[#424750]"
+                        }
+                      `}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* =====================================================
+                SELLER / PURCHASE CARD
+            ====================================================== */}
+            <div className="mt-5 border border-[#e0e0e2] bg-white p-5 sm:p-7">
+
+              {/* SELLER */}
+              <div className="flex items-center justify-between border-b border-[#f1f2f4] pb-5">
+                <div>
+                  <div className="mb-2 text-[11px] text-[#81858b]">
+                    فروشنده
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-[#424750]">
+                      قماش شیخ الاسلامی
+                    </span>
+
+                    <ShieldCheck
+                      size={17}
+                      className="text-[#19bfd3]"
+                    />
+                  </div>
+                </div>
+
+                <span className="text-[11px] text-[#19bfd3]">
+                  معتبر
+                </span>
+              </div>
+
+              {/* DELIVERY */}
+              <div className="space-y-4 border-b border-[#f1f2f4] py-5">
+
+                <div className="flex items-center gap-3">
+                  <Truck
+                    size={20}
+                    className="text-[#81858b]"
+                  />
+
+                  <div>
+                    <div className="text-xs font-bold text-[#424750]">
+                      ارسال سریع
+                    </div>
+
+                    <div className="mt-1 text-[10px] text-[#81858b]">
+                      ارسال سفارش در کوتاه‌ترین زمان
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <ShieldCheck
+                    size={20}
+                    className="text-[#81858b]"
+                  />
+
+                  <div>
+                    <div className="text-xs font-bold text-[#424750]">
+                      تضمین اصالت کالا
+                    </div>
+
+                    <div className="mt-1 text-[10px] text-[#81858b]">
+                      ضمانت سلامت و اصالت محصول
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <RotateCcw
+                    size={20}
+                    className="text-[#81858b]"
+                  />
+
+                  <div>
+                    <div className="text-xs font-bold text-[#424750]">
+                      ضمانت بازگشت
+                    </div>
+
+                    <div className="mt-1 text-[10px] text-[#81858b]">
+                      ۷ روز ضمانت بازگشت
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* PRICE */}
+              <div className="pt-6">
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-md bg-[#ef394e] px-2 py-1 text-[11px] font-bold text-white">
+                      {discountPercent}٪
+                    </span>
+
+                    <span className="text-xs text-[#81858b] line-through">
+                      {originalPrice.toLocaleString("fa-IR")}
+                    </span>
+                  </div>
+
+                  <span className="text-[11px] text-[#81858b]">
+                    قیمت فروشنده
+                  </span>
+                </div>
+
+                <div className="mt-3 flex items-end justify-between">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-black text-[#23262a]">
+                      {finalPrice.toLocaleString("fa-IR")}
+                    </span>
+
+                    <span className="text-xs text-[#424750]">
+                      تومان
+                    </span>
+                  </div>
+                </div>
+
+                {/* QUANTITY + CART */}
+                <div className="mt-6 flex gap-3">
+
+                  <div className="flex h-[52px] shrink-0 items-center overflow-hidden rounded-lg border border-[#e0e0e2] bg-white">
+                    <button
+                      onClick={increase}
+                      className="flex h-full w-10 items-center justify-center text-[#19bfd3] transition hover:bg-[#f5f5f5]"
+                    >
+                      <Plus size={17} />
+                    </button>
+
+                    <span className="w-9 text-center text-sm font-bold text-[#424750]">
+                      {quantity}
+                    </span>
+
+                    <button
+                      onClick={decrease}
+                      className="flex h-full w-10 items-center justify-center text-[#19bfd3] transition hover:bg-[#f5f5f5]"
+                    >
+                      <Minus size={17} />
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={addToCart}
+                    className="
+                      flex h-[52px]
+                      flex-1
+                      items-center
+                      justify-center
+                      gap-2
+                      rounded-lg
+                      bg-[#ef394e]
+                      px-4
+                      text-sm
+                      font-bold
+                      text-white
+                      transition
+                      hover:bg-[#d92f42]
+                    "
+                  >
+                    <ShoppingBag size={19} />
+                    افزودن به سبد خرید
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= PRODUCT TABS ================= */}
+      <section className="mx-auto mt-7 w-full max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <div className="border border-[#e0e0e2] bg-white">
+
+          {/* TAB HEADER */}
+          <div className="overflow-x-auto border-b border-[#e0e0e2]">
+            <div className="flex min-w-max">
+              {[
+                ["specs", "مشخصات فنی"],
+                ["description", "توضیحات"],
+                ["reviews", "دیدگاه کاربران"],
+                ["questions", "پرسش و پاسخ"],
+              ].map(([tab, title]) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`
+                    relative px-7 py-5
+                    text-sm font-bold
+                    ${
+                      activeTab === tab
+                        ? "text-[#ef394e]"
+                        : "text-[#62666d]"
+                    }
+                  `}
+                >
+                  {title}
+
+                  {activeTab === tab && (
+                    <span className="absolute bottom-0 right-5 left-5 h-[3px] bg-[#ef394e]" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* SPECS */}
+          {activeTab === "specs" && (
+            <div className="p-5 sm:p-8">
+              <h2 className="mb-6 text-lg font-bold text-[#23262a]">
+                مشخصات فنی
               </h2>
 
-              <p className="mt-2 text-xs text-[#999]">
-                فیلترها یا عبارت جستجو را تغییر دهید.
-              </p>
+              <div className="overflow-hidden border border-[#e0e0e2]">
+                {features.map(([label, value], index) => (
+                  <div
+                    key={label}
+                    className={`
+                      grid grid-cols-1
+                      gap-3
+                      px-5 py-4
+                      sm:grid-cols-[220px_1fr]
+                      sm:items-center
+                      ${
+                        index !== features.length - 1
+                          ? "border-b border-[#e0e0e2]"
+                          : ""
+                      }
+                    `}
+                  >
+                    <div className="text-xs text-[#81858b]">
+                      {label}
+                    </div>
 
-              <button
-                type="button"
-                onClick={resetFilters}
-                className="
-                  mt-5
-                  rounded-xl
-                  bg-[#173a2c]
-                  px-5
-                  py-3
-                  text-xs
-                  text-white
-                  transition
-                  hover:bg-[#166534]
-                "
-              >
-                حذف فیلترها
+                    <div className="text-sm text-[#424750]">
+                      {value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* DESCRIPTION */}
+          {activeTab === "description" && (
+            <div className="p-5 sm:p-8">
+              <h2 className="mb-6 text-lg font-bold text-[#23262a]">
+                توضیحات محصول
+              </h2>
+
+              <div className="max-w-4xl">
+                <p className="text-sm leading-9 text-[#62666d]">
+                  {product.description}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* REVIEWS */}
+          {activeTab === "reviews" && (
+            <div className="p-5 sm:p-8">
+              <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
+
+                <div className="border-l border-[#e0e0e2] pl-8">
+                  <h2 className="text-lg font-bold text-[#23262a]">
+                    امتیاز کاربران
+                  </h2>
+
+                  <div className="mt-5 flex items-center gap-3">
+                    <span className="text-4xl font-black text-[#23262a]">
+                      {product.rating?.rate || 0}
+                    </span>
+
+                    <div>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((item) => (
+                          <Star
+                            key={item}
+                            size={15}
+                            fill="currentColor"
+                            className="text-[#f9a825]"
+                          />
+                        ))}
+                      </div>
+
+                      <p className="mt-2 text-[11px] text-[#81858b]">
+                        بر اساس {product.rating?.count || 0} امتیاز
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="border-b border-[#e0e0e2] pb-5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-[#424750]">
+                        نظر کاربران درباره این محصول
+                      </span>
+
+                      <MessageCircle
+                        size={19}
+                        className="text-[#81858b]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="py-6">
+                    <p className="text-sm leading-8 text-[#62666d]">
+                      هنوز دیدگاه ثبت‌شده‌ای برای این محصول وجود ندارد.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* QUESTIONS */}
+          {activeTab === "questions" && (
+            <div className="p-5 sm:p-8">
+              <div className="flex gap-4 border-b border-[#e0e0e2] pb-6">
+                <HelpCircle
+                  size={22}
+                  className="shrink-0 text-[#81858b]"
+                />
+
+                <div>
+                  <h2 className="text-sm font-bold text-[#23262a]">
+                    پرسش درباره محصول
+                  </h2>
+
+                  <p className="mt-2 text-xs leading-7 text-[#81858b]">
+                    سوالی درباره مشخصات یا نحوه استفاده از محصول دارید؟
+                  </p>
+                </div>
+              </div>
+
+              <button className="mt-6 rounded-lg border border-[#ef394e] px-6 py-3 text-xs font-bold text-[#ef394e] transition hover:bg-[#fff5f6]">
+                ثبت پرسش
               </button>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* ================= RELATED ================= */}
+      {relatedProducts.length > 0 && (
+        <section className="mx-auto mt-7 w-full max-w-[1400px] px-4 pb-10 sm:px-6 lg:px-8">
+          <div className="border border-[#e0e0e2] bg-white">
+
+            <div className="flex items-center justify-between border-b border-[#e0e0e2] px-5 py-5 sm:px-7">
+              <h2 className="text-lg font-bold text-[#23262a]">
+                محصولات مرتبط
+              </h2>
+
+              <Link
+                to="/products"
+                className="text-xs font-bold text-[#19bfd3]"
+              >
+                مشاهده همه
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+              {relatedProducts.map((item, index) => (
+                <Link
+                  key={item.id}
+                  to={`/product/${item.id}`}
+                  className={`
+                    group p-4 transition hover:shadow-[0_2px_12px_rgba(0,0,0,0.08)]
+                    ${
+                      index !== relatedProducts.length - 1
+                        ? "border-l border-[#e0e0e2]"
+                        : ""
+                    }
+                  `}
+                >
+                  <div className="flex h-[220px] items-center justify-center">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="max-h-full max-w-full object-contain transition duration-300 group-hover:scale-105"
+                    />
+                  </div>
+
+                  <div className="mt-4 border-t border-[#f1f2f4] pt-4">
+                    <h3 className="line-clamp-2 min-h-[50px] text-xs font-bold leading-6 text-[#424750]">
+                      {item.title}
+                    </h3>
+
+                    <div className="mt-4 flex items-center justify-between">
+                      <div>
+                        <span className="text-sm font-black text-[#23262a]">
+                          {item.price.toLocaleString("fa-IR")}
+                        </span>
+
+                        <span className="mr-1 text-[9px] text-[#81858b]">
+                          تومان
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1">
+                        <Star
+                          size={13}
+                          fill="currentColor"
+                          className="text-[#f9a825]"
+                        />
+
+                        <span className="text-[10px] text-[#62666d]">
+                          {item.rating?.rate || 0}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
         </section>
+      )}
+
+      {/* ================= MOBILE CART ================= */}
+      <div className="fixed bottom-0 right-0 left-0 z-50 border-t border-[#e0e0e2] bg-white p-3 shadow-[0_-3px_15px_rgba(0,0,0,0.08)] lg:hidden">
+        <div className="flex items-center gap-3">
+          <div className="flex-1">
+            <div className="text-[10px] text-[#81858b]">
+              قیمت نهایی
+            </div>
+
+            <div className="mt-1">
+              <span className="text-lg font-black text-[#23262a]">
+                {finalPrice.toLocaleString("fa-IR")}
+              </span>
+
+              <span className="mr-1 text-[9px] text-[#424750]">
+                تومان
+              </span>
+            </div>
+          </div>
+
+          <button
+            onClick={addToCart}
+            className="flex h-12 flex-[1.4] items-center justify-center gap-2 rounded-lg bg-[#ef394e] text-sm font-bold text-white"
+          >
+            <ShoppingBag size={18} />
+            افزودن به سبد خرید
+          </button>
+        </div>
       </div>
 
-      {/* Mobile Filter Drawer */}
-      <AnimatePresence>
-        {mobileFilters && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileFilters(false)}
-              className="
-                fixed
-                inset-0
-                z-[100]
-                bg-black/30
-                lg:hidden
-              "
-            />
-
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 0.3 }}
-              className="
-                fixed
-                right-0
-                top-0
-                z-[101]
-                h-full
-                w-[85%]
-                max-w-[350px]
-                overflow-y-auto
-                bg-white
-                p-5
-                lg:hidden
-              "
-            >
-              <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-sm font-bold text-[#222]">
-                  فیلتر محصولات
-                </h2>
-
-                <button
-                  type="button"
-                  onClick={() => setMobileFilters(false)}
-                  className="
-                    flex
-                    h-9
-                    w-9
-                    items-center
-                    justify-center
-                    rounded-full
-                    bg-[#f5f5f5]
-                    text-[#555]
-                  "
-                >
-                  <X size={17} />
-                </button>
-              </div>
-
-              <FilterContent />
-
-              <button
-                type="button"
-                onClick={() => setMobileFilters(false)}
-                className="
-                  mt-8
-                  h-12
-                  w-full
-                  rounded-xl
-                  bg-[#173a2c]
-                  text-xs
-                  text-white
-                "
-              >
-                نمایش محصولات
-              </button>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      <div className="h-20 lg:hidden" />
     </main>
-  );
-}
-
-// ========================================
-// Filter Radio
-// ========================================
-
-function FilterRadio({ label, checked, onClick }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="
-        flex
-        w-full
-        items-center
-        gap-2.5
-        text-right
-        text-[11px]
-        text-[#666]
-        transition
-        hover:text-[#173a2c]
-      "
-    >
-      <span
-        className={`
-          flex
-          h-4
-          w-4
-          shrink-0
-          items-center
-          justify-center
-          rounded-full
-          border
-          transition
-          ${
-            checked
-              ? "border-[#173a2c]"
-              : "border-[#d8d8d8]"
-          }
-        `}
-      >
-        {checked && (
-          <span className="h-2 w-2 rounded-full bg-[#173a2c]" />
-        )}
-      </span>
-
-      {label}
-    </button>
   );
 }
